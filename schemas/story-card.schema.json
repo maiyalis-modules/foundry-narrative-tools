@@ -1,0 +1,74 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/brenton/foundry-story-deck/schemas/story-card.schema.json",
+  "title": "Story Card",
+  "description": "A single collaborative worldbuilding card executed by the Story Deck engine (schema v3). A card is a guided conversation: each step names one player, asks one open question, and passes the spotlight to a different player.",
+  "type": "object",
+  "required": ["id", "title", "theme", "scope", "steps"],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "title": { "type": "string", "minLength": 1 },
+    "theme": {
+      "description": "What the conversation is about, not what it creates. One per card.",
+      "type": "string",
+      "minLength": 1
+    },
+    "scope": {
+      "description": "How far the subject reaches. personal = one character or keepsake; community = a single town or village; regional = a province or nation; epic = a grand, world-shaping scale.",
+      "enum": ["personal", "community", "regional", "epic"]
+    },
+    "outputs": {
+      "description": "The kinds of campaign element this card is about — descriptive metadata for selection and guidance, not a per-answer mapping. Free-form and evolving; reuse existing values where possible (person, place, object, institution, event, legend, tradition, memory, reputation, organization, location, phenomenon, mystery, opportunity, rumor, …). Prefer the canonical form when synonyms exist (person over npc, place over location, institution over organization).",
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "tags": {
+      "description": "The nature of the discussion — used for filtering and Story Deck construction. Free-form; keep them lowercase and reuse existing values where possible.",
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "metadata": { "type": "object" },
+    "steps": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 5,
+      "items": { "$ref": "#/definitions/step" }
+    }
+  },
+  "definitions": {
+    "step": {
+      "type": "object",
+      "required": ["participant", "question"],
+      "additionalProperties": false,
+      "properties": {
+        "participant": { "$ref": "#/definitions/participant" },
+        "setup": {
+          "description": "Framing text shown before the question. May contain {{token}} placeholders.",
+          "type": "string"
+        },
+        "question": {
+          "description": "The single open question this step's player answers.",
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "participant": {
+      "type": "object",
+      "required": ["role", "selection"],
+      "additionalProperties": false,
+      "properties": {
+        "role": { "enum": ["primary", "secondary", "tertiary", "quaternary", "group"] },
+        "selection": {
+          "description": "Who chooses this step's speaker. The opening step is always gm_selects_player; use it mid-card when the choice is the GM's call. chosen_by_previous lets the player who just answered pick (a natural in-fiction hand-off, shown to them).",
+          "enum": ["gm_selects_player", "chosen_by_previous"]
+        },
+        "prompt": {
+          "description": "Guidance for whoever chooses this speaker (\"Choose a player who witnessed…\"). Shown to the previous player when chosen_by_previous; a GM-only note when gm_selects_player. Omit on the opening step.",
+          "type": "string"
+        }
+      }
+    }
+  }
+}

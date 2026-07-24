@@ -1,0 +1,24 @@
+{{!-- Player-facing card popup: setup, one question, and the pass instruction. --}}
+<div class="card-prompt__body">
+  {{#if setup}}
+    <p class="card-prompt__setup">{{setup}}</p>
+  {{/if}}
+
+  <div class="card-prompt__field">
+    <label for="cp-answer">{{question}}</label>
+    <textarea id="cp-answer" data-answer rows="4"></textarea>
+  </div>
+
+  {{#if handoff}}
+    <p class="card-prompt__spotlight">
+      <i class="fa-solid fa-hand-point-right"></i>
+      <span><strong>{{localize "FSD.ThenPass"}}</strong> {{handoff}}</span>
+    </p>
+  {{/if}}
+
+  <div class="card-prompt__actions">
+    <button type="button" class="story-deck__primary" data-fsd="submit">
+      {{localize "FSD.Submit"}}
+    </button>
+  </div>
+</div>

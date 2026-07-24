@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "decks": [
+    {
+      "id": "test-deck",
+      "name": "Test Deck (3 cards)",
+      "description": "A short deck for exercising the runtime end to end without working through a full campaign. Three phases, one relationships card each, so a whole run is three cards — long enough to see the chapter intros, the phase recaps, and the campaign-seed transcript, short enough to run in a few minutes.",
+      "type": "premade",
+      "minPlayers": 2,
+      "maxPlayers": 6,
+      "expectedCards": 3,
+      "allowManualSubstitution": true,
+      "allowReordering": true,
+      "avoidDuplicateCards": true,
+      "focus": [
+        "Exercise the phase flow, recap, and seed transcript.",
+        "Confirm the spotlight passes between players correctly."
+      ],
+      "facilitatorNotes": [
+        "For testing. Each phase draws one relationships card, so a full run is three cards."
+      ],
+      "phases": [
+        {
+          "id": "test-one",
+          "name": "First Bond",
+          "description": "One relationships card.",
+          "count": 1,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["relationships"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "test-two",
+          "name": "Second Bond",
+          "description": "Another relationships card.",
+          "count": 1,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["relationships"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "test-three",
+          "name": "Third Bond",
+          "description": "One more relationships card.",
+          "count": 1,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["relationships"],
+            "preferUnused": true
+          }
+        }
+      ],
+      "completion": {
+        "summaryPrompt": "Summarize what this short run established.",
+        "saveOutputsAsCampaignSeed": true,
+        "campaignSeedTitle": "Test Campaign Seed"
+      }
+    }
+  ]
+}

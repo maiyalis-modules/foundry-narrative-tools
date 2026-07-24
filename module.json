@@ -1,0 +1,34 @@
+{
+  "id": "foundry-story-deck",
+  "title": "Campaign Story Decks",
+  "description": "A JSON-driven collaborative Session 0 story-card engine. Guides players through collaboratively creating their hometown, relationships, NPCs, traditions, and shared history — producing a campaign seed the GM can build adventures around. System-agnostic, starting with Daggerheart.",
+  "version": "0.1.0",
+  "authors": [
+    {
+      "name": "Brenton",
+      "email": "brenton.morse@gmail.com"
+    }
+  ],
+  "compatibility": {
+    "minimum": "14",
+    "verified": "14"
+  },
+  "esmodules": [
+    "dist/module.js"
+  ],
+  "styles": [
+    "styles/module.css"
+  ],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    }
+  ],
+  "packs": [],
+  "socket": true,
+  "url": "https://github.com/brenton/foundry-story-deck",
+  "manifest": "https://github.com/brenton/foundry-story-deck/releases/latest/download/module.json",
+  "download": "https://github.com/brenton/foundry-story-deck/releases/latest/download/module.zip"
+}

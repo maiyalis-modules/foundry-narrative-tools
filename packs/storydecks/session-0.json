@@ -1,0 +1,118 @@
+{
+  "schemaVersion": 1,
+  "_parked": "Not loaded yet (see src/cards/index.ts). Phases filter on themes/categories that don't exist in the library until more themes are authored. When ready, add this path back to RECIPE_PATHS and change each phase's `categories` filter to `themes`.",
+  "decks": [
+    {
+      "id": "session-0",
+      "name": "Session 0",
+      "description": "Build the party's shared history, hometown, relationships, and reason for beginning the campaign together.",
+      "type": "premade",
+      "minPlayers": 3,
+      "maxPlayers": 6,
+      "expectedCards": 12,
+      "allowManualSubstitution": true,
+      "allowReordering": true,
+      "avoidDuplicateCards": true,
+      "facilitatorNotes": [
+        "The GM selects only the first player for each card.",
+        "Players pass the spotlight according to each card's instructions.",
+        "The GM may skip or replace a card that does not fit the emerging story.",
+        "Pause briefly between phases to summarize what has been established."
+      ],
+      "phases": [
+        {
+          "id": "who-we-are",
+          "name": "Who We Are",
+          "description": "Establish how the characters are known and how they see one another.",
+          "count": 2,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "categories": ["reputation", "people"],
+            "tags": ["personal", "relationship"],
+            "outputs": ["reputation", "person"],
+            "excludeCardIds": [],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "shared-past",
+          "name": "Shared Past",
+          "description": "Create memories, secrets, debts, and stories the characters already share.",
+          "count": 3,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "categories": ["memories", "objects"],
+            "tags": ["history", "relationship", "responsibility", "mystery"],
+            "outputs": ["memory", "object"],
+            "excludeCardIds": [],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "our-home",
+          "name": "Our Home",
+          "description": "Define the places, people, customs, and institutions that make the community feel real.",
+          "count": 3,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "categories": ["places", "people", "traditions"],
+            "tags": ["community", "culture", "belief"],
+            "outputs": ["place", "person", "tradition", "institution", "legend"],
+            "excludeCardIds": [],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "what-binds-us",
+          "name": "What Binds Us",
+          "description": "Strengthen the relationships, obligations, and unresolved tensions within the group.",
+          "count": 2,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "tags": ["relationship", "responsibility", "conflict"],
+            "outputs": ["memory", "reputation", "person", "object"],
+            "excludeCardIds": [],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "what-is-changing",
+          "name": "What Is Changing",
+          "description": "Introduce a recent pressure, opportunity, or disruption that makes the present different from the past.",
+          "count": 1,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "tags": ["change", "conflict", "opportunity", "mystery"],
+            "outputs": ["event", "person", "institution", "place"],
+            "excludeCardIds": [],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "why-we-leave",
+          "name": "Why We Leave",
+          "description": "Create the immediate reason the characters step into the campaign together.",
+          "count": 1,
+          "selection": {
+            "mode": "random",
+            "match": "all",
+            "tags": ["change", "opportunity"],
+            "outputs": ["event"],
+            "excludeCardIds": [],
+            "preferUnused": true
+          }
+        }
+      ],
+      "completion": {
+        "summaryPrompt": "Summarize the party's shared history, their home, the people and places that matter to them, the tensions left unresolved, and the event that begins the campaign.",
+        "saveOutputsAsCampaignSeed": true,
+        "campaignSeedTitle": "Session 0 Campaign Seed"
+      }
+    }
+  ]
+}

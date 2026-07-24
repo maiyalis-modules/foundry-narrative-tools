@@ -1,0 +1,1259 @@
+/* Campaign Story Decks — window styles. Scoped under the module id to avoid
+   leaking into the rest of the Foundry UI. */
+
+/* Surface palette.
+   Surfaces are *opaque*: translucent white over Foundry's sheet resolves to a
+   flat wash with no separation from the panel behind it, which is what made
+   cards hard to pick out.
+
+   Dark is the default because Foundry's own default is dark; the light palette
+   below opts in from Foundry's `theme-light` class. Deliberately NOT keyed off
+   `prefers-color-scheme` — that reports the OS setting, which can disagree with
+   the theme the user actually picked inside Foundry. */
+.foundry-story-deck.story-deck {
+  --fsd-gap: 0.75rem;
+
+  --fsd-surface: #2a2d34;
+  --fsd-surface-top: #31343d;
+  --fsd-surface-hover: #383c47;
+  /* Chrome behind the fixed tab row and sticky action bars — opaque so scrolling
+     content can't bleed through. */
+  --fsd-header-bg: #20222a;
+  --fsd-border: rgba(255, 255, 255, 0.13);
+  --fsd-ink: #e4e1db;
+  --fsd-accent: #8592e8;
+  --fsd-accent-tint: rgba(133, 146, 232, 0.18);
+  /* Text on a filled accent: the dark palette's accent is light, so it needs
+     dark text rather than the white that works on the light palette's indigo. */
+  --fsd-on-accent: #1b1d24;
+  --fsd-divider: rgba(255, 255, 255, 0.12);
+  --fsd-danger: #ff8f8f;
+  --fsd-chip-bg: rgba(255, 255, 255, 0.1);
+  --fsd-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 2px 6px rgba(0, 0, 0, 0.25);
+  --fsd-shadow-raised: 0 2px 5px rgba(0, 0, 0, 0.35), 0 8px 18px rgba(0, 0, 0, 0.4);
+
+  /* Category accents: hue comes from the card (inline `--fsd-cat-h`), while
+     saturation and lightness are per-theme so the same category stays legible. */
+  --fsd-cat-s: 58%;
+  --fsd-cat-l: 68%;
+}
+
+.theme-light .foundry-story-deck.story-deck,
+.foundry-story-deck.story-deck.theme-light {
+  --fsd-surface: #faf6ed;
+  --fsd-surface-top: #fffdf8;
+  --fsd-surface-hover: #fffcf4;
+  --fsd-header-bg: #f1ede3;
+  --fsd-border: rgba(74, 59, 40, 0.22);
+  --fsd-ink: #2a241c;
+  --fsd-accent: #3f51b5;
+  --fsd-accent-tint: rgba(63, 81, 181, 0.12);
+  --fsd-on-accent: #fff;
+  --fsd-divider: rgba(0, 0, 0, 0.12);
+  --fsd-danger: #a33;
+  --fsd-chip-bg: rgba(0, 0, 0, 0.08);
+  --fsd-shadow: 0 1px 2px rgba(45, 34, 18, 0.07), 0 2px 6px rgba(45, 34, 18, 0.06);
+  --fsd-shadow-raised: 0 2px 5px rgba(45, 34, 18, 0.1), 0 8px 18px rgba(45, 34, 18, 0.13);
+  --fsd-cat-s: 60%;
+  --fsd-cat-l: 42%;
+}
+
+/* One shared surface treatment, so every card-like element matches. The subtle
+   top-down gradient is what stops a large grid of cards reading as flat blocks. */
+.foundry-story-deck .story-deck__card,
+.foundry-story-deck .story-deck__recipe,
+.foundry-story-deck .story-deck__run-card,
+.foundry-story-deck .story-deck__log-entry,
+.foundry-story-deck .story-deck__run-entry,
+.foundry-story-deck .card-window__step {
+  background: linear-gradient(180deg, var(--fsd-surface-top) 0%, var(--fsd-surface) 100%);
+  border: 1px solid var(--fsd-border);
+  color: var(--fsd-ink);
+  box-shadow: var(--fsd-shadow);
+  /* Resolve this element's category accent from its inline hue. */
+  --fsd-cat: hsl(var(--fsd-cat-h, 30) var(--fsd-cat-s) var(--fsd-cat-l));
+}
+
+.foundry-story-deck .story-deck__body {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  /* The tab row stays put; only the active panel scrolls (see below). */
+  overflow: hidden;
+}
+
+.foundry-story-deck .story-deck__header h2 {
+  margin: 0;
+  border: none;
+}
+
+.foundry-story-deck .story-deck__subtitle {
+  margin: 0.25rem 0 0;
+  opacity: 0.8;
+  font-style: italic;
+}
+
+.foundry-story-deck .story-deck__status {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--fsd-gap);
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  background: var(--fsd-chip-bg);
+}
+
+.foundry-story-deck .story-deck__cards {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--fsd-gap);
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+}
+
+.foundry-story-deck .story-deck__cards-empty {
+  grid-column: 1 / -1;
+}
+
+.foundry-story-deck .story-deck__card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-height: 116px;
+  padding: 0.7rem 0.8rem 0.75rem;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* Accent bar down the left edge, coloured per category. */
+.foundry-story-deck .story-deck__card::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 3px;
+  background: var(--fsd-cat, rgba(255, 152, 0, 0.65));
+}
+
+.foundry-story-deck .story-deck__card-category {
+  align-self: flex-start;
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.66em;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--fsd-cat, inherit);
+  background: color-mix(in srgb, var(--fsd-cat, #ff9800) 16%, transparent);
+}
+
+.foundry-story-deck .story-deck__card-title {
+  font-weight: 700;
+  font-size: 1.1em;
+  line-height: 1.2;
+}
+
+.foundry-story-deck .story-deck__card-question {
+  margin: 0;
+  font-size: 0.86em;
+  line-height: 1.35;
+  opacity: 0.8;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.foundry-story-deck .story-deck__card-outputs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin-top: auto;
+}
+
+.foundry-story-deck .story-deck__tag {
+  padding: 0.12rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.72em;
+  line-height: 1.5;
+  background: var(--fsd-chip-bg);
+}
+
+.foundry-story-deck .story-deck__tag--stage,
+.foundry-story-deck .story-deck__tag--output {
+  background: rgba(255, 152, 0, 0.18);
+}
+
+.foundry-story-deck .story-deck__tag--tag {
+  background: rgba(76, 175, 80, 0.15);
+}
+
+.foundry-story-deck .story-deck__card--clickable {
+  cursor: pointer;
+  transition: border-color 0.12s ease, box-shadow 0.12s ease, transform 0.12s ease;
+}
+
+.foundry-story-deck .story-deck__card--clickable:hover {
+  border-color: var(--fsd-accent);
+  background: linear-gradient(180deg, #fffefb 0%, var(--fsd-surface-hover) 100%);
+  box-shadow: var(--fsd-shadow-raised);
+  transform: translateY(-2px);
+}
+
+/* Outputs + tags shown in the opened card window header. */
+.foundry-story-deck .card-window__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.5rem;
+}
+
+/* ---- Log tab ---- */
+
+.foundry-story-deck .story-deck__log-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 0.5rem;
+}
+
+.foundry-story-deck .story-deck__log-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.foundry-story-deck .story-deck__log-entry {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: border-color 0.12s ease, background 0.12s ease;
+}
+
+.foundry-story-deck .story-deck__log-entry:hover {
+  border-color: var(--fsd-accent);
+  background: var(--fsd-surface-hover);
+}
+
+.foundry-story-deck .story-deck__log-main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.foundry-story-deck .story-deck__log-title {
+  font-weight: 600;
+}
+
+.foundry-story-deck .story-deck__log-meta {
+  font-size: 0.8em;
+  opacity: 0.7;
+}
+
+.foundry-story-deck .story-deck__log-delete {
+  flex: 0 0 auto;
+  width: auto;
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+.foundry-story-deck .story-deck__log-delete:hover {
+  opacity: 1;
+  color: var(--fsd-danger);
+}
+
+/* ---- Card window (single card: all steps + play controls) ---- */
+
+.foundry-story-deck.card-window .card-window__body,
+.foundry-story-deck .card-window__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding: 0.85rem;
+}
+
+.foundry-story-deck .card-window__steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.foundry-story-deck .card-window__step {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.6rem 0.85rem;
+  border-left-width: 3px;
+  border-radius: 6px;
+}
+
+/* The step awaiting an answer — tinted so the table's eye lands on it. */
+.foundry-story-deck .card-window__step.current {
+  border-left-color: var(--fsd-accent);
+  /* Accent tint layered over the normal surface, so it reads as the same card
+     highlighted rather than a differently-coloured one. */
+  background:
+    linear-gradient(var(--fsd-accent-tint), var(--fsd-accent-tint)),
+    linear-gradient(180deg, var(--fsd-surface-top) 0%, var(--fsd-surface) 100%);
+  box-shadow: var(--fsd-shadow-raised);
+}
+
+.foundry-story-deck .card-window__step.future {
+  opacity: 0.6;
+}
+
+.foundry-story-deck .card-window__setup {
+  margin: 0;
+  font-style: italic;
+  opacity: 0.85;
+}
+
+/* ---------------------------------------------------------------------------
+   Story Deck runs: the recipe picker, chapter screens, recaps, campaign seed.
+   --------------------------------------------------------------------------- */
+
+.foundry-story-deck .story-deck__recipes,
+.foundry-story-deck .story-deck__run-list,
+.foundry-story-deck .story-deck__run-cards,
+.foundry-story-deck .story-deck__recap-list,
+.foundry-story-deck .story-deck__seed-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.foundry-story-deck .story-deck__recipe {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.9rem 1rem;
+  border-radius: 10px;
+}
+
+.foundry-story-deck .story-deck__recipe-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.foundry-story-deck .story-deck__recipe-name {
+  font-size: 1.15em;
+  font-weight: 700;
+}
+
+.foundry-story-deck .story-deck__recipe-desc {
+  margin: 0;
+  line-height: 1.45;
+}
+
+.foundry-story-deck .story-deck__recipe-notes {
+  margin: 0;
+  padding-left: 1.1rem;
+  font-size: 0.88em;
+  line-height: 1.5;
+}
+
+.foundry-story-deck .story-deck__recipe--clickable {
+  cursor: pointer;
+  transition: border-color 0.12s ease, box-shadow 0.12s ease, transform 0.12s ease;
+}
+
+.foundry-story-deck .story-deck__recipe--clickable:hover {
+  border-color: var(--fsd-accent);
+  box-shadow: var(--fsd-shadow-raised);
+  transform: translateY(-2px);
+}
+
+.foundry-story-deck .story-deck__recipe-view {
+  align-self: flex-end;
+  font-size: 0.82em;
+}
+
+.foundry-story-deck .story-deck__recipe-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.foundry-story-deck .story-deck__tag--deck {
+  background: var(--fsd-accent-tint);
+  font-weight: 600;
+}
+
+/* Deck detail / breakdown page. */
+.foundry-story-deck .story-deck__deck-detail {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.foundry-story-deck .story-deck__detail-name {
+  margin: 0.4rem 0 0;
+  font-size: 1.5em;
+}
+
+.foundry-story-deck .story-deck__detail-meta {
+  font-size: 0.9em;
+}
+
+.foundry-story-deck .story-deck__detail-desc {
+  margin: 0.4rem 0;
+  line-height: 1.55;
+  max-width: 38rem;
+}
+
+.foundry-story-deck .story-deck__detail-heading {
+  margin: 0.7rem 0 0.1rem;
+  font-size: 0.78em;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.foundry-story-deck .story-deck__breakdown {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  max-width: 22rem;
+}
+
+.foundry-story-deck .story-deck__breakdown-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.22rem 0;
+}
+
+.foundry-story-deck .story-deck__breakdown-dot {
+  width: 0.6em;
+  height: 0.6em;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: var(--fsd-cat, var(--fsd-accent));
+}
+
+.foundry-story-deck .story-deck__breakdown-theme {
+  flex: 1 1 auto;
+  text-transform: capitalize;
+}
+
+.foundry-story-deck .story-deck__breakdown-count {
+  flex: 0 0 auto;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+
+.foundry-story-deck .story-deck__detail-focus {
+  margin: 0;
+  padding-left: 1.2rem;
+  line-height: 1.55;
+}
+
+.foundry-story-deck .story-deck__detail-bias {
+  margin: 0.6rem 0;
+  font-size: 0.85em;
+  line-height: 1.5;
+  max-width: 38rem;
+}
+
+/* The run header strip, always visible while a deck is in progress. */
+.foundry-story-deck .story-deck__run-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.foundry-story-deck .story-deck__run-name {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+/* The chapter screen — deliberately roomy so the group reads it together. */
+.foundry-story-deck .story-deck__chapter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+}
+
+.foundry-story-deck .story-deck__chapter-step {
+  font-size: 0.8em;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.65;
+}
+
+.foundry-story-deck .story-deck__chapter-title {
+  margin: 0;
+  font-size: 1.9em;
+  line-height: 1.2;
+}
+
+.foundry-story-deck .story-deck__chapter-desc {
+  max-width: 30rem;
+  margin: 0;
+  font-size: 1.02em;
+  line-height: 1.55;
+  opacity: 0.85;
+}
+
+.foundry-story-deck .story-deck__chapter-count {
+  padding: 0.2rem 0.7rem;
+  border-radius: 999px;
+  background: var(--fsd-accent-tint);
+  font-size: 0.85em;
+  font-weight: 600;
+}
+
+.foundry-story-deck .story-deck__chapter-head {
+  margin-bottom: 0.8rem;
+  text-align: center;
+}
+
+.foundry-story-deck .story-deck__chapter-head .story-deck__chapter-title {
+  font-size: 1.35em;
+}
+
+/* The phase's cards, in play order. */
+.foundry-story-deck .story-deck__run-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.foundry-story-deck .story-deck__run-card {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 0.8rem;
+  border-left: 3px solid var(--fsd-cat, rgba(255, 152, 0, 0.65));
+  border-radius: 8px;
+}
+
+.foundry-story-deck .story-deck__run-card.played {
+  opacity: 0.55;
+}
+
+.foundry-story-deck .story-deck__run-card-title {
+  font-weight: 600;
+}
+
+.foundry-story-deck .story-deck__run-card-actions,
+.foundry-story-deck .story-deck__run-card-done {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-left: auto;
+}
+
+.foundry-story-deck .story-deck__run-card-done {
+  font-size: 0.85em;
+  opacity: 0.8;
+}
+
+.foundry-story-deck .story-deck__run-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+/* Between chapters. */
+.foundry-story-deck .story-deck__recap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 1.75rem 1.5rem;
+  text-align: center;
+}
+
+.foundry-story-deck .story-deck__recap-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+  max-width: 34rem;
+  text-align: left;
+}
+
+.foundry-story-deck .story-deck__recap-list li {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.foundry-story-deck .story-deck__recap-value {
+  line-height: 1.4;
+}
+
+/* Past runs. */
+.foundry-story-deck .story-deck__run-entry {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 0.8rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: border-color 0.12s ease, background 0.12s ease;
+}
+
+.foundry-story-deck .story-deck__run-entry:hover {
+  border-color: var(--fsd-accent);
+  background: var(--fsd-surface-hover);
+}
+
+.foundry-story-deck .story-deck__run-main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.foundry-story-deck .story-deck__run-title {
+  font-weight: 600;
+}
+
+.foundry-story-deck .story-deck__badge {
+  margin-left: 0.4rem;
+  padding: 0.05rem 0.45rem;
+  border-radius: 999px;
+  background: var(--fsd-accent-tint);
+  font-size: 0.72em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.foundry-story-deck .story-deck__run-meta,
+.foundry-story-deck .story-deck__recipe-meta {
+  font-size: 0.85em;
+}
+
+/* Campaign seed. */
+.foundry-story-deck .story-deck__seed-head {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.75rem;
+}
+
+.foundry-story-deck .story-deck__seed-head h2 {
+  margin: 0;
+  font-size: 1.15em;
+}
+
+.foundry-story-deck .story-deck__seed-group {
+  margin-bottom: 1rem;
+}
+
+.foundry-story-deck .story-deck__seed-heading {
+  margin: 0 0 0.35rem;
+  padding-bottom: 0.2rem;
+  border-bottom: 1px solid var(--fsd-divider);
+  font-size: 0.8em;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+
+.foundry-story-deck .story-deck__seed-list li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  padding: 0.35rem 0;
+}
+
+.foundry-story-deck .story-deck__seed-value {
+  line-height: 1.45;
+}
+
+.foundry-story-deck .story-deck__seed-src {
+  font-size: 0.8em;
+}
+
+/* Per-card transcript blocks, shared by the phase recap and the run's seed view. */
+.foundry-story-deck .story-deck__transcript {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 40rem;
+  text-align: left;
+}
+
+.foundry-story-deck .story-deck__seed-card {
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--fsd-border);
+  border-left: 3px solid var(--fsd-cat, var(--fsd-accent));
+  border-radius: 8px;
+  background: linear-gradient(180deg, var(--fsd-surface-top) 0%, var(--fsd-surface) 100%);
+}
+
+.foundry-story-deck .story-deck__seed-card + .story-deck__seed-card {
+  margin-top: 0.6rem;
+}
+
+.foundry-story-deck .story-deck__seed-card-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4rem;
+  margin-bottom: 0.5rem;
+}
+
+.foundry-story-deck .story-deck__seed-card-title {
+  font-weight: 700;
+}
+
+.foundry-story-deck .story-deck__qa-block + .story-deck__qa-block {
+  margin-top: 0.5rem;
+}
+
+.foundry-story-deck .story-deck__qa-q {
+  margin: 0;
+  font-weight: 600;
+  font-size: 0.92em;
+  opacity: 0.85;
+}
+
+.foundry-story-deck .story-deck__qa-a {
+  margin: 0.1rem 0 0;
+  line-height: 1.45;
+}
+
+.foundry-story-deck .story-deck__qa-who {
+  font-size: 0.85em;
+}
+
+.foundry-story-deck .story-deck__card-scope {
+  align-self: flex-start;
+  font-size: 0.72em;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* How the spotlight passed on from this step — shown once it's been answered. */
+.foundry-story-deck .card-window__spotlight {
+  margin: 0.15rem 0 0;
+  font-size: 0.85em;
+  opacity: 0.7;
+}
+
+/* A GM-only pass note (the player never saw this) reads a touch louder and warmer
+   so the GM registers it as their decision to make. */
+.foundry-story-deck .card-window__spotlight--gm {
+  opacity: 0.95;
+  padding: 0.3rem 0.5rem;
+  border-radius: 6px;
+  background: var(--fsd-accent-tint);
+}
+
+.foundry-story-deck .card-window__qa {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.foundry-story-deck .card-window__q {
+  margin: 0;
+  font-weight: 600;
+}
+
+.foundry-story-deck .card-window__a {
+  margin: 0;
+  line-height: 1.45;
+}
+
+.foundry-story-deck .card-window__controls {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--fsd-divider);
+}
+
+/* ---- Tabbed browser ---- */
+
+/* Fixed header: sits outside the scroll area, so it never scrolls out. */
+.foundry-story-deck .story-deck__tabs {
+  flex: 0 0 auto;
+  display: flex;
+  gap: 0.25rem;
+  padding: 0.5rem 0.5rem 0;
+  background: var(--fsd-header-bg);
+  border-bottom: 1px solid var(--fsd-divider);
+}
+
+.foundry-story-deck .story-deck__tab {
+  flex: 0 0 auto;
+  width: auto;
+  padding: 0.4rem 0.9rem;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  cursor: pointer;
+  font-weight: 600;
+  opacity: 0.7;
+}
+
+.foundry-story-deck .story-deck__tab:hover {
+  opacity: 1;
+}
+
+.foundry-story-deck .story-deck__tab.active {
+  opacity: 1;
+  border-bottom-color: var(--fsd-accent);
+}
+
+/* The one rendered panel is the scroll region. Its top padding is 0 so each
+   panel's first row can be a sticky header that sits flush with no scroll jump;
+   panels whose first row isn't a sticky header restore spacing on that element. */
+.foundry-story-deck .story-deck__panel {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 0 0.5rem 1rem;
+}
+
+/* Sticky top rows: the deck detail action bar, and each tab's first toolbar (the
+   Story Decks / Story Cards filter rows and the Log's clear-log row). Bled to the
+   panel's side edges so they span full width and hold at the top while content
+   scrolls beneath them. */
+.foundry-story-deck .story-deck__detail-bar,
+.foundry-story-deck .story-deck__run-bar,
+.foundry-story-deck .story-deck__filterbar,
+.foundry-story-deck .story-deck__cards-toolbar,
+.foundry-story-deck .story-deck__log-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  margin: 0 -0.5rem 0.5rem;
+  padding: 0.55rem 0.5rem;
+  background: var(--fsd-header-bg);
+  border-bottom: 1px solid var(--fsd-divider);
+}
+
+.foundry-story-deck .story-deck__detail-bar {
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.foundry-story-deck .story-deck__muted {
+  opacity: 0.65;
+  font-style: italic;
+}
+
+.foundry-story-deck .story-deck__filterbar,
+.foundry-story-deck .story-deck__filter-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 0.5rem;
+}
+
+.foundry-story-deck .story-deck__filters {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.foundry-story-deck .story-deck__filter-label {
+  font-weight: 600;
+  opacity: 0.8;
+  margin-right: 0.25rem;
+}
+
+.foundry-story-deck .story-deck__chip {
+  flex: 0 0 auto;
+  width: auto;
+  padding: 0.15rem 0.6rem;
+  border: 1px solid var(--fsd-border);
+  border-radius: 999px;
+  background: var(--fsd-chip-bg);
+  color: var(--fsd-ink);
+  cursor: pointer;
+  font-size: 0.85em;
+}
+
+.foundry-story-deck .story-deck__chip.active {
+  background: var(--fsd-accent);
+  border-color: var(--fsd-accent);
+  color: var(--fsd-on-accent);
+}
+
+/* Category filter chips carry a colour dot matching their card accent. */
+.foundry-story-deck .story-deck__chip--cat {
+  --fsd-cat: hsl(var(--fsd-cat-h, 30) var(--fsd-cat-s) var(--fsd-cat-l));
+}
+
+.foundry-story-deck .story-deck__chip--cat::before {
+  content: "";
+  display: inline-block;
+  width: 0.55em;
+  height: 0.55em;
+  margin-right: 0.4em;
+  border-radius: 50%;
+  background: var(--fsd-cat, currentColor);
+  vertical-align: baseline;
+}
+
+.foundry-story-deck .story-deck__count {
+  margin: 0;
+}
+
+.foundry-story-deck .story-deck__cards-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.foundry-story-deck .story-deck__toolbar-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.foundry-story-deck .story-deck__filter-wrap {
+  position: relative;
+}
+
+.foundry-story-deck .story-deck__reset {
+  width: auto;
+  cursor: pointer;
+}
+
+.foundry-story-deck .story-deck__reset:disabled {
+  cursor: default;
+  opacity: 0.45;
+}
+
+.foundry-story-deck .story-deck__filter-toggle {
+  width: auto;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.foundry-story-deck .story-deck__filter-toggle.active {
+  background: var(--fsd-accent-tint);
+}
+
+.foundry-story-deck .story-deck__filter-popup {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 20;
+  margin-top: 0.35rem;
+  min-width: 300px;
+  max-width: 460px;
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  background: #202225;
+  color: #eceff4;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.5);
+}
+
+.foundry-story-deck .story-deck__filter-popup .story-deck__filter-label {
+  color: #c3c9d5;
+}
+
+/* The popup is dark in both themes, so its category dots keep the light-on-dark
+   values even when the rest of the window is using the light palette. */
+.foundry-story-deck .story-deck__filter-popup {
+  --fsd-cat-s: 58%;
+  --fsd-cat-l: 68%;
+}
+
+/* Unselected chips inside the dark popup need light text + a visible border. */
+.foundry-story-deck .story-deck__filter-popup .story-deck__chip {
+  background: rgba(255, 255, 255, 0.09);
+  color: #eceff4;
+  border-color: rgba(255, 255, 255, 0.28);
+}
+
+.foundry-story-deck .story-deck__filter-popup .story-deck__chip:hover {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.45);
+}
+
+.foundry-story-deck .story-deck__filter-popup .story-deck__chip.active {
+  background: #5c6bc0;
+  border-color: #7986cb;
+  color: #fff;
+}
+
+.foundry-story-deck .story-deck__filter-group {
+  margin-bottom: 0;
+}
+
+.foundry-story-deck .story-deck__filter-actions {
+  display: flex;
+  justify-content: flex-end;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  padding-top: 0.5rem;
+}
+
+.foundry-story-deck .story-deck__filter-popup .story-deck__ghost {
+  color: #eceff4;
+  opacity: 0.9;
+}
+
+/* ---- Card prompt popup (player-facing) ---- */
+
+.foundry-story-deck .card-prompt__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding: 0.85rem;
+}
+
+.foundry-story-deck .card-prompt__setup {
+  margin: 0;
+  padding: 0.75rem 1rem;
+  border-left: 3px solid var(--fsd-accent);
+  background: var(--fsd-accent-tint);
+  border-radius: 4px;
+  font-size: 1.1em;
+  line-height: 1.5;
+}
+
+/* The pass instruction: who this speaker hands the spotlight to next. */
+.foundry-story-deck .card-prompt__spotlight {
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  background: rgba(255, 152, 0, 0.12);
+  font-size: 0.92em;
+  line-height: 1.4;
+}
+
+.foundry-story-deck .card-prompt__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.foundry-story-deck .card-prompt__field label {
+  font-weight: 600;
+}
+
+.foundry-story-deck .card-prompt__actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.foundry-story-deck .story-deck__hint {
+  margin: 0;
+  font-size: 0.8em;
+  opacity: 0.7;
+}
+
+.foundry-story-deck .story-deck__candidates {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.foundry-story-deck .story-deck__waiting {
+  padding: 0.75rem;
+  text-align: center;
+  font-style: italic;
+  opacity: 0.8;
+}
+
+.foundry-story-deck .story-deck__warn {
+  padding: 0.75rem;
+  color: var(--fsd-danger);
+}
+
+.foundry-story-deck .story-deck__answers ul {
+  margin: 0.25rem 0 0;
+  padding-left: 1.2rem;
+}
+
+.foundry-story-deck .story-deck__gm-controls {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: auto;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--fsd-divider);
+}
+
+.foundry-story-deck .story-deck__primary {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.foundry-story-deck .story-deck__ghost {
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+/* ---------------------------------------------------------------------------
+   Session announcement banner (injected into <body>, over the whole screen).
+   Unscoped on purpose — it isn't inside an app window.
+   --------------------------------------------------------------------------- */
+.foundry-story-deck-banner {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 34%;
+  z-index: 100000;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+  animation: fsd-banner-sweep 4.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+.foundry-story-deck-banner__inner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.6rem;
+  width: 100%;
+  padding: 1rem 2rem;
+  overflow: hidden;
+  background: linear-gradient(
+    90deg,
+    rgba(15, 16, 22, 0) 0%,
+    rgba(15, 16, 22, 0.9) 16%,
+    rgba(34, 30, 58, 0.94) 50%,
+    rgba(15, 16, 22, 0.9) 84%,
+    rgba(15, 16, 22, 0) 100%
+  );
+  border-top: 1px solid rgba(133, 146, 232, 0.55);
+  border-bottom: 1px solid rgba(133, 146, 232, 0.55);
+  box-shadow: 0 0 60px rgba(80, 90, 180, 0.35);
+}
+
+.foundry-story-deck-banner__glyph {
+  font-size: 1.8rem;
+  color: #cdbb7a;
+  text-shadow: 0 0 16px rgba(205, 187, 122, 0.6);
+  opacity: 0.9;
+}
+
+.foundry-story-deck-banner__text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.foundry-story-deck-banner__title {
+  font-size: 2.6rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #f6f2e8;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.75);
+  line-height: 1.05;
+}
+
+.foundry-story-deck-banner__subtitle {
+  margin-top: 0.3rem;
+  font-size: 1.05rem;
+  letter-spacing: 0.06em;
+  color: #b9c0f0;
+}
+
+/* A single light sweep across the strip, timed with the entrance. */
+.foundry-story-deck-banner__inner::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -30%;
+  width: 30%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.14), transparent);
+  transform: skewX(-20deg);
+  animation: fsd-banner-shine 4.2s ease-in-out forwards;
+}
+
+@keyframes fsd-banner-sweep {
+  0% { opacity: 0; transform: translateY(14px) scale(0.98); }
+  10% { opacity: 1; transform: translateY(0) scale(1); }
+  82% { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(-10px) scale(1); }
+}
+
+@keyframes fsd-banner-shine {
+  0%, 14% { left: -30%; opacity: 0; }
+  24% { opacity: 1; }
+  56% { left: 100%; opacity: 0.8; }
+  60%, 100% { left: 100%; opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .foundry-story-deck-banner { animation-duration: 0.01ms; animation-iteration-count: 1; }
+  .foundry-story-deck-banner__inner::after { animation: none; display: none; }
+}
+
+/* ---- Player session HUD (small read-only window) ---- */
+.foundry-story-deck.session-status .session-status__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 0.15rem 0.1rem;
+}
+
+.foundry-story-deck.session-status .session-status__name {
+  font-weight: 700;
+  font-size: 1.05em;
+  line-height: 1.25;
+}
+
+.foundry-story-deck.session-status .session-status__phase {
+  font-size: 0.85em;
+  opacity: 0.85;
+}
+
+.foundry-story-deck.session-status .session-status__bar {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--fsd-chip-bg);
+  overflow: hidden;
+}
+
+.foundry-story-deck.session-status .session-status__bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--fsd-accent);
+  transition: width 0.35s ease;
+}
+
+.foundry-story-deck.session-status .session-status__state {
+  font-size: 0.8em;
+}

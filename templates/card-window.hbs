@@ -1,0 +1,81 @@
+{{!-- A single story card: all steps' questions, plus play controls (GM). --}}
+<div class="card-window__body">
+
+{{#if missing}}
+  <p class="story-deck__warn">{{localize "FSD.CardMissing"}}</p>
+{{else}}
+  <header class="story-deck__header">
+    <h2>{{cardTitle}}</h2>
+    <p class="story-deck__subtitle">
+      {{localize "FSD.Theme"}}: {{theme}} &middot; {{localize "FSD.Scope"}}: {{scope}}
+      {{#if isLog}} &middot; {{localize "FSD.Log.Played" date=playedAt}}{{/if}}
+    </p>
+    {{#if hasMeta}}
+      <div class="card-window__meta">
+        {{#each outputs as |o|}}
+          <span class="story-deck__tag story-deck__tag--output">{{o}}</span>
+        {{/each}}
+        {{#each tags as |t|}}
+          <span class="story-deck__tag story-deck__tag--tag">#{{t}}</span>
+        {{/each}}
+      </div>
+    {{/if}}
+  </header>
+
+  <section class="card-window__steps">
+    {{#each steps as |s|}}
+      <div class="card-window__step{{#if s.isCurrent}} current{{/if}}{{#if s.isFuture}} future{{/if}}">
+        {{#if s.cueByGm}}
+          <p class="card-window__spotlight card-window__spotlight--gm">
+            <i class="fa-solid fa-user-gear"></i> <strong>{{localize "FSD.Pass.GMChooses"}}</strong>{{#if s.cue}} {{s.cue}}{{/if}}
+          </p>
+        {{else}}
+          {{#if s.cue}}
+            <p class="card-window__spotlight">
+              <i class="fa-solid fa-hand-point-right"></i> {{s.cue}}
+            </p>
+          {{/if}}
+        {{/if}}
+        {{#if s.setup}}<p class="card-window__setup">{{s.setup}}</p>{{/if}}
+        <div class="card-window__qa">
+          <p class="card-window__q">{{s.question}}</p>
+          {{#if s.answered}}
+            <p class="card-window__a"><strong>{{s.who}}:</strong> {{s.value}}</p>
+          {{else}}
+            {{#if s.waiting}}
+              <p class="story-deck__waiting">{{localize "FSD.WaitingToAnswer" who=s.assignedNames}}</p>
+            {{/if}}
+          {{/if}}
+        </div>
+      </div>
+    {{/each}}
+  </section>
+
+  {{#if isGM}}
+    {{#unless isLog}}
+    <footer class="card-window__controls">
+      {{#if playingThis}}
+        <button type="button" data-fsd="reset" class="story-deck__ghost">
+          {{localize "FSD.Cancel"}}
+        </button>
+        {{#if canPromptNext}}
+          <button type="button" data-fsd="promptNext" class="story-deck__primary">
+            {{localize "FSD.PromptNext"}}
+          </button>
+        {{/if}}
+        {{#if canFinish}}
+          <button type="button" data-fsd="finish" class="story-deck__primary">
+            {{localize "FSD.Finish"}}
+          </button>
+        {{/if}}
+      {{else}}
+        <button type="button" data-fsd="play" class="story-deck__primary">
+          {{localize "FSD.PlayCard"}}
+        </button>
+      {{/if}}
+    </footer>
+    {{/unless}}
+  {{/if}}
+{{/if}}
+
+</div>

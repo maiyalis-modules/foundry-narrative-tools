@@ -1,0 +1,15 @@
+{{!-- Player-facing session HUD: name + progress, no controls. --}}
+{{#if active}}
+  <div class="session-status__body">
+    <div class="session-status__name">{{deckName}}</div>
+    <div class="session-status__phase">
+      {{localize "FSD.Status.PhaseOf" current=phaseNumber total=phaseTotal}}{{#if phaseName}} &middot; {{phaseName}}{{/if}}
+    </div>
+    <div class="session-status__bar">
+      <div class="session-status__bar-fill" style="width: {{percent}}%"></div>
+    </div>
+    <span class="session-status__state story-deck__muted">{{localize stateLabel}}</span>
+  </div>
+{{else}}
+  <p class="story-deck__muted session-status__idle">{{localize "FSD.Status.Idle"}}</p>
+{{/if}}

@@ -1,0 +1,445 @@
+{{!-- Story Deck window: tabbed browser (Home / Story Decks / Story Cards).
+      Interactive elements carry data-fsd="<action>". --}}
+<div class="story-deck__body">
+
+  <nav class="story-deck__tabs">
+    {{#each tabs as |t|}}
+      <button type="button" class="story-deck__tab {{#if t.active}}active{{/if}}"
+        data-fsd="tab" data-value="{{t.id}}">{{localize t.label}}</button>
+    {{/each}}
+  </nav>
+
+  {{#if isHome}}
+    <section class="story-deck__panel story-deck__home">
+
+      {{#unless hasRun}}
+        {{#if viewingRecipe}}
+          {{!-- A single deck's detail page: what it is before you commit to it. --}}
+          <div class="story-deck__deck-detail">
+            <div class="story-deck__detail-bar">
+              <button type="button" class="story-deck__ghost" data-fsd="closeRecipe">
+                <i class="fa-solid fa-arrow-left"></i> {{localize "FSD.Back"}}
+              </button>
+              {{#if isGM}}
+                <button type="button" class="story-deck__primary"
+                  data-fsd="startRun" data-value="{{viewingRecipe.id}}">
+                  {{localize "FSD.Run.Start"}}
+                </button>
+              {{/if}}
+            </div>
+
+            <h2 class="story-deck__detail-name">{{viewingRecipe.name}}</h2>
+            <span class="story-deck__detail-meta story-deck__muted">
+              {{localize "FSD.Run.CardTotal" count=viewingRecipe.cardCount}}{{#if viewingRecipe.players}} &middot; {{localize "FSD.Run.Players" range=viewingRecipe.players}}{{/if}}
+            </span>
+            {{#if viewingRecipe.tags.length}}
+              <div class="story-deck__recipe-tags">
+                {{#each viewingRecipe.tags as |t|}}
+                  <span class="story-deck__tag story-deck__tag--deck">{{t}}</span>
+                {{/each}}
+              </div>
+            {{/if}}
+            <p class="story-deck__detail-desc">{{viewingRecipe.description}}</p>
+
+            {{#if viewingRecipe.breakdown.length}}
+              <h3 class="story-deck__detail-heading">{{localize "FSD.Deck.Breakdown"}}</h3>
+              <ul class="story-deck__breakdown">
+                {{#each viewingRecipe.breakdown as |b|}}
+                  <li class="story-deck__breakdown-row" style="--fsd-cat-h: {{b.hue}}">
+                    <span class="story-deck__breakdown-dot"></span>
+                    <span class="story-deck__breakdown-theme">{{b.theme}}</span>
+                    <span class="story-deck__breakdown-count">{{b.count}}</span>
+                  </li>
+                {{/each}}
+              </ul>
+            {{/if}}
+
+            {{#if viewingRecipe.focus.length}}
+              <h3 class="story-deck__detail-heading">{{localize "FSD.Deck.Focus"}}</h3>
+              <ul class="story-deck__detail-focus">
+                {{#each viewingRecipe.focus as |f|}}<li>{{f}}</li>{{/each}}
+              </ul>
+            {{/if}}
+
+            {{#if viewingRecipe.notes.length}}
+              <ul class="story-deck__recipe-notes story-deck__muted">
+                {{#each viewingRecipe.notes as |n|}}<li>{{n}}</li>{{/each}}
+              </ul>
+            {{/if}}
+
+            <p class="story-deck__detail-bias story-deck__muted">{{localize "FSD.Deck.BiasNote"}}</p>
+          </div>
+        {{else}}
+          {{!-- No run in progress: browse the Story Decks. --}}
+          <div class="story-deck__filterbar">
+            {{#each deckTagFilters as |f|}}
+              <button type="button" class="story-deck__chip {{#if f.active}}active{{/if}}"
+                data-fsd="deckTagFilter" data-value="{{f.value}}">{{localize f.label}}</button>
+            {{/each}}
+          </div>
+          {{#if hasRecipes}}
+            <ul class="story-deck__recipes">
+              {{#each recipes as |r|}}
+                <li class="story-deck__recipe story-deck__recipe--clickable"
+                  data-fsd="viewRecipe" data-value="{{r.id}}">
+                  <div class="story-deck__recipe-head">
+                    <span class="story-deck__recipe-name">{{r.name}}</span>
+                    <span class="story-deck__recipe-meta story-deck__muted">
+                      {{localize "FSD.Run.CardTotal" count=r.cardCount}}{{#if r.players}} &middot; {{localize "FSD.Run.Players" range=r.players}}{{/if}}
+                    </span>
+                  </div>
+                  {{#if r.tags.length}}
+                    <div class="story-deck__recipe-tags">
+                      {{#each r.tags as |t|}}
+                        <span class="story-deck__tag story-deck__tag--deck">{{t}}</span>
+                      {{/each}}
+                    </div>
+                  {{/if}}
+                  <p class="story-deck__recipe-desc">{{r.description}}</p>
+                  <span class="story-deck__recipe-view story-deck__muted">
+                    {{localize "FSD.Deck.View"}} <i class="fa-solid fa-arrow-right"></i>
+                  </span>
+                </li>
+              {{/each}}
+            </ul>
+          {{else}}
+            <p class="story-deck__muted">{{localize "FSD.Deck.NoneMatch"}}</p>
+          {{/if}}
+        {{/if}}
+      {{/unless}}
+
+      {{#if hasRun}}
+        <div class="story-deck__run">
+          <div class="story-deck__run-bar">
+            <span class="story-deck__run-name">{{runName}}</span>
+            {{#if isGM}}
+              <button type="button" class="story-deck__ghost" data-fsd="endRun">
+                {{localize "FSD.Run.End"}}
+              </button>
+            {{/if}}
+          </div>
+
+          {{#if isPhaseIntro}}
+            {{!-- The chapter screen: nothing else until the GM begins. --}}
+            <div class="story-deck__chapter">
+              <span class="story-deck__chapter-step">
+                {{localize "FSD.Run.PhaseOf" current=phaseNumber total=phaseTotal}}
+              </span>
+              <h2 class="story-deck__chapter-title">{{phaseName}}</h2>
+              <p class="story-deck__chapter-desc">{{phaseDescription}}</p>
+              <span class="story-deck__chapter-count">
+                {{localize "FSD.Run.CardCount" count=phaseCardCount}}
+              </span>
+              {{#if phaseIsShort}}
+                <p class="story-deck__warn">{{localize "FSD.Run.ShortPhase"}}</p>
+              {{/if}}
+              {{#if isGM}}
+                <button type="button" class="story-deck__primary" data-fsd="beginPhase">
+                  {{localize "FSD.Run.BeginPhase"}}
+                </button>
+              {{else}}
+                <p class="story-deck__muted">{{localize "FSD.Run.WaitingForGM"}}</p>
+              {{/if}}
+            </div>
+          {{/if}}
+
+          {{#if isPlaying}}
+            <div class="story-deck__chapter-head">
+              <span class="story-deck__chapter-step">
+                {{localize "FSD.Run.PhaseOf" current=phaseNumber total=phaseTotal}}
+              </span>
+              <h2 class="story-deck__chapter-title">{{phaseName}}</h2>
+            </div>
+            <ul class="story-deck__run-cards">
+              {{#each runCards as |c|}}
+                <li class="story-deck__run-card{{#if c.played}} played{{/if}}"
+                  style="--fsd-cat-h: {{c.themeHue}}">
+                  <span class="story-deck__run-card-title">{{c.title}}</span>
+                  <span class="story-deck__card-category">{{c.theme}}</span>
+                  {{#if c.played}}
+                    <span class="story-deck__run-card-done">
+                      <i class="fa-solid fa-check"></i> {{localize "FSD.Run.Done"}}
+                    </span>
+                  {{else}}
+                    {{#if ../isGM}}
+                      <span class="story-deck__run-card-actions">
+                        <button type="button" class="story-deck__primary"
+                          data-fsd="viewRunCard" data-card-id="{{c.id}}">
+                          {{localize "FSD.Run.View"}}
+                        </button>
+                        <button type="button" class="story-deck__ghost"
+                          data-fsd="replaceRunCard" data-card-id="{{c.id}}"
+                          title="{{localize "FSD.Run.Replace"}}">
+                          <i class="fa-solid fa-rotate"></i>
+                        </button>
+                        <button type="button" class="story-deck__ghost"
+                          data-fsd="chooseRunCard" data-card-id="{{c.id}}"
+                          title="{{localize "FSD.Run.Choose"}}">
+                          <i class="fa-solid fa-magnifying-glass"></i>
+                        </button>
+                        <button type="button" class="story-deck__ghost"
+                          data-fsd="skipRunCard" data-card-id="{{c.id}}"
+                          title="{{localize "FSD.Run.Skip"}}">
+                          <i class="fa-solid fa-forward"></i>
+                        </button>
+                      </span>
+                    {{/if}}
+                  {{/if}}
+                </li>
+              {{/each}}
+            </ul>
+            {{#if isGM}}
+              <div class="story-deck__run-actions">
+                <button type="button" class="story-deck__ghost" data-fsd="drawAnother">
+                  <i class="fa-solid fa-shuffle"></i> {{localize "FSD.Run.DrawAnother"}}
+                </button>
+                <button type="button" class="story-deck__ghost" data-fsd="chooseRunCard">
+                  <i class="fa-solid fa-magnifying-glass"></i> {{localize "FSD.Run.ChooseAddButton"}}
+                </button>
+              </div>
+            {{/if}}
+          {{/if}}
+
+          {{#if isPhaseRecap}}
+            {{!-- Between chapters: let the group absorb what they just built. --}}
+            <div class="story-deck__recap">
+              <h2 class="story-deck__chapter-title">{{localize "FSD.Run.YouCreated"}}</h2>
+              {{#if hasPhaseCards}}
+                <div class="story-deck__transcript">
+                  {{#each phaseCards as |c|}}
+                    <section class="story-deck__seed-card" style="--fsd-cat-h: {{c.themeHue}}">
+                      <div class="story-deck__seed-card-head">
+                        <span class="story-deck__seed-card-title">{{c.title}}</span>
+                        {{#each c.outputs as |o|}}
+                          <span class="story-deck__tag story-deck__tag--output">{{o}}</span>
+                        {{/each}}
+                      </div>
+                      {{#each c.answers as |a|}}
+                        <div class="story-deck__qa-block">
+                          <p class="story-deck__qa-q">{{a.question}}</p>
+                          <p class="story-deck__qa-a">{{a.answer}}
+                            <span class="story-deck__qa-who story-deck__muted">— {{a.who}}</span>
+                          </p>
+                        </div>
+                      {{/each}}
+                    </section>
+                  {{/each}}
+                </div>
+                <p class="story-deck__muted">{{localize "FSD.Run.WillBecomePartOf"}}</p>
+              {{else}}
+                <p class="story-deck__muted">{{localize "FSD.Run.NothingCreated"}}</p>
+              {{/if}}
+              {{#if isGM}}
+                <button type="button" class="story-deck__primary" data-fsd="nextPhase">
+                  {{#if isLastPhase}}
+                    {{localize "FSD.Run.FinishDeck"}}
+                  {{else}}
+                    {{localize "FSD.Run.NextPhase"}}
+                  {{/if}}
+                </button>
+              {{/if}}
+            </div>
+          {{/if}}
+        </div>
+      {{/if}}
+
+    </section>
+  {{/if}}
+
+  {{#if isDecks}}
+    <section class="story-deck__panel story-deck__decks">
+      <div class="story-deck__filterbar">
+        {{#each deckFilters as |f|}}
+          <button type="button" class="story-deck__chip {{#if f.active}}active{{/if}}"
+            data-fsd="deckFilter" data-value="{{f.value}}">{{localize f.label}}</button>
+        {{/each}}
+      </div>
+      {{#if viewingRun}}
+        {{!-- A single run opened as its campaign seed. --}}
+        <div class="story-deck__seed">
+          <div class="story-deck__seed-head">
+            <button type="button" class="story-deck__ghost" data-fsd="closeRun">
+              <i class="fa-solid fa-arrow-left"></i> {{localize "FSD.Back"}}
+            </button>
+            <h2>{{localize "FSD.Seed.Title" name=viewingRun.name}}</h2>
+          </div>
+          {{#each seedPhases as |p|}}
+            <section class="story-deck__seed-group">
+              <h3 class="story-deck__seed-heading">{{p.name}}</h3>
+              {{#each p.cards as |c|}}
+                <section class="story-deck__seed-card" style="--fsd-cat-h: {{c.themeHue}}">
+                  <div class="story-deck__seed-card-head">
+                    <span class="story-deck__seed-card-title">{{c.title}}</span>
+                    {{#each c.outputs as |o|}}
+                      <span class="story-deck__tag story-deck__tag--output">{{o}}</span>
+                    {{/each}}
+                  </div>
+                  {{#each c.answers as |a|}}
+                    <div class="story-deck__qa-block">
+                      <p class="story-deck__qa-q">{{a.question}}</p>
+                      <p class="story-deck__qa-a">{{a.answer}}
+                        <span class="story-deck__qa-who story-deck__muted">— {{a.who}}</span>
+                      </p>
+                    </div>
+                  {{/each}}
+                </section>
+              {{/each}}
+            </section>
+          {{else}}
+            <p class="story-deck__muted">{{localize "FSD.Seed.Empty"}}</p>
+          {{/each}}
+        </div>
+      {{else}}
+        {{#if hasRuns}}
+          <ul class="story-deck__run-list">
+            {{#each runs as |r|}}
+              <li class="story-deck__run-entry" data-fsd="viewRun" data-run-id="{{r.id}}">
+                <div class="story-deck__run-main">
+                  <span class="story-deck__run-title">
+                    {{r.name}}
+                    {{#if r.inProgress}}
+                      <span class="story-deck__badge">{{localize "FSD.Filter.InProgress"}}</span>
+                    {{/if}}
+                    {{#if r.endedEarly}}
+                      <span class="story-deck__badge">{{localize "FSD.Run.EndedEarly"}}</span>
+                    {{/if}}
+                  </span>
+                  <span class="story-deck__run-meta story-deck__muted">
+                    {{localize "FSD.Run.Summary" cards=r.cardCount}} &middot; {{r.date}}
+                  </span>
+                </div>
+                {{#if ../isGM}}
+                  {{#unless r.inProgress}}
+                    <button type="button" class="story-deck__log-delete" data-fsd="deleteRun"
+                      data-run-id="{{r.id}}" title="{{localize "FSD.Run.Delete"}}">
+                      <i class="fa-solid fa-trash"></i>
+                    </button>
+                  {{/unless}}
+                {{/if}}
+              </li>
+            {{/each}}
+          </ul>
+        {{else}}
+          <p class="story-deck__muted">{{localize "FSD.Decks.Empty"}}</p>
+        {{/if}}
+      {{/if}}
+    </section>
+  {{/if}}
+
+  {{#if isCards}}
+    <section class="story-deck__panel story-deck__cards-tab">
+      <div class="story-deck__cards-toolbar">
+        <div class="story-deck__toolbar-left">
+        <div class="story-deck__filter-wrap">
+          <button type="button"
+            class="story-deck__filter-toggle {{#if filtersOpen}}active{{/if}}"
+            data-fsd="toggleFilters">
+            <i class="fa-solid fa-filter"></i> {{localize "FSD.Filters"}}{{#if activeFilterCount}} ({{activeFilterCount}}){{/if}}
+          </button>
+
+          {{#if filtersOpen}}
+            <div class="story-deck__filter-popup">
+              <div class="story-deck__filter-group">
+                <span class="story-deck__filter-label">{{localize "FSD.Filter.Theme"}}</span>
+                {{#each themeFilters as |f|}}
+                  <button type="button"
+                    class="story-deck__chip {{#if f.hue}}story-deck__chip--cat{{/if}} {{#if f.active}}active{{/if}}"
+                    {{#if f.hue}}style="--fsd-cat-h: {{f.hue}}"{{/if}}
+                    data-fsd="cardTheme" data-value="{{f.value}}">{{localize f.label}}</button>
+                {{/each}}
+              </div>
+              {{#if hasScopes}}
+                <div class="story-deck__filter-group">
+                  <span class="story-deck__filter-label">{{localize "FSD.Filter.Scope"}}</span>
+                  {{#each scopeFilters as |f|}}
+                    <button type="button" class="story-deck__chip {{#if f.active}}active{{/if}}"
+                      data-fsd="cardScope" data-value="{{f.value}}">{{localize f.label}}</button>
+                  {{/each}}
+                </div>
+              {{/if}}
+              {{#if hasOutputs}}
+                <div class="story-deck__filter-group">
+                  <span class="story-deck__filter-label">{{localize "FSD.Filter.Outputs"}}</span>
+                  {{#each outputFilters as |f|}}
+                    <button type="button" class="story-deck__chip {{#if f.active}}active{{/if}}"
+                      data-fsd="cardOutput" data-value="{{f.value}}">{{localize f.label}}</button>
+                  {{/each}}
+                </div>
+              {{/if}}
+              {{#if hasTags}}
+                <div class="story-deck__filter-group">
+                  <span class="story-deck__filter-label">{{localize "FSD.Filter.Tags"}}</span>
+                  {{#each tagFilters as |f|}}
+                    <button type="button" class="story-deck__chip {{#if f.active}}active{{/if}}"
+                      data-fsd="cardTag" data-value="{{f.value}}">{{localize f.label}}</button>
+                  {{/each}}
+                </div>
+              {{/if}}
+            </div>
+          {{/if}}
+        </div>
+        <button type="button" class="story-deck__reset" data-fsd="clearFilters"
+          {{#unless activeFilterCount}}disabled{{/unless}}>{{localize "FSD.Reset"}}</button>
+        </div>
+
+        <span class="story-deck__count story-deck__muted">{{localize "FSD.Cards.Count" count=cardCount}}</span>
+      </div>
+
+      <ul class="story-deck__cards">
+        {{#each cards as |card|}}
+          <li class="story-deck__card story-deck__card--clickable" data-fsd="openCard"
+            data-card-id="{{card.id}}" style="--fsd-cat-h: {{card.themeHue}}">
+            <span class="story-deck__card-category">{{card.theme}}</span>
+            <div class="story-deck__card-title">{{card.title}}</div>
+            <span class="story-deck__card-scope story-deck__muted">{{card.scope}}</span>
+            {{#if card.firstQuestion}}
+              <p class="story-deck__card-question">{{card.firstQuestion}}</p>
+            {{/if}}
+            {{#if card.outputs.length}}
+              <div class="story-deck__card-outputs">
+                {{#each card.outputs as |output|}}
+                  <span class="story-deck__tag story-deck__tag--output">{{output}}</span>
+                {{/each}}
+              </div>
+            {{/if}}
+          </li>
+        {{else}}
+          <li class="story-deck__cards-empty story-deck__muted">{{localize "FSD.Cards.Empty"}}</li>
+        {{/each}}
+      </ul>
+    </section>
+  {{/if}}
+
+  {{#if isLog}}
+    <section class="story-deck__panel story-deck__log">
+      {{#if hasLog}}
+        {{#if isGM}}
+          <div class="story-deck__log-toolbar">
+            <button type="button" class="story-deck__ghost" data-fsd="clearLog">
+              <i class="fa-solid fa-trash"></i> {{localize "FSD.Log.Clear"}}
+            </button>
+          </div>
+        {{/if}}
+        <ul class="story-deck__log-list">
+          {{#each logEntries as |e|}}
+            <li class="story-deck__log-entry" data-fsd="openLog" data-log-id="{{e.id}}">
+              <div class="story-deck__log-main">
+                <span class="story-deck__log-title">{{e.title}}</span>
+                <span class="story-deck__log-meta">{{e.theme}} &middot; {{e.playedAt}}</span>
+              </div>
+              {{#if ../isGM}}
+                <button type="button" class="story-deck__log-delete" data-fsd="deleteLog"
+                  data-log-id="{{e.id}}" title="{{localize "FSD.Log.Delete"}}">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              {{/if}}
+            </li>
+          {{/each}}
+        </ul>
+      {{else}}
+        <p class="story-deck__muted">{{localize "FSD.Log.Empty"}}</p>
+      {{/if}}
+    </section>
+  {{/if}}
+
+</div>
