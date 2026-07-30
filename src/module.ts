@@ -72,8 +72,9 @@ Hooks.once("ready", async () => {
   sessionStatus.setDeckRunService(deckRunService);
   registerSocket({
     onPromptCard: (prompt) => showCardPrompt(prompt),
-    onCardResponse: (userId, cardId, stepIndex, value) => {
-      if (playService) void recordCardResponse(playService, engine, userId, cardId, stepIndex, value);
+    onCardResponse: (userId, cardId, stepIndex, value, nextPlayerId) => {
+      if (playService)
+        void recordCardResponse(playService, engine, userId, cardId, stepIndex, value, nextPlayerId);
     },
     onSessionStart: (deckName) => showSessionBanner(deckName),
   });

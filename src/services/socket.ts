@@ -22,6 +22,10 @@ export interface PromptPayload {
   /** Criterion shown to this player for choosing the next speaker — empty when the
    *  next speaker is the GM's call (or the card ends here). */
   handoff: string;
+  /** When the next speaker is this player's to choose (`chosen_by_previous`), the
+   *  online players they may pass to — themselves excluded. Empty otherwise; also
+   *  empty when they're the only player online, in which case the GM continues. */
+  handoffCandidates: { id: string; name: string }[];
 }
 
 type SocketMessage =
@@ -32,6 +36,9 @@ type SocketMessage =
       cardId: string;
       stepIndex: number;
       value: string;
+      /** The player this speaker chose to answer next, when the hand-off was
+       *  theirs to make. The GM prompts them automatically. */
+      nextPlayerId: string | null;
     }
   | { type: "sessionStart"; deckName: string };
 
@@ -44,6 +51,7 @@ export interface SocketHandlers {
     cardId: string,
     stepIndex: number,
     value: string,
+    nextPlayerId: string | null,
   ) => void;
   /** Runs on every other client: a Story Session has begun. */
   onSessionStart: (deckName: string) => void;
@@ -61,7 +69,13 @@ export function registerSocket(deps: SocketHandlers): void {
         return;
       case "cardResponse":
         if (game.user?.isGM) {
-          handlers.onCardResponse(message.userId, message.cardId, message.stepIndex, message.value);
+          handlers.onCardResponse(
+            message.userId,
+            message.cardId,
+            message.stepIndex,
+            message.value,
+            message.nextPlayerId ?? null,
+          );
         }
         return;
       case "sessionStart":
@@ -81,13 +95,20 @@ export function emitPromptCard(targetUserId: string, prompt: PromptPayload): voi
   game.socket?.emit(SOCKET_EVENT, { type: "promptCard", targetUserId, prompt });
 }
 
-/** Player → GM: the player's answer to a played step. */
-export function emitCardResponse(cardId: string, stepIndex: number, value: string): void {
+/** Player → GM: the player's answer to a played step, and — when the hand-off was
+ *  theirs — the player they chose to answer next. */
+export function emitCardResponse(
+  cardId: string,
+  stepIndex: number,
+  value: string,
+  nextPlayerId: string | null = null,
+): void {
   game.socket?.emit(SOCKET_EVENT, {
     type: "cardResponse",
     userId: game.user?.id,
     cardId,
     stepIndex,
     value,
+    nextPlayerId,
   });
 }

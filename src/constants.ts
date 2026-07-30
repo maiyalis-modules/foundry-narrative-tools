@@ -1,7 +1,7 @@
 /** Shared, immutable identifiers for the module. */
 
 export const MODULE_ID = "foundry-story-deck" as const;
-export const MODULE_TITLE = "Campaign Story Decks" as const;
+export const MODULE_TITLE = "Eryndor: Story Decks" as const;
 
 /** Prefix used for all console logging so output is easy to filter. */
 export const LOG_PREFIX = `${MODULE_TITLE} |` as const;
@@ -11,6 +11,10 @@ export const SOCKET_EVENT = `module.${MODULE_ID}` as const;
 
 /** Journal folder that completed Story Deck runs are written into. */
 export const JOURNAL_FOLDER = "Story Decks" as const;
+
+/** Players a card or deck needs online when it doesn't declare `requiredPlayers`.
+ *  A card is a hand-off between players, so two is the working floor. */
+export const DEFAULT_REQUIRED_PLAYERS = 2 as const;
 
 /** Setting keys, kept in one place to avoid typos across the codebase. */
 export const SETTINGS = {

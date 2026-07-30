@@ -58,6 +58,11 @@ export interface StoryDeckRecipe {
   description: string;
   /** `premade` ships with the module; `custom` was built by a GM. */
   type: "premade" | "custom";
+  /** How many players must be online before this deck can be started — a hard gate,
+   *  distinct from the advisory `minPlayers`/`maxPlayers` ideal-table range. Party
+   *  decks default to 2; a solo/downtime deck may set 1. Defaults to 2 when omitted. */
+  requiredPlayers?: number;
+  /** Advisory ideal-table range shown as "3–6 players"; not a gate. */
   minPlayers?: number;
   maxPlayers?: number;
   expectedCards?: number;

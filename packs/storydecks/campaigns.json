@@ -10,6 +10,7 @@
                                    "New Campaign"
                                ],
                       "minPlayers":  3,
+                      "requiredPlayers":  3,
                       "maxPlayers":  6,
                       "expectedCards":  12,
                       "allowManualSubstitution":  true,
@@ -145,6 +146,7 @@
                                    "New Character"
                                ],
                       "minPlayers":  2,
+                      "requiredPlayers":  2,
                       "maxPlayers":  6,
                       "expectedCards":  6,
                       "allowManualSubstitution":  true,
@@ -224,6 +226,7 @@
                                    "New Campaign"
                                ],
                       "minPlayers":  3,
+                      "requiredPlayers":  3,
                       "maxPlayers":  6,
                       "expectedCards":  10,
                       "allowManualSubstitution":  true,
@@ -331,6 +334,7 @@
                                    "New Campaign"
                                ],
                       "minPlayers":  3,
+                      "requiredPlayers":  3,
                       "maxPlayers":  6,
                       "expectedCards":  10,
                       "allowManualSubstitution":  true,
@@ -438,6 +442,7 @@
                                    "New Campaign"
                                ],
                       "minPlayers":  3,
+                      "requiredPlayers":  3,
                       "maxPlayers":  6,
                       "expectedCards":  12,
                       "allowManualSubstitution":  true,
@@ -559,6 +564,7 @@
                                    "New Campaign"
                                ],
                       "minPlayers":  3,
+                      "requiredPlayers":  3,
                       "maxPlayers":  6,
                       "expectedCards":  12,
                       "allowManualSubstitution":  true,
@@ -681,6 +687,7 @@
                                    "Plot Twist"
                                ],
                       "minPlayers":  3,
+                      "requiredPlayers":  3,
                       "maxPlayers":  6,
                       "expectedCards":  10,
                       "allowManualSubstitution":  true,
@@ -787,6 +794,7 @@
                                    "Party Downtime"
                                ],
                       "minPlayers":  3,
+                      "requiredPlayers":  3,
                       "maxPlayers":  6,
                       "expectedCards":  8,
                       "allowManualSubstitution":  true,

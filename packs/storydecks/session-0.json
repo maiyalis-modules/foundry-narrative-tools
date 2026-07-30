@@ -7,6 +7,7 @@
       "name": "Session 0",
       "description": "Build the party's shared history, hometown, relationships, and reason for beginning the campaign together.",
       "type": "premade",
+      "requiredPlayers": 3,
       "minPlayers": 3,
       "maxPlayers": 6,
       "expectedCards": 12,

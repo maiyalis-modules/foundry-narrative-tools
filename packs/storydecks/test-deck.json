@@ -6,6 +6,7 @@
       "name": "Test Deck (3 cards)",
       "description": "A short deck for exercising the runtime end to end without working through a full campaign. Three phases, one relationships card each, so a whole run is three cards — long enough to see the chapter intros, the phase recaps, and the campaign-seed transcript, short enough to run in a few minutes.",
       "type": "premade",
+      "requiredPlayers": 2,
       "minPlayers": 2,
       "maxPlayers": 6,
       "expectedCards": 3,

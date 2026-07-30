@@ -59,6 +59,10 @@ export interface StoryCard {
   theme: string;
   /** How broadly the subject affects the world (personal → global). One per card. */
   scope: string;
+  /** How many players must be online for this card to be played. A card is a
+   *  guided hand-off between players, so the floor is 2; solo (personal) cards may
+   *  set 1, and ensemble cards 3+. Defaults to 2 when omitted. */
+  requiredPlayers?: number;
   /** The campaign elements this card creates — descriptive metadata for selection
    *  and guidance, not a per-answer mapping. Turning answers into Foundry
    *  documents is always a deliberate GM action. */

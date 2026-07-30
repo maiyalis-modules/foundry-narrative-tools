@@ -1,9 +1,9 @@
-import { MODULE_ID, MODULE_TITLE, TEMPLATES } from "../constants.js";
+import { DEFAULT_REQUIRED_PLAYERS, MODULE_ID, MODULE_TITLE, TEMPLATES } from "../constants.js";
 import type { DeckEngine } from "../engine/deck-engine.js";
 import type { DeckRun, RunCardRecord } from "../models/session.js";
-import type { DeckPhase } from "../models/story-deck-recipe.js";
+import type { DeckPhase, StoryDeckRecipe } from "../models/story-deck-recipe.js";
 import type { DeckRunService } from "../services/deck-run-service.js";
-import { userName } from "../services/foundry-users.js";
+import { onlinePlayerCount, userName } from "../services/foundry-users.js";
 import type { PlayService } from "../services/play-service.js";
 import { buildTokenContext } from "../services/token-context.js";
 import { SessionStore } from "../stores/session-store.js";
@@ -214,10 +214,16 @@ export class StoryDeckApp extends HandlebarsApplicationMixin(ApplicationV2) {
         return;
       case "startRun":
         if (value && game.user?.isGM) {
+          const recipe = this.deckRunService?.getRecipe(value);
+          if (!recipe) return;
+          const required = recipe.requiredPlayers ?? DEFAULT_REQUIRED_PLAYERS;
+          if (onlinePlayerCount() < required) {
+            ui.notifications?.warn(game.i18n.format("FSD.NotEnoughPlayers", { count: required }));
+            return;
+          }
           this.viewingRecipeId = null;
-          const deckName = this.deckRunService?.getRecipe(value)?.name ?? "";
           void this.deckRunService?.startRun(value);
-          announceSessionStart(deckName);
+          announceSessionStart(recipe.name);
         }
         return;
       case "beginPhase":
@@ -422,6 +428,7 @@ export class StoryDeckApp extends HandlebarsApplicationMixin(ApplicationV2) {
    */
   private homeContext(): AnyObject {
     const run = SessionStore.load().run;
+    const online = onlinePlayerCount();
 
     if (!run) {
       const recipes = this.deckRunService?.availableRecipes ?? [];
@@ -432,6 +439,7 @@ export class StoryDeckApp extends HandlebarsApplicationMixin(ApplicationV2) {
           ? recipes.find((r) => r.id === this.viewingRecipeId)
           : undefined;
       if (viewing) {
+        const required = viewing.requiredPlayers ?? DEFAULT_REQUIRED_PLAYERS;
         return {
           hasRun: false,
           viewingRecipe: {
@@ -444,6 +452,8 @@ export class StoryDeckApp extends HandlebarsApplicationMixin(ApplicationV2) {
               viewing.minPlayers && viewing.maxPlayers
                 ? `${viewing.minPlayers}–${viewing.maxPlayers}`
                 : null,
+            requiredPlayers: required,
+            enoughPlayers: online >= required,
             breakdown: themeBreakdown(viewing.phases),
             focus: viewing.focus ?? [],
             notes: viewing.facilitatorNotes ?? [],
@@ -462,16 +472,21 @@ export class StoryDeckApp extends HandlebarsApplicationMixin(ApplicationV2) {
           { value: "all", label: "FSD.Filter.All", active: this.deckTag === null },
           ...DECK_TAGS.map((t) => ({ value: t, label: t, active: this.deckTag === t })),
         ],
-        recipes: shown.map((r) => ({
-          id: r.id,
-          name: r.name,
-          description: r.description,
-          tags: r.tags ?? [],
-          phaseCount: r.phases.length,
-          cardCount: r.expectedCards ?? r.phases.reduce((n, p) => n + p.count, 0),
-          players:
-            r.minPlayers && r.maxPlayers ? `${r.minPlayers}–${r.maxPlayers}` : null,
-        })),
+        recipes: shown.map((r: StoryDeckRecipe) => {
+          const required = r.requiredPlayers ?? DEFAULT_REQUIRED_PLAYERS;
+          return {
+            id: r.id,
+            name: r.name,
+            description: r.description,
+            tags: r.tags ?? [],
+            phaseCount: r.phases.length,
+            cardCount: r.expectedCards ?? r.phases.reduce((n, p) => n + p.count, 0),
+            players:
+              r.minPlayers && r.maxPlayers ? `${r.minPlayers}–${r.maxPlayers}` : null,
+            requiredPlayers: required,
+            enoughPlayers: online >= required,
+          };
+        }),
         hasRecipes: shown.length > 0,
       };
     }

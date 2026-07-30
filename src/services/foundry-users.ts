@@ -32,6 +32,12 @@ export function getRoster(): { players: string[]; gmIds: string[] } {
   return { players, gmIds };
 }
 
+/** How many non-GM players are currently connected. Used to gate cards/decks
+ *  whose `requiredPlayers` can't be met with too few players online. */
+export function onlinePlayerCount(): number {
+  return getUsers().filter((u) => u.active && !u.isGM).length;
+}
+
 export function userName(id: string): string {
   return getUsers().find((u) => u.id === id)?.name ?? id;
 }

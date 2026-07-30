@@ -1,6 +1,6 @@
 {
   "id": "foundry-story-deck",
-  "title": "Campaign Story Decks",
+  "title": "Eryndor: Story Decks",
   "description": "A JSON-driven collaborative Session 0 story-card engine. Guides players through collaboratively creating their hometown, relationships, NPCs, traditions, and shared history — producing a campaign seed the GM can build adventures around. System-agnostic, starting with Daggerheart.",
   "version": "0.1.0",
   "authors": [

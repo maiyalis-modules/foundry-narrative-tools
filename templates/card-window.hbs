@@ -69,9 +69,18 @@
           </button>
         {{/if}}
       {{else}}
-        <button type="button" data-fsd="play" class="story-deck__primary">
-          {{localize "FSD.PlayCard"}}
-        </button>
+        {{#if enoughPlayers}}
+          <button type="button" data-fsd="play" class="story-deck__primary">
+            {{localize "FSD.PlayCard"}}
+          </button>
+        {{else}}
+          <button type="button" class="story-deck__primary" disabled>
+            {{localize "FSD.PlayCard"}}
+          </button>
+          <span class="story-deck__gate story-deck__muted">
+            <i class="fa-solid fa-user-group"></i> {{localize "FSD.NeedsPlayers" count=requiredPlayers}}
+          </span>
+        {{/if}}
       {{/if}}
     </footer>
     {{/unless}}

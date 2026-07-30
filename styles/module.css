@@ -1044,6 +1044,20 @@
   line-height: 1.5;
 }
 
+/* "Needs N players" gate — shown wherever a card/deck can't start yet. */
+.foundry-story-deck .story-deck__gate {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  white-space: nowrap;
+}
+
+.foundry-story-deck .story-deck__start-gate {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
 /* The pass instruction: who this speaker hands the spotlight to next. */
 .foundry-story-deck .card-prompt__spotlight {
   display: flex;
@@ -1065,6 +1079,27 @@
 
 .foundry-story-deck .card-prompt__field label {
   font-weight: 600;
+}
+
+/* The hand-off field: pass the spotlight straight to the next player. */
+.foundry-story-deck .card-prompt__handoff {
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  background: rgba(255, 152, 0, 0.12);
+}
+
+.foundry-story-deck .card-prompt__handoff label {
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  font-weight: 500;
+  font-size: 0.92em;
+  line-height: 1.4;
+}
+
+.foundry-story-deck .card-prompt__handoff select {
+  margin-top: 0.4rem;
+  width: 100%;
 }
 
 .foundry-story-deck .card-prompt__actions {

@@ -33,6 +33,25 @@ interface PortraitsApi {
  */
 const raisedByUs = new Set<string>();
 
+/**
+ * Pending "lower this portrait" timers, keyed by actor id. A portrait is lowered
+ * a short while *after its player submits* (not when the next player is prompted),
+ * so the speaker's portrait lingers through the beat where they finish answering.
+ * A re-spotlight cancels its timer; card-end cancels them all.
+ */
+const pendingLower = new Map<string, number>();
+
+/** How long a portrait stays up after its player submits, in milliseconds. */
+const LINGER_MS = 1500;
+
+function cancelPendingLower(actorId: string): void {
+  const timer = pendingLower.get(actorId);
+  if (timer !== undefined) {
+    window.clearTimeout(timer);
+    pendingLower.delete(actorId);
+  }
+}
+
 /** The portraits API, or `null` when the module isn't available to us. */
 function api(): PortraitsApi | null {
   if (!game.user?.isGM) return null;
@@ -67,9 +86,11 @@ async function setShown(portraits: PortraitsApi, actorId: string, shown: boolean
 }
 
 /**
- * Put the spotlight on these users: raise their portraits and, unless the GM has
- * asked for portraits to accumulate, lower the ones we raised for whoever spoke
- * before them.
+ * Put the spotlight on these users by raising their portraits.
+ *
+ * Lowering is *not* done here — a previously spotlighted portrait comes down a
+ * short while after that player submits (see `releasePortraitAfterAnswer`), so
+ * it doesn't vanish the instant the GM prompts the next player.
  */
 export async function spotlightPortraits(userIds: string[]): Promise<void> {
   const portraits = api();
@@ -80,16 +101,9 @@ export async function spotlightPortraits(userIds: string[]): Promise<void> {
   );
 
   try {
-    const solo = game.settings.get(MODULE_ID, SETTINGS.portraitSpotlightSolo) !== false;
-    if (solo) {
-      for (const actorId of [...raisedByUs]) {
-        if (wanted.has(actorId)) continue;
-        await setShown(portraits, actorId, false);
-        raisedByUs.delete(actorId);
-      }
-    }
-
     for (const actorId of wanted) {
+      // If this actor was about to be lowered, keep them up — they're on again.
+      cancelPendingLower(actorId);
       await setShown(portraits, actorId, true);
       raisedByUs.add(actorId);
     }
@@ -99,8 +113,41 @@ export async function spotlightPortraits(userIds: string[]): Promise<void> {
   }
 }
 
+/**
+ * The spotlighted player has submitted their answer — schedule their portrait to
+ * lower after a short linger. GM-side only. In "accumulate" mode (solo off) the
+ * portraits are left up until the card ends, so this does nothing.
+ */
+export function releasePortraitAfterAnswer(userId: string): void {
+  if (!api() || !enabled()) return;
+  const solo = game.settings.get(MODULE_ID, SETTINGS.portraitSpotlightSolo) !== false;
+  if (!solo) return;
+
+  const actorId = actorForUser(userId)?.id;
+  if (!actorId || !raisedByUs.has(actorId)) return;
+
+  cancelPendingLower(actorId);
+  const timer = window.setTimeout(() => {
+    pendingLower.delete(actorId);
+    void (async () => {
+      const portraits = api();
+      if (!portraits || !raisedByUs.has(actorId)) return;
+      try {
+        await setShown(portraits, actorId, false);
+        raisedByUs.delete(actorId);
+      } catch (error) {
+        console.warn(`${LOG_PREFIX} Could not lower portrait after answer.`, error);
+      }
+    })();
+  }, LINGER_MS);
+  pendingLower.set(actorId, timer);
+}
+
 /** Lower every portrait this module raised — end of a card, or end of a run. */
 export async function clearPortraits(): Promise<void> {
+  for (const timer of pendingLower.values()) window.clearTimeout(timer);
+  pendingLower.clear();
+
   const portraits = api();
   if (!portraits) {
     raisedByUs.clear();

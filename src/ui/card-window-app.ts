@@ -1,9 +1,9 @@
-import { MODULE_ID, TEMPLATES } from "../constants.js";
+import { DEFAULT_REQUIRED_PLAYERS, MODULE_ID, TEMPLATES } from "../constants.js";
 import type { DeckEngine } from "../engine/deck-engine.js";
 import type { StoryCard } from "../models/story-card.js";
 import type { CardResult } from "../models/session.js";
 import { promptNextStep, startCardPlay } from "../services/card-prompt.js";
-import { userName, userNames } from "../services/foundry-users.js";
+import { onlinePlayerCount, userName, userNames } from "../services/foundry-users.js";
 import type { DeckRunService } from "../services/deck-run-service.js";
 import type { PlayService } from "../services/play-service.js";
 import { clearPortraits } from "../services/portrait-bridge.js";
@@ -173,6 +173,10 @@ export class CardWindowApp extends HandlebarsApplicationMixin(ApplicationV2) {
     const currentAnswered = current !== undefined && current.answered;
     const hasNext = currentStep + 1 < card.steps.length;
 
+    // Gate play on enough players being online to hand the spotlight around.
+    const requiredPlayers = card.requiredPlayers ?? DEFAULT_REQUIRED_PLAYERS;
+    const enoughPlayers = onlinePlayerCount() >= requiredPlayers;
+
     return {
       isGM,
       missing: false,
@@ -186,6 +190,8 @@ export class CardWindowApp extends HandlebarsApplicationMixin(ApplicationV2) {
       hasMeta: (card.outputs?.length ?? 0) > 0 || (card.tags?.length ?? 0) > 0,
       playingThis,
       steps,
+      requiredPlayers,
+      enoughPlayers,
       canPromptNext: playingThis && currentAnswered && hasNext,
       canFinish: playingThis && currentAnswered && !hasNext,
     };

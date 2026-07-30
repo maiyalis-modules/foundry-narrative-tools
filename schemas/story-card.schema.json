@@ -18,6 +18,11 @@
       "description": "How far the subject reaches. personal = one character or keepsake; community = a single town or village; regional = a province or nation; epic = a grand, world-shaping scale.",
       "enum": ["personal", "community", "regional", "epic"]
     },
+    "requiredPlayers": {
+      "description": "How many players must be online for this card to be played. A card is a guided hand-off between players, so the floor is 2; solo (personal) cards may set 1, and ensemble cards 3 or more. Defaults to 2 when omitted.",
+      "type": "integer",
+      "minimum": 1
+    },
     "outputs": {
       "description": "The kinds of campaign element this card is about — descriptive metadata for selection and guidance, not a per-answer mapping. Free-form and evolving; reuse existing values where possible (person, place, object, institution, event, legend, tradition, memory, reputation, organization, location, phenomenon, mystery, opportunity, rumor, …). Prefer the canonical form when synonyms exist (person over npc, place over location, institution over organization).",
       "type": "array",

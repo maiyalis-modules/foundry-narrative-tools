@@ -2,9 +2,10 @@ import type { DeckEngine } from "../engine/deck-engine.js";
 import type { ActivePlay } from "../models/session.js";
 import { CardPromptApp } from "../ui/card-prompt-app.js";
 import { SessionStore } from "../stores/session-store.js";
-import { getUsers, userName } from "./foundry-users.js";
+import { DEFAULT_REQUIRED_PLAYERS } from "../constants.js";
+import { getUsers, onlinePlayerCount, userName } from "./foundry-users.js";
 import type { PlayService } from "./play-service.js";
-import { spotlightPortraits } from "./portrait-bridge.js";
+import { releasePortraitAfterAnswer, spotlightPortraits } from "./portrait-bridge.js";
 import { emitPromptCard, type PromptPayload } from "./socket.js";
 import { buildTokenContext } from "./token-context.js";
 import { escapeHtml } from "../utils/escape-html.js";
@@ -38,6 +39,14 @@ export async function startCardPlay(
   // answers, so refuse rather than clobber it.
   if (SessionStore.load().active) {
     ui.notifications?.warn(game.i18n.localize("FSD.CardAlreadyActive"));
+    return;
+  }
+
+  // This card needs more players than are online — it can't hand the spotlight
+  // around as designed, so refuse rather than strand it mid-card.
+  const required = card.requiredPlayers ?? DEFAULT_REQUIRED_PLAYERS;
+  if (onlinePlayerCount() < required) {
+    ui.notifications?.warn(game.i18n.format("FSD.NotEnoughPlayers", { count: required }));
     return;
   }
 
@@ -90,8 +99,11 @@ export async function recordCardResponse(
   cardId: string,
   _stepIndex: number,
   value: string,
+  nextPlayerId: string | null = null,
 ): Promise<void> {
   await playService.recordStepResponse(userId, value);
+  // Their turn is done — let their portrait linger briefly, then lower it.
+  releasePortraitAfterAnswer(userId);
   const card = engine?.getCard(cardId);
   ui.notifications?.info(
     game.i18n.format("FSD.PlayerAnswered", {
@@ -100,6 +112,38 @@ export async function recordCardResponse(
       answer: value,
     }),
   );
+
+  // If this speaker chose who answers next (a `chosen_by_previous` hand-off), the
+  // spotlight passes straight to that player — no detour back through the GM. The
+  // GM's window still re-renders off the resulting session write.
+  if (nextPlayerId && engine) await passSpotlightTo(engine, playService, nextPlayerId);
+}
+
+/**
+ * Advance to the next step and prompt the player the previous speaker chose,
+ * provided that step really is a player-chosen hand-off and the pick is still a
+ * connected player. Anything off (they logged off, the next step is GM-chosen)
+ * falls back to the GM's manual **Prompt Next** control.
+ */
+async function passSpotlightTo(
+  engine: DeckEngine,
+  playService: PlayService,
+  nextPlayerId: string,
+): Promise<void> {
+  const active = SessionStore.load().active;
+  if (!active) return;
+  const nextStep = engine.getStep(active.cardId, active.stepIndex + 1);
+  if (!nextStep || !engine.chosenByPreviousPlayer(nextStep)) return;
+
+  if (!getOnlinePlayers().some((p) => p.id === nextPlayerId)) {
+    ui.notifications?.warn(
+      game.i18n.format("FSD.HandoffOffline", { name: userName(nextPlayerId) }),
+    );
+    return;
+  }
+
+  await playService.promptNextStep(nextPlayerId);
+  sendPrompt(engine, nextPlayerId);
 }
 
 // --- internals --------------------------------------------------------------
@@ -128,11 +172,18 @@ function buildPromptPayload(engine: DeckEngine, active: ActivePlay): PromptPaylo
   const ctx = buildTokenContext(active);
 
   // If the *next* step is chosen by the previous player, this answerer makes that
-  // pick — so show them its criterion. If the next step is GM-chosen (or the card
-  // ends here), the player sees no hand-off line.
+  // pick — so show them its criterion and the players they can pass to. If the next
+  // step is GM-chosen (or the card ends here), the player sees no hand-off line.
   const nextStep = engine.getStep(active.cardId, active.stepIndex + 1);
-  const handoff =
-    nextStep && engine.chosenByPreviousPlayer(nextStep) ? engine.renderPrompt(nextStep, ctx) : "";
+  const isPlayerHandoff = nextStep !== undefined && engine.chosenByPreviousPlayer(nextStep);
+  const handoff = isPlayerHandoff ? engine.renderPrompt(nextStep!, ctx) : "";
+
+  // The current speaker can pass to anyone online but themselves. Computed here on
+  // the GM so the player's popup stays a self-contained payload.
+  const currentPlayerId = active.participants[step.participant.role]?.[0];
+  const handoffCandidates = isPlayerHandoff
+    ? getOnlinePlayers().filter((p) => p.id !== currentPlayerId)
+    : [];
 
   return {
     cardId: active.cardId,
@@ -141,6 +192,7 @@ function buildPromptPayload(engine: DeckEngine, active: ActivePlay): PromptPaylo
     setup: engine.renderSetup(step, ctx),
     question: engine.renderQuestion(step, ctx),
     handoff,
+    handoffCandidates,
   };
 }
 

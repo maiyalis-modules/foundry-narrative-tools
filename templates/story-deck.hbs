@@ -21,10 +21,21 @@
                 <i class="fa-solid fa-arrow-left"></i> {{localize "FSD.Back"}}
               </button>
               {{#if isGM}}
-                <button type="button" class="story-deck__primary"
-                  data-fsd="startRun" data-value="{{viewingRecipe.id}}">
-                  {{localize "FSD.Run.Start"}}
-                </button>
+                {{#if viewingRecipe.enoughPlayers}}
+                  <button type="button" class="story-deck__primary"
+                    data-fsd="startRun" data-value="{{viewingRecipe.id}}">
+                    {{localize "FSD.Run.Start"}}
+                  </button>
+                {{else}}
+                  <div class="story-deck__start-gate">
+                    <button type="button" class="story-deck__primary" disabled>
+                      {{localize "FSD.Run.Start"}}
+                    </button>
+                    <span class="story-deck__gate story-deck__muted">
+                      <i class="fa-solid fa-user-group"></i> {{localize "FSD.NeedsPlayers" count=viewingRecipe.requiredPlayers}}
+                    </span>
+                  </div>
+                {{/if}}
               {{/if}}
             </div>
 
@@ -86,6 +97,7 @@
                     <span class="story-deck__recipe-name">{{r.name}}</span>
                     <span class="story-deck__recipe-meta story-deck__muted">
                       {{localize "FSD.Run.CardTotal" count=r.cardCount}}{{#if r.players}} &middot; {{localize "FSD.Run.Players" range=r.players}}{{/if}}
+                      {{#unless r.enoughPlayers}} &middot; <span class="story-deck__gate"><i class="fa-solid fa-user-group"></i> {{localize "FSD.NeedsPlayers" count=r.requiredPlayers}}</span>{{/unless}}
                     </span>
                   </div>
                   {{#if r.tags.length}}

@@ -9,11 +9,25 @@
     <textarea id="cp-answer" data-answer rows="4"></textarea>
   </div>
 
-  {{#if handoff}}
-    <p class="card-prompt__spotlight">
-      <i class="fa-solid fa-hand-point-right"></i>
-      <span><strong>{{localize "FSD.ThenPass"}}</strong> {{handoff}}</span>
-    </p>
+  {{#if canChooseNext}}
+    <div class="card-prompt__field card-prompt__handoff">
+      <label for="cp-next">
+        <i class="fa-solid fa-hand-point-right"></i>
+        <span><strong>{{localize "FSD.ThenPass"}}</strong> {{handoff}}</span>
+      </label>
+      <select id="cp-next" data-next-player>
+        {{#each candidates as |c|}}
+          <option value="{{c.id}}">{{c.name}}</option>
+        {{/each}}
+      </select>
+    </div>
+  {{else}}
+    {{#if handoffNoPlayers}}
+      <p class="card-prompt__spotlight">
+        <i class="fa-solid fa-hand-point-right"></i>
+        <span><strong>{{localize "FSD.ThenPass"}}</strong> {{handoff}} — {{localize "FSD.HandoffGMWillContinue"}}</span>
+      </p>
+    {{/if}}
   {{/if}}
 
   <div class="card-prompt__actions">

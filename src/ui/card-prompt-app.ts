@@ -56,23 +56,36 @@ export class CardPromptApp extends HandlebarsApplicationMixin(ApplicationV2) {
   }
 
   async _prepareContext(_options: AnyObject): Promise<AnyObject> {
+    const candidates = this.prompt.handoffCandidates ?? [];
     return {
       setup: this.prompt.setup,
       question: this.prompt.question,
       handoff: this.prompt.handoff,
+      // The pick is only theirs to make when the hand-off is a player choice AND
+      // there's actually someone else online to pass to.
+      canChooseNext: this.prompt.handoff !== "" && candidates.length > 0,
+      // The hand-off is theirs but nobody else is online — the GM will continue.
+      handoffNoPlayers: this.prompt.handoff !== "" && candidates.length === 0,
+      candidates,
     };
   }
 
   private async submit(): Promise<void> {
     const root = this.element as HTMLElement;
     const input = root.querySelector<HTMLTextAreaElement>("[data-answer]");
-    emitCardResponse(this.prompt.cardId, this.prompt.stepIndex, input?.value ?? "");
-    // Remind this speaker to hand the spotlight on, when the choice is theirs.
-    if (this.prompt.handoff) {
-      ui.notifications?.info(
-        game.i18n.format("FSD.YourTurnToPass", { instruction: this.prompt.handoff }),
-      );
+    const nextPlayerId = this.selectedNextPlayer(root);
+    emitCardResponse(this.prompt.cardId, this.prompt.stepIndex, input?.value ?? "", nextPlayerId);
+    // Confirm to this speaker who they just passed the spotlight to.
+    if (nextPlayerId) {
+      const name = this.prompt.handoffCandidates.find((c) => c.id === nextPlayerId)?.name ?? "";
+      ui.notifications?.info(game.i18n.format("FSD.PassedTo", { name }));
     }
     void this.close();
+  }
+
+  /** The player this speaker chose to answer next, or null when it isn't their call. */
+  private selectedNextPlayer(root: HTMLElement): string | null {
+    const select = root.querySelector<HTMLSelectElement>("[data-next-player]");
+    return select?.value || null;
   }
 }
