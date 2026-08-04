@@ -112,10 +112,6 @@ Hooks.once("ready", async () => {
   const module = game.modules.get(MODULE_ID);
   if (module) module.api = api;
 
-  // DEV ONLY: auto-open the Story Deck window on load for faster iteration.
-  // Remove this line before release. (No-ops for players — the window is GM-only.)
-  void app.render(true);
-
   // A player joining mid-session sees the HUD immediately.
   syncSessionStatus();
 
