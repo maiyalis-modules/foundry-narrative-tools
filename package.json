@@ -1,6 +1,6 @@
 {
   "name": "foundry-story-deck",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Campaign Story Decks — a JSON-driven collaborative Session 0 story-card engine for FoundryVTT.",
   "type": "module",
   "private": true,
