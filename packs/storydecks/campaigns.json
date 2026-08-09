@@ -1290,6 +1290,126 @@
           }
         }
       ]
+    },
+    {
+      "id": "wild-village-start",
+      "name": "Village at the Wild's Edge",
+      "description": "A small-village beginning for a land that never got tamed. The bones are the same as a quiet frontier start — who these people are to each other, and what the village is actually like to live in — but half the deck is given over to the country around it and the older things living in that country. Ilyndor does not treat a village as the centre of anything. By the end you should have neighbours worth protecting, a stretch of wild the village has learned to be careful about, and at least one thing out there that was here long before the first roof went up.",
+      "type": "premade",
+      "tags": ["New Campaign"],
+      "minPlayers": 3,
+      "requiredPlayers": 3,
+      "maxPlayers": 6,
+      "expectedCards": 12,
+      "allowManualSubstitution": true,
+      "allowReordering": true,
+      "avoidDuplicateCards": true,
+      "focus": [
+        "Build connections between characters.",
+        "Make the village small, specific, and worth losing.",
+        "Give the surrounding wild a personality of its own.",
+        "Put something old and awake within a day's walk.",
+        "Leave the village owing the land something."
+      ],
+      "facilitatorNotes": [
+        "Keep the village small on purpose — one of everything, and everyone knows who has it.",
+        "When the wild comes up, push for specifics the party could walk to this week, not distant legends.",
+        "Let the mystical answers stay unexplained. The village lives beside these things; it does not understand them.",
+        "If a card offers a choice between comfort and the land, take the land — that is the setting talking."
+      ],
+      "phases": [
+        {
+          "id": "wild-village-relationships",
+          "name": "Ties",
+          "description": "Who these people are to each other before anything goes wrong.",
+          "count": 3,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["relationships"],
+            "scopes": ["community"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "wild-village-settlement",
+          "name": "The Village",
+          "description": "Small, specific, and somebody's whole world.",
+          "count": 2,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["culture", "organizations", "economy"],
+            "scopes": ["community"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "wild-village-land",
+          "name": "The Land Around It",
+          "description": "What lies past the last fence, and what the village has learned about it.",
+          "count": 2,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["wilderness"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "wild-village-older",
+          "name": "Older Than the Village",
+          "description": "The things that were here first, and still are.",
+          "count": 2,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["mystical"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "wild-village-belief",
+          "name": "What They Observe",
+          "description": "The practices that keep the village on good terms with all of it.",
+          "count": 1,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["religion"],
+            "scopes": ["community"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "wild-village-history",
+          "name": "What the Village Remembers",
+          "description": "The past that everyone here still measures things against.",
+          "count": 1,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["history"],
+            "scopes": ["community"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "wild-village-stirring",
+          "name": "Something Stirring",
+          "description": "The thing nobody has explained yet.",
+          "count": 1,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["mystery"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        }
+      ]
     }
   ]
 }
