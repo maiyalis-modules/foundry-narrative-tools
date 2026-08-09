@@ -111,6 +111,66 @@ junction to this repo, these files update **live, with no page refresh** — and
 So the dev loop is: keep `docker compose up watch` running → CSS/template/lang edits
 apply instantly; TS edits rebuild, then F5.
 
+## The connections round (Daggerheart)
+
+A **Connections** tab appears in the Story Deck window when the game system is
+Daggerheart, for running the character-creation step where each player's
+connection questions are answered by the *other* players.
+
+The GM presses **Start Connections** to open the round — like starting a Story
+Deck, it announces itself with a banner on every client and puts the shared
+session HUD on screen for the whole table, tracking questions answered. It needs
+two players online, since a connection is one character answering for another.
+
+Characters are listed **online first**; anyone whose player is disconnected is
+folded into a collapsed *Offline* section, because nothing can be handed to them
+until they're back.
+
+Once the round is open the GM hands out **one question at a time** — not one
+player at a time — so a character's three questions usually end up answered by
+three different people. Each question takes two hops:
+
+1. the GM presses **Ask** on a question,
+2. its owner is prompted to choose who answers it,
+3. that player writes the answer,
+4. the GM's client records it and writes it onto the owner's sheet, credited
+   inline (`*Kira:* A stubborn old badger.`).
+
+**End Connections** closes the round and drops any question still out; answers
+already given stay put. **Clear all answers** is the destructive one.
+
+Two rules keep the round even. A player who has already answered one of *your*
+questions drops off your candidate list — and if that empties the list (more
+questions than players), everyone becomes eligible again rather than stranding
+the question. The chooser also shows how many questions each player has answered
+tonight **for anybody**, so the asker can see who is carrying the round.
+
+While the round is switched on, players cannot hand-edit the Connections field on
+their sheet; the GM still can, as the escape hatch for fixing a bad answer. Turn
+the whole thing off under *Settings → Configure Settings → Eryndor: Story Decks →
+Connections round* — the checkbox is disabled on non-Daggerheart systems, which
+have no such field to read.
+
+### How the sheet field is read
+
+Daggerheart stores connections as one HTML blob in `system.biography.connections`,
+not as a list — character creation copies the class item's prompts in as a flat
+run of bolded paragraphs. Questions have no ids and are addressed by ordinal
+position.
+
+That blob comes in **two shapes**. As the system first writes it, the prompts are
+joined by bare `<br/>` separators; once the field has been through the sheet's
+ProseMirror editor even once, those become empty `<p><br></p>` paragraphs. Only
+the second has a usable answer slot — a `<br>` is a void element, so writing into
+it is silently discarded by the DOM. The parser accepts a slot only if it can
+actually hold children, and inserts a paragraph when there isn't one.
+
+[`src/services/connections-html.ts`](src/services/connections-html.ts) does that
+parsing, deliberately conservatively: a paragraph counts as a question only when
+*all* of its text is bold, and every write edits in place and re-serializes the
+whole document so unrecognised content — headings, pasted quotes, the player's own
+prose — passes through untouched.
+
 ## Authoring cards
 
 Cards conform to [`schemas/story-card.schema.json`](schemas/story-card.schema.json).

@@ -41,6 +41,10 @@ declare global {
     };
     user?: { id: string; isGM: boolean; name: string } & AnyObject;
     users?: AnyObject;
+    /** World actors — the connections round reads and writes character sheets. */
+    actors?: { get(id: string): AnyObject | undefined } & AnyObject;
+    /** The active game system; gates the Daggerheart-only connections round. */
+    system?: { id: string; version?: string } & AnyObject;
     /** World folders, including the journal folders runs are exported into. */
     folders?: { find(fn: (folder: Folder) => boolean): Folder | undefined } & AnyObject;
     i18n: {
@@ -53,6 +57,13 @@ declare global {
   type Folder = { id: string; name: string; type: string } & AnyObject;
   const Folder: {
     create(data: AnyObject): Promise<Folder | undefined>;
+  };
+
+  /** A chat message, used to announce answered connections to the table. */
+  type ChatMessage = { id: string } & AnyObject;
+  const ChatMessage: {
+    create(data: AnyObject): Promise<ChatMessage | undefined>;
+    getSpeaker(data: AnyObject): AnyObject;
   };
 
   /** A journal entry document, created when a Story Deck run completes. */
@@ -72,7 +83,9 @@ declare global {
         HandlebarsApplicationMixin: <T>(base: T) => T;
         DialogV2: any;
       };
-    };
+      /** Every open ApplicationV2, keyed by id (the v1 `ui.windows` successor). */
+      instances: Map<string, AnyObject>;
+    } & AnyObject;
     utils: AnyObject;
   } & AnyObject;
 }

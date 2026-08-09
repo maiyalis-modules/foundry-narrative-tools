@@ -8,7 +8,12 @@
       <div class="session-status__text">
         <div class="session-status__name">{{deckName}}</div>
         <div class="session-status__phase">
-          {{localize "FSD.Status.PhaseOf" current=phaseNumber total=phaseTotal}}{{#if phaseName}} &middot; {{phaseName}}{{/if}}
+          {{!-- A deck run counts phases; a connections round counts questions. --}}
+          {{#if progressLabel}}
+            {{progressLabel}}
+          {{else}}
+            {{localize "FSD.Status.PhaseOf" current=phaseNumber total=phaseTotal}}{{#if phaseName}} &middot; {{phaseName}}{{/if}}
+          {{/if}}
         </div>
       </div>
       {{#if isGM}}

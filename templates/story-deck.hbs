@@ -422,6 +422,168 @@
     </section>
   {{/if}}
 
+  {{#if isConnections}}
+    {{!-- The connections round: started like a Story Deck, then handed out one
+          question at a time. Online characters lead; offline ones are folded
+          away, since they can't take part until their player is back. --}}
+    <section class="story-deck__panel story-deck__connections">
+
+      {{!-- One character's block, reused by both the online and offline lists. --}}
+      {{#*inline "connActor"}}
+        <section class="story-deck__conn-actor{{#unless online}} offline{{/unless}}">
+          <div class="story-deck__conn-actor-head">
+            <span class="story-deck__conn-actor-name">{{actorName}}</span>
+            <span class="story-deck__conn-actor-player story-deck__muted">{{askerName}}</span>
+            {{#if hasQuestions}}
+              <span class="story-deck__conn-actor-count story-deck__muted">
+                {{localize "FSD.Connections.AnsweredOf" answered=answeredCount total=questionCount}}
+              </span>
+            {{/if}}
+          </div>
+
+          {{#if hasQuestions}}
+            <ul class="story-deck__conn-questions">
+              {{#each questions as |q|}}
+                <li class="story-deck__conn-question{{#if q.answered}} answered{{/if}}{{#if q.pending}} pending{{/if}}">
+                  <p class="story-deck__conn-q">{{q.question}}</p>
+                  {{!-- The answer already carries its "Kira:" credit, written
+                        into the sheet itself — don't repeat it here. --}}
+                  {{#if q.answered}}
+                    <p class="story-deck__conn-a">{{q.answer}}</p>
+                  {{/if}}
+                  {{#if @root.isGM}}
+                    <div class="story-deck__conn-actions">
+                      {{#if q.pending}}
+                        <span class="story-deck__muted">
+                          <i class="fa-solid fa-hourglass-half"></i> {{localize "FSD.Connections.InFlight"}}
+                        </span>
+                      {{else}}
+                        <button type="button"
+                          class="{{#if q.answered}}story-deck__ghost{{else}}story-deck__primary{{/if}}"
+                          data-fsd="askConnection"
+                          data-actor-id="{{../actorId}}"
+                          data-question-index="{{q.index}}"
+                          {{#unless q.canAsk}}disabled{{/unless}}>
+                          {{#if q.answered}}
+                            {{localize "FSD.Connections.AskAgain"}}
+                          {{else}}
+                            {{localize "FSD.Connections.Ask"}}
+                          {{/if}}
+                        </button>
+                      {{/if}}
+                    </div>
+                  {{/if}}
+                </li>
+              {{/each}}
+            </ul>
+          {{else}}
+            <p class="story-deck__muted">{{localize "FSD.Connections.NoQuestions"}}</p>
+          {{/if}}
+        </section>
+      {{/inline}}
+
+      {{!-- The round bar: start it, or track it. --}}
+      <div class="story-deck__conn-bar">
+        {{#if connectionsRunning}}
+          <div class="story-deck__conn-bar-main">
+            <span class="story-deck__conn-bar-name">{{localize "FSD.Connections.RoundName"}}</span>
+            <span class="story-deck__conn-bar-meta story-deck__muted">
+              {{localize "FSD.Connections.Progress" answered=connectionsProgress.answered total=connectionsProgress.total}}
+            </span>
+            <div class="story-deck__conn-progress">
+              <div class="story-deck__conn-progress-fill" style="width: {{connectionsProgress.percent}}%"></div>
+            </div>
+          </div>
+          {{#if isGM}}
+            <button type="button" class="story-deck__ghost" data-fsd="endConnectionsRound">
+              {{localize "FSD.Connections.End"}}
+            </button>
+          {{/if}}
+        {{else}}
+          <div class="story-deck__conn-bar-main">
+            <span class="story-deck__conn-bar-name">{{localize "FSD.Connections.RoundName"}}</span>
+            <span class="story-deck__conn-bar-meta story-deck__muted">
+              {{localize "FSD.Connections.Intro"}}
+            </span>
+          </div>
+          {{#if isGM}}
+            {{#if enoughForConnections}}
+              <button type="button" class="story-deck__primary" data-fsd="startConnectionsRound">
+                {{localize "FSD.Connections.Start"}}
+              </button>
+            {{else}}
+              <div class="story-deck__start-gate">
+                <button type="button" class="story-deck__primary" disabled>
+                  {{localize "FSD.Connections.Start"}}
+                </button>
+                <span class="story-deck__gate story-deck__muted">
+                  <i class="fa-solid fa-user-group"></i> {{localize "FSD.NeedsPlayers" count=2}}
+                </span>
+              </div>
+            {{/if}}
+          {{/if}}
+        {{/if}}
+      </div>
+
+      {{#if connectionPending}}
+        <div class="story-deck__conn-pending">
+          <span class="story-deck__conn-pending-label">
+            {{#if connectionPending.choosing}}
+              {{localize "FSD.Connections.WaitingChoose" name=connectionPending.waitingOn}}
+            {{else}}
+              {{localize "FSD.Connections.WaitingAnswer" name=connectionPending.waitingOn}}
+            {{/if}}
+          </span>
+          <p class="story-deck__conn-pending-q">{{connectionPending.question}}</p>
+          {{#if isGM}}
+            <button type="button" class="story-deck__ghost" data-fsd="cancelConnection">
+              <i class="fa-solid fa-xmark"></i> {{localize "FSD.Connections.Cancel"}}
+            </button>
+          {{/if}}
+        </div>
+      {{/if}}
+
+      {{#if hasConnectionRows}}
+        {{#if hasConnectionsOnline}}
+          {{#each connectionsOnline as |row|}}
+            {{> connActor row}}
+          {{/each}}
+        {{else}}
+          <p class="story-deck__muted">{{localize "FSD.Connections.NoneOnline"}}</p>
+        {{/if}}
+
+        {{#if hasConnectionsOffline}}
+          <div class="story-deck__conn-offline">
+            <button type="button" class="story-deck__conn-offline-toggle"
+              data-fsd="toggleOfflineConnections"
+              aria-expanded="{{#if offlineConnectionsOpen}}true{{else}}false{{/if}}">
+              <i class="fa-solid {{#if offlineConnectionsOpen}}fa-chevron-down{{else}}fa-chevron-right{{/if}}"></i>
+              {{localize "FSD.Connections.OfflineHeading" count=connectionsOffline.length}}
+            </button>
+            {{#if offlineConnectionsOpen}}
+              <div class="story-deck__conn-offline-body">
+                {{#each connectionsOffline as |row|}}
+                  {{> connActor row}}
+                {{/each}}
+              </div>
+            {{/if}}
+          </div>
+        {{/if}}
+
+        {{#if isGM}}
+          <div class="story-deck__conn-footer">
+            <button type="button" class="story-deck__ghost" data-fsd="resetConnections"
+              {{#unless connectionsAnswered}}disabled{{/unless}}>
+              <i class="fa-solid fa-eraser"></i> {{localize "FSD.Connections.Reset"}}
+            </button>
+          </div>
+        {{/if}}
+      {{else}}
+        <p class="story-deck__muted">{{localize "FSD.Connections.NoCharacters"}}</p>
+      {{/if}}
+    </section>
+  {{/if}}
+
   {{#if isLog}}
     <section class="story-deck__panel story-deck__log">
       {{#if hasLog}}

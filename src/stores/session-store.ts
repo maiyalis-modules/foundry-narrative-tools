@@ -1,6 +1,8 @@
 import { MODULE_ID, SETTINGS } from "../constants.js";
 import {
   createEmptySession,
+  emptyConnections,
+  type ConnectionsState,
   type DeckRun,
   type StoryDeckSession,
 } from "../models/session.js";
@@ -32,6 +34,7 @@ export class SessionStore {
     const session = { ...createEmptySession(), ...stored };
     if (session.run) session.run = normalizeRun(session.run);
     session.runs = session.runs.map(normalizeRun);
+    session.connections = normalizeConnections(session.connections);
     return session;
   }
 
@@ -65,5 +68,21 @@ function normalizeRun(run: DeckRun): DeckRun {
     ...run,
     cards: Array.isArray(run.cards) ? run.cards : [],
     phases: Array.isArray(run.phases) ? run.phases : [],
+  };
+}
+
+/**
+ * Fill in the connections block, added in schema v5.
+ *
+ * A session written by an older build has no `connections` at all, and a session
+ * written mid-upgrade may have it half-formed — either way the round simply
+ * starts empty rather than reaching the UI with holes in it.
+ */
+function normalizeConnections(state: ConnectionsState | undefined): ConnectionsState {
+  if (!state) return emptyConnections();
+  return {
+    round: state.round ?? null,
+    answers: Array.isArray(state.answers) ? state.answers : [],
+    pending: state.pending ?? null,
   };
 }

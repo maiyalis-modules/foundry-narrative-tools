@@ -16,6 +16,19 @@ export const JOURNAL_FOLDER = "Story Decks" as const;
  *  A card is a hand-off between players, so two is the working floor. */
 export const DEFAULT_REQUIRED_PLAYERS = 2 as const;
 
+/** The only system whose character sheet the connections round knows how to read. */
+export const DAGGERHEART_SYSTEM_ID = "daggerheart" as const;
+
+/**
+ * The connections field on a Daggerheart character, as a *suffix*.
+ *
+ * The sheet builds its editor from `system.schema.getField("biography.connections")`,
+ * so whether the rendered input is named with or without the leading `system.`
+ * depends on how the sheet prefixes it. Matching on the suffix covers both and
+ * survives that detail changing.
+ */
+export const CONNECTIONS_FIELD = "biography.connections" as const;
+
 /** Setting keys, kept in one place to avoid typos across the codebase. */
 export const SETTINGS = {
   /** Persisted in-progress session state (the campaign seed being built). */
@@ -30,6 +43,8 @@ export const SETTINGS = {
   portraitSpotlight: "portraitSpotlight",
   /** Whether the spotlight shows one portrait at a time or lets them accumulate. */
   portraitSpotlightSolo: "portraitSpotlightSolo",
+  /** Run the Daggerheart connections round (and lock the sheet field while on). */
+  connections: "connections",
   /** Key for the settings-menu button that opens the Story Deck window. */
   menu: "storyDeckMenu",
 } as const;

@@ -107,6 +107,69 @@ export interface ActivePlay {
   responses: StepResponse[];
 }
 
+/**
+ * One connection question answered for someone else's character.
+ *
+ * Kept flat (rather than nested under the asker) so it serializes cleanly into
+ * the world setting and so the "who has answered how much tonight" tally is a
+ * single pass, regardless of whose sheet the answers landed on.
+ */
+export interface ConnectionAnswerRecord {
+  /** The actor whose sheet the question belongs to — the one being asked *about*. */
+  actorId: string;
+  /** Position of the question within that sheet's parsed connections blob. */
+  questionIndex: number;
+  /** Snapshot of the question text, so the record still reads if the blob changes. */
+  question: string;
+  /** The player who owns the character and chose who would answer. */
+  askerUserId: string;
+  /** The player who wrote the answer. */
+  answererUserId: string;
+  answer: string;
+  answeredAt: number;
+}
+
+/**
+ * The connection question currently out for an answer.
+ *
+ * Two-stage: the GM starts a question and the asker picks a responder
+ * (`answererUserId` still null), then that responder writes the answer. Holding
+ * both stages in one record means a reload mid-question doesn't lose track of
+ * which half of the hand-off is outstanding.
+ */
+export interface PendingConnection {
+  actorId: string;
+  askerUserId: string;
+  questionIndex: number;
+  question: string;
+  /** Set once the asker has chosen; `null` while their picker is still open. */
+  answererUserId: string | null;
+}
+
+/**
+ * A connections round in progress.
+ *
+ * Deliberately a nullable object rather than a boolean: "is the round running"
+ * and "when did it start" are the same question, and a run of the round is the
+ * thing the HUD and the announcement banner are about — the same shape a
+ * `DeckRun` plays for a Story Deck.
+ */
+export interface ConnectionsRound {
+  startedAt: number;
+}
+
+/** Everything the connections round has produced, plus what it's waiting on. */
+export interface ConnectionsState {
+  /** The round currently running, or `null` between rounds. */
+  round: ConnectionsRound | null;
+  answers: ConnectionAnswerRecord[];
+  pending: PendingConnection | null;
+}
+
+export function emptyConnections(): ConnectionsState {
+  return { round: null, answers: [], pending: null };
+}
+
 /** The full, persistable session document. */
 export interface StoryDeckSession {
   /** Schema version for forward-compatible migrations. */
@@ -120,15 +183,18 @@ export interface StoryDeckSession {
   /** Finished (or abandoned) Story Deck runs. */
   runs: DeckRun[];
   results: CardResult[];
+  /** The Daggerheart connections round — see `services/connections-service.ts`. */
+  connections: ConnectionsState;
 }
 
 export function createEmptySession(): StoryDeckSession {
   return {
-    version: 4,
+    version: 5,
     stage: null,
     active: null,
     run: null,
     runs: [],
     results: [],
+    connections: emptyConnections(),
   };
 }

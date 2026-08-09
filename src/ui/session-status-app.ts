@@ -1,4 +1,5 @@
 import { MODULE_ID, TEMPLATES } from "../constants.js";
+import { currentRound, roundProgress } from "../services/connections-service.js";
 import type { DeckRunService } from "../services/deck-run-service.js";
 import { SessionStore } from "../stores/session-store.js";
 import type { StoryDeckApp } from "./story-deck-app.js";
@@ -161,9 +162,16 @@ export class SessionStatusApp extends HandlebarsApplicationMixin(ApplicationV2) 
   async _prepareContext(_options: AnyObject): Promise<AnyObject> {
     const isGM = Boolean(game.user?.isGM);
     const run = SessionStore.load().run;
-    // Renders as nothing: this window is closed when no run is live, so this is
-    // only the moment between a session ending and the close landing.
-    if (!run) return { active: false, isGM };
+
+    // A Story Deck run is the larger frame, so it wins when both are going —
+    // a connections round started inside one is a step within it, not a rival
+    // session, and the GM tracks it from the Connections tab either way.
+    if (!run) {
+      const connections = this.connectionsContext(isGM);
+      // Renders as nothing: this window is closed when nothing is live, so this
+      // is only the moment between a session ending and the close landing.
+      return connections ?? { active: false, isGM };
+    }
 
     const total = this.deckRunService?.getRecipe(run.recipeId)?.phases.length ?? run.phases.length;
     const phase = run.phases[run.phaseIndex];
@@ -190,6 +198,33 @@ export class SessionStatusApp extends HandlebarsApplicationMixin(ApplicationV2) 
       phaseName: phase?.name ?? "",
       percent: total > 0 ? Math.round((done / total) * 100) : 0,
       stateLabel,
+    };
+  }
+
+  /**
+   * The same panel, reporting a connections round instead of a deck run.
+   *
+   * Progress is questions answered rather than phases done, so the sub-line
+   * counts them outright — "3 of 9 connections" is the only measure of how far
+   * through the round the table is.
+   */
+  private connectionsContext(isGM: boolean): AnyObject | null {
+    if (!currentRound()) return null;
+    const { answered, total, percent } = roundProgress();
+
+    return {
+      active: true,
+      isGM,
+      deckName: game.i18n.localize("FSD.Connections.RoundName"),
+      percent,
+      progressLabel: game.i18n.format("FSD.Connections.Progress", {
+        answered,
+        total,
+      }),
+      stateLabel:
+        answered >= total && total > 0
+          ? "FSD.Connections.AllAnswered"
+          : "FSD.Status.InProgress",
     };
   }
 }

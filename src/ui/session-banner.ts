@@ -15,29 +15,39 @@ const BANNER_ID = `${MODULE_ID}-banner`;
 /** Enter + hold + exit, in ms — kept in step with the CSS animation. */
 const BANNER_LIFETIME = 4200;
 
-/** GM side: show the banner locally and broadcast it to everyone else. */
-export function announceSessionStart(deckName: string): void {
-  showSessionBanner(deckName);
-  emitSessionStart(deckName);
+/** The banner's default heading — a Story Deck run. */
+const DEFAULT_TITLE_KEY = "FSD.Banner.Title";
+
+/**
+ * GM side: show the banner locally and broadcast it to everyone else.
+ *
+ * `titleKey` lets other kinds of session borrow the same announcement — the
+ * connections round opens with one too. Only the *key* crosses the wire, so each
+ * client renders the heading in its own language.
+ */
+export function announceSessionStart(subtitle: string, titleKey?: string): void {
+  showSessionBanner(subtitle, titleKey);
+  emitSessionStart(subtitle, titleKey);
 }
 
 /** Show the animated banner + chime on *this* client. */
-export function showSessionBanner(deckName: string): void {
+export function showSessionBanner(subtitle: string, titleKey?: string): void {
   try {
     document.getElementById(BANNER_ID)?.remove();
 
     const el = document.createElement("div");
     el.id = BANNER_ID;
     el.className = BANNER_ID;
-    const subtitle = deckName
-      ? `<span class="${BANNER_ID}__subtitle">${escapeHtml(deckName)}</span>`
+    const sub = subtitle
+      ? `<span class="${BANNER_ID}__subtitle">${escapeHtml(subtitle)}</span>`
       : "";
+    const title = game.i18n.localize(titleKey || DEFAULT_TITLE_KEY);
     el.innerHTML = `
       <div class="${BANNER_ID}__inner">
         <i class="fa-solid fa-book-sparkles ${BANNER_ID}__glyph"></i>
         <div class="${BANNER_ID}__text">
-          <span class="${BANNER_ID}__title">${escapeHtml(game.i18n.localize("FSD.Banner.Title"))}</span>
-          ${subtitle}
+          <span class="${BANNER_ID}__title">${escapeHtml(title)}</span>
+          ${sub}
         </div>
         <i class="fa-solid fa-book-sparkles ${BANNER_ID}__glyph"></i>
       </div>`;

@@ -3,17 +3,32 @@ import type { DeckEngine } from "../engine/deck-engine.js";
 import type { DeckRun, RunCardRecord } from "../models/session.js";
 import type { DeckPhase, StoryDeckRecipe } from "../models/story-deck-recipe.js";
 import type { DeckRunService } from "../services/deck-run-service.js";
+import {
+  cancelConnection,
+  connectionRoster,
+  connectionsEnabled,
+  currentRound,
+  endRound,
+  resetConnections,
+  roundProgress,
+  startConnection,
+  startRound,
+} from "../services/connections-service.js";
 import { onlinePlayerCount, userName } from "../services/foundry-users.js";
 import type { PlayService } from "../services/play-service.js";
 import { buildTokenContext } from "../services/token-context.js";
 import { SessionStore } from "../stores/session-store.js";
 import { escapeHtml } from "../utils/escape-html.js";
 import { announceSessionStart } from "./session-banner.js";
+import type { ConnectionRow } from "../services/connections-service.js";
 import type { CardWindowApp } from "./card-window-app.js";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
-type TabId = "home" | "decks" | "cards" | "log";
+type TabId = "home" | "decks" | "cards" | "connections" | "log";
+
+/** Tabs that are always present. Connections is added only when it can run. */
+const BASE_TABS: TabId[] = ["home", "decks", "cards", "log"];
 type DeckFilter = "all" | "in_progress" | "completed";
 
 /** The deck-list filter tags, in display order. Fixed so all show even before a
@@ -64,6 +79,9 @@ export class StoryDeckApp extends HandlebarsApplicationMixin(ApplicationV2) {
   private cardOutput: string | null = null;
   private cardTag: string | null = null;
   private filtersOpen = false;
+  /** Whether the offline half of the Connections tab is expanded. Collapsed by
+   *  default: those characters can't take part until their player is back. */
+  private offlineConnectionsOpen = false;
 
   constructor(engine: DeckEngine | null = null, options: AnyObject = {}) {
     super(options);
@@ -141,7 +159,7 @@ export class StoryDeckApp extends HandlebarsApplicationMixin(ApplicationV2) {
     const value = target.dataset["value"];
     switch (action) {
       case "tab":
-        if (value === "home" || value === "decks" || value === "cards" || value === "log") {
+        if (isTabId(value)) {
           this.activeTab = value;
           void this.render();
         }
@@ -275,7 +293,64 @@ export class StoryDeckApp extends HandlebarsApplicationMixin(ApplicationV2) {
         }
         return;
       }
+
+      // --- Connections round (GM-only; the service re-checks every entry point) ---
+      case "askConnection": {
+        const actorId = target.dataset["actorId"];
+        const index = Number(target.dataset["questionIndex"]);
+        if (actorId && Number.isInteger(index)) void startConnection(actorId, index);
+        return;
+      }
+      case "cancelConnection":
+        void cancelConnection();
+        return;
+      case "startConnectionsRound":
+        void this.onStartRound();
+        return;
+      case "endConnectionsRound":
+        void this.onEndRound();
+        return;
+      case "toggleOfflineConnections":
+        this.offlineConnectionsOpen = !this.offlineConnectionsOpen;
+        void this.render();
+        return;
+      case "resetConnections":
+        void this.onResetConnections();
+        return;
     }
+  }
+
+  /** Open the round, announcing it to the table the way a deck run announces itself. */
+  private async onStartRound(): Promise<void> {
+    if (!game.user?.isGM) return;
+    if (await startRound()) {
+      announceSessionStart(
+        game.i18n.localize("FSD.Connections.RoundName"),
+        "FSD.Connections.BannerTitle",
+      );
+    }
+  }
+
+  /** Ending drops the question in flight, so say so before doing it. */
+  private async onEndRound(): Promise<void> {
+    if (!game.user?.isGM) return;
+    const confirmed = await foundry.applications.api.DialogV2.confirm({
+      window: { title: game.i18n.localize("FSD.Connections.End") },
+      content: `<p>${game.i18n.localize("FSD.Connections.EndConfirm")}</p>`,
+      rejectClose: false,
+    });
+    if (confirmed) await endRound();
+  }
+
+  /** Clearing the round rewrites every sheet it touched — always confirm it. */
+  private async onResetConnections(): Promise<void> {
+    if (!game.user?.isGM) return;
+    const confirmed = await foundry.applications.api.DialogV2.confirm({
+      window: { title: game.i18n.localize("FSD.Connections.Reset") },
+      content: `<p>${game.i18n.localize("FSD.Connections.ResetConfirm")}</p>`,
+      rejectClose: false,
+    });
+    if (confirmed) await resetConnections();
   }
 
   /**
@@ -371,25 +446,36 @@ export class StoryDeckApp extends HandlebarsApplicationMixin(ApplicationV2) {
         (this.cardTag === null || (c.tags ?? []).includes(this.cardTag)),
     );
 
+    // The connections round only exists under Daggerheart. Rather than show a
+    // dead tab elsewhere, drop it — and fall back to Home if it was the open tab
+    // when the setting was turned off.
+    const showConnections = connectionsEnabled();
+    if (!showConnections && this.activeTab === "connections") this.activeTab = "home";
+
+    const tabIds: TabId[] = showConnections
+      ? ["home", "decks", "cards", "connections", "log"]
+      : BASE_TABS;
+
     return {
       isGM,
       moduleTitle: MODULE_TITLE,
       hasDeck: this.engine !== null,
       deckTitle: this.engine?.title ?? null,
 
-      tabs: [
-        { id: "home", label: "FSD.Tab.Home", active: this.activeTab === "home" },
-        { id: "decks", label: "FSD.Tab.Decks", active: this.activeTab === "decks" },
-        { id: "cards", label: "FSD.Tab.Cards", active: this.activeTab === "cards" },
-        { id: "log", label: "FSD.Tab.Log", active: this.activeTab === "log" },
-      ],
+      tabs: tabIds.map((id) => ({
+        id,
+        label: TAB_LABELS[id],
+        active: this.activeTab === id,
+      })),
       isHome: this.activeTab === "home",
       isDecks: this.activeTab === "decks",
       isCards: this.activeTab === "cards",
+      isConnections: this.activeTab === "connections",
       isLog: this.activeTab === "log",
       ...this.logContext(),
       ...this.homeContext(),
       ...this.decksContext(),
+      ...this.connectionsContext(),
 
       filtersOpen: this.filtersOpen,
       activeFilterCount: [this.cardTheme, this.cardScope, this.cardOutput, this.cardTag].filter(
@@ -606,6 +692,75 @@ export class StoryDeckApp extends HandlebarsApplicationMixin(ApplicationV2) {
       .filter((p) => (p.cards as AnyObject[]).length > 0);
   }
 
+  /**
+   * The Connections tab: every player character's connection questions, one row
+   * each, with the one question currently out for an answer called out on top.
+   *
+   * Listed per *question* rather than per player because that is the unit the GM
+   * hands out — a character's three questions can go to three different people,
+   * and the whole point of the round is that they usually should.
+   */
+  private connectionsContext(): AnyObject {
+    if (!connectionsEnabled()) return { connectionsOnline: [], connectionsOffline: [] };
+
+    const { pending, answers } = SessionStore.load().connections;
+    const round = currentRound();
+    const rows = connectionRoster();
+
+    // A question can only be handed out while the round is open, nothing else is
+    // in flight, and its owner is connected to choose who answers. The button
+    // reflects all three rather than failing on click.
+    const canAsk = round !== null && pending === null;
+    const render = (row: ConnectionRow): AnyObject => ({
+      actorId: row.actorId,
+      actorName: row.actorName,
+      askerName: row.askerName,
+      online: row.online,
+      answeredCount: row.questions.filter((q) => q.answer !== "").length,
+      questionCount: row.questions.length,
+      questions: row.questions.map((q) => ({
+        index: q.index,
+        question: q.question,
+        answer: q.answer,
+        answered: q.answer !== "",
+        pending: q.pending,
+        canAsk: canAsk && row.online,
+      })),
+      hasQuestions: row.questions.length > 0,
+    });
+
+    const online = rows.filter((r) => r.online);
+    const offline = rows.filter((r) => !r.online);
+    const progress = roundProgress();
+
+    return {
+      connectionsRunning: round !== null,
+      connectionsProgress: progress,
+      connectionsComplete: progress.total > 0 && progress.answered >= progress.total,
+      connectionsOnline: online.map(render),
+      connectionsOffline: offline.map(render),
+      hasConnectionsOnline: online.length > 0,
+      hasConnectionsOffline: offline.length > 0,
+      offlineConnectionsOpen: this.offlineConnectionsOpen,
+      hasConnectionRows: rows.length > 0,
+      // Two players is the floor: a connection is one character answering for
+      // another, so a table of one has nobody to ask.
+      enoughForConnections: online.length >= 2,
+      connectionPending: pending
+        ? {
+            question: pending.question,
+            askerName: userName(pending.askerUserId),
+            // Which half of the hand-off we're waiting on.
+            waitingOn: pending.answererUserId
+              ? userName(pending.answererUserId)
+              : userName(pending.askerUserId),
+            choosing: pending.answererUserId === null,
+          }
+        : null,
+      connectionsAnswered: answers.length,
+    };
+  }
+
   /** Newest-first list of finished cards for the Log tab. */
   private logContext(): AnyObject {
     const logEntries = [...SessionStore.load().results]
@@ -618,6 +773,18 @@ export class StoryDeckApp extends HandlebarsApplicationMixin(ApplicationV2) {
       }));
     return { logEntries, hasLog: logEntries.length > 0 };
   }
+}
+
+const TAB_LABELS: Record<TabId, string> = {
+  home: "FSD.Tab.Home",
+  decks: "FSD.Tab.Decks",
+  cards: "FSD.Tab.Cards",
+  connections: "FSD.Tab.Connections",
+  log: "FSD.Tab.Log",
+};
+
+function isTabId(value: string | undefined): value is TabId {
+  return value !== undefined && value in TAB_LABELS;
 }
 
 /** Distinct, stable-ordered list of non-empty strings. */

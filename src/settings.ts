@@ -8,6 +8,7 @@
  *   - a single real toggle that gates the Journal-sidebar launch button.
  */
 import { MODULE_ID, SETTINGS } from "./constants.js";
+import { isDaggerheart } from "./services/connections-service.js";
 import { StoryDeckApp } from "./ui/story-deck-app.js";
 
 export function registerSettings(): void {
@@ -75,5 +76,43 @@ export function registerSettings(): void {
     config: true,
     type: Boolean,
     default: true,
+  });
+
+  // The connections round reads and writes a Daggerheart-specific sheet field, so
+  // it can only ever run under that system. Registered (and shown) everywhere all
+  // the same, so the feature is discoverable and the choice survives a world
+  // switching systems — `connectionsEnabled()` gates on the system as well as the
+  // value, and the checkbox is disabled below where the system can't support it.
+  game.settings.register(MODULE_ID, SETTINGS.connections, {
+    name: "FSD.Settings.ConnectionsName",
+    hint: isDaggerheart()
+      ? "FSD.Settings.ConnectionsHint"
+      : "FSD.Settings.ConnectionsHintUnavailable",
+    scope: "world",
+    config: true,
+    type: Boolean,
+    default: isDaggerheart(),
+    onChange: () => Hooks.callAll(`${MODULE_ID}.refreshConnections`),
+  });
+}
+
+/**
+ * Grey out the connections checkbox on systems that can't support it.
+ *
+ * Foundry has no "disabled" flag for a registered setting, so the input is
+ * disabled once the settings form is on screen. Cosmetic only — the runtime gate
+ * is `connectionsEnabled()`, which never trusts the stored value alone.
+ */
+export function registerSettingsUI(): void {
+  Hooks.on("renderSettingsConfig", (_app: unknown, html: HTMLElement | JQuery) => {
+    if (isDaggerheart()) return;
+    const root: HTMLElement | undefined =
+      html instanceof HTMLElement ? html : (html as JQuery)?.[0];
+    const input = root?.querySelector(
+      `input[name="${MODULE_ID}.${SETTINGS.connections}"]`,
+    ) as HTMLInputElement | null;
+    if (!input) return;
+    input.checked = false;
+    input.disabled = true;
   });
 }
