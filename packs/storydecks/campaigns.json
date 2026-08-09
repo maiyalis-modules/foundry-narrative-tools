@@ -651,6 +651,645 @@
           }
         }
       ]
+    },
+    {
+      "id": "gods-and-mortals",
+      "name": "Gods and Mortals",
+      "description": "A campaign where faith is a force in the world rather than a detail on a character sheet. The deck leans on religion and the divine signs that come with it, then gives those beliefs institutions, histories, and people who disagree about what any of it means. It stays deliberately open about whether the gods are real, present, or worth following, so the table can land anywhere from devout to heretical without the deck deciding first.",
+      "type": "premade",
+      "tags": ["New Campaign"],
+      "minPlayers": 3,
+      "requiredPlayers": 3,
+      "maxPlayers": 6,
+      "expectedCards": 12,
+      "allowManualSubstitution": true,
+      "allowReordering": true,
+      "avoidDuplicateCards": true,
+      "focus": [
+        "Establish what people believe and why.",
+        "Give the faith a body: temples, orders, and authorities.",
+        "Leave the truth of the divine unsettled.",
+        "Find where belief and power pull against each other."
+      ],
+      "phases": [
+        {
+          "id": "gods-and-mortals-religion",
+          "name": "Faith",
+          "description": "What people believe, and what they owe it.",
+          "count": 3,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["religion"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "gods-and-mortals-mystical",
+          "name": "Signs and Wonders",
+          "description": "The parts of belief that leave marks on the world.",
+          "count": 2,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["mystical"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "gods-and-mortals-organizations",
+          "name": "Orders and Temples",
+          "description": "The institutions that speak for the faith.",
+          "count": 2,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["organizations"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "gods-and-mortals-history",
+          "name": "Scripture and Memory",
+          "description": "The past the faith is built on.",
+          "count": 2,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["history"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "gods-and-mortals-relationships",
+          "name": "The Faithful",
+          "description": "The people the characters believe alongside — or against.",
+          "count": 1,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["relationships"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "gods-and-mortals-politics",
+          "name": "Doctrine and Power",
+          "description": "Where belief becomes authority.",
+          "count": 1,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["politics"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "gods-and-mortals-conflict",
+          "name": "Schism",
+          "description": "What the faithful cannot agree on.",
+          "count": 1,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["conflict"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "age-of-magic",
+      "name": "An Age of Magic",
+      "description": "For a world where magic is common enough to shape daily life and strange enough that nobody fully understands it. The deck is weighted toward the mystical and the questions magic leaves behind, then anchors it with the traditions, circles, and long histories that decide who gets to practise. Use it whether magic in your world is a gift, a science, an inheritance, or a slow-burning problem.",
+      "type": "premade",
+      "tags": ["New Campaign"],
+      "minPlayers": 3,
+      "requiredPlayers": 3,
+      "maxPlayers": 6,
+      "expectedCards": 12,
+      "allowManualSubstitution": true,
+      "allowReordering": true,
+      "avoidDuplicateCards": true,
+      "focus": [
+        "Decide how magic feels to ordinary people.",
+        "Establish who teaches it and who is denied it.",
+        "Leave at least one thing about magic unexplained.",
+        "Give magic a cost somebody is already paying."
+      ],
+      "phases": [
+        {
+          "id": "age-of-magic-mystical",
+          "name": "The Art",
+          "description": "Magic as it is lived with.",
+          "count": 4,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["mystical"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "age-of-magic-mystery",
+          "name": "The Unexplained",
+          "description": "What magic has done that no one can account for.",
+          "count": 2,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["mystery"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "age-of-magic-organizations",
+          "name": "Circles and Schools",
+          "description": "Who holds the knowledge and guards it.",
+          "count": 2,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["organizations"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "age-of-magic-history",
+          "name": "What Came Before",
+          "description": "The workings of an older, less careful age.",
+          "count": 2,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["history"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "age-of-magic-culture",
+          "name": "Custom and Superstition",
+          "description": "How ordinary life bends around the Art.",
+          "count": 1,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["culture"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "age-of-magic-conflict",
+          "name": "The Cost",
+          "description": "What magic has already broken.",
+          "count": 1,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["conflict"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "arcane-engine",
+      "name": "The Arcane Engine",
+      "description": "A world where magic has been industrialised — bottled, sold, wired into cities, and put to work. The deck splits its weight between the mystical and the economy that has grown around it, then adds the companies, laws, and street-level habits that follow any new industry. Expect questions about who owns the enchantment, who is exposed to its waste, and what the old practitioners think of all this.",
+      "type": "premade",
+      "tags": ["New Campaign"],
+      "minPlayers": 3,
+      "requiredPlayers": 3,
+      "maxPlayers": 6,
+      "expectedCards": 12,
+      "allowManualSubstitution": true,
+      "allowReordering": true,
+      "avoidDuplicateCards": true,
+      "focus": [
+        "Define the technology magic has become.",
+        "Follow the money: who owns it and who works it.",
+        "Establish what industrialised magic has already cost.",
+        "Contrast the new industry with older traditions."
+      ],
+      "phases": [
+        {
+          "id": "arcane-engine-mystical",
+          "name": "The Power Source",
+          "description": "The magic everything else is built on.",
+          "count": 3,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["mystical"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "arcane-engine-economy",
+          "name": "The Industry",
+          "description": "Production, trade, and who profits.",
+          "count": 3,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["economy"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "arcane-engine-organizations",
+          "name": "Companies and Guilds",
+          "description": "The bodies that own the engine.",
+          "count": 2,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["organizations"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "arcane-engine-culture",
+          "name": "Everyday Life",
+          "description": "How the work and the city have changed.",
+          "count": 1,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["culture"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "arcane-engine-opportunity",
+          "name": "The Next Thing",
+          "description": "What is about to be invented, or exploited.",
+          "count": 1,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["opportunity"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "arcane-engine-politics",
+          "name": "Regulation",
+          "description": "Who is trying to control it, and why.",
+          "count": 1,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["politics"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "arcane-engine-conflict",
+          "name": "The Fallout",
+          "description": "What the engine has already broken.",
+          "count": 1,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["conflict"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "city-underworld",
+      "name": "City Underworld",
+      "description": "A street-level campaign in a city where the real authority is not the one on the letterhead. The deck spends most of its weight on the crews and syndicates that run things, the money moving between them, and the personal debts that hold it all together. Where Political Intrigue works the court, this one works the alley — but the syndicates still have reach beyond the walls.",
+      "type": "premade",
+      "tags": ["New Campaign"],
+      "minPlayers": 3,
+      "requiredPlayers": 3,
+      "maxPlayers": 6,
+      "expectedCards": 12,
+      "allowManualSubstitution": true,
+      "allowReordering": true,
+      "avoidDuplicateCards": true,
+      "focus": [
+        "Map the crews and who answers to whom.",
+        "Establish debts, favours, and leverage.",
+        "Keep the law present but compromised.",
+        "Leave one score worth pulling."
+      ],
+      "phases": [
+        {
+          "id": "city-underworld-organizations",
+          "name": "The Crews",
+          "description": "Who runs what, and where the lines fall.",
+          "count": 3,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["organizations"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "city-underworld-economy",
+          "name": "The Take",
+          "description": "Money, contraband, and the routes they move on.",
+          "count": 2,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["economy"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "city-underworld-relationships",
+          "name": "Debts and Favours",
+          "description": "What the characters owe, and who is owed.",
+          "count": 2,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["relationships"],
+            "scopes": ["community"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "city-underworld-conflict",
+          "name": "Turf",
+          "description": "The quarrel that is currently boiling.",
+          "count": 2,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["conflict"],
+            "scopes": ["community"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "city-underworld-culture",
+          "name": "The Code",
+          "description": "The rules nobody wrote down.",
+          "count": 1,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["culture"],
+            "scopes": ["community"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "city-underworld-mystery",
+          "name": "Loose Ends",
+          "description": "The thing nobody on the street will explain.",
+          "count": 1,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["mystery"],
+            "scopes": ["community"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "city-underworld-opportunity",
+          "name": "The Score",
+          "description": "Something worth the risk.",
+          "count": 1,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["opportunity"],
+            "scopes": ["community"],
+            "preferUnused": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "under-occupation",
+      "name": "Under Occupation",
+      "description": "The war is over and your side lost. The deck weights the friction of living under someone else's authority, the politics that put them there, and the question of who the characters are now that the old order is gone — then gives the resistance a shape and a set of people worth protecting. It assumes the party is on the losing side and asks what they are willing to do about it.",
+      "type": "premade",
+      "tags": ["New Campaign"],
+      "minPlayers": 3,
+      "requiredPlayers": 3,
+      "maxPlayers": 6,
+      "expectedCards": 12,
+      "allowManualSubstitution": true,
+      "allowReordering": true,
+      "avoidDuplicateCards": true,
+      "focus": [
+        "Establish what the occupation has taken.",
+        "Ask who the characters are under it — and who collaborates.",
+        "Give the resistance a structure, not just a mood.",
+        "Keep the occupiers people rather than a faceless force."
+      ],
+      "phases": [
+        {
+          "id": "under-occupation-conflict",
+          "name": "The Boot",
+          "description": "How the occupation makes itself felt.",
+          "count": 3,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["conflict"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "under-occupation-politics",
+          "name": "The New Order",
+          "description": "Who rules now, and through whom.",
+          "count": 2,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["politics"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "under-occupation-identity",
+          "name": "Who You Are Now",
+          "description": "What the characters have had to become.",
+          "count": 2,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["identity"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "under-occupation-organizations",
+          "name": "The Resistance",
+          "description": "The groups pushing back, and the ones that folded.",
+          "count": 2,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["organizations"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "under-occupation-relationships",
+          "name": "Who You Protect",
+          "description": "The people the fight is actually for.",
+          "count": 2,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["relationships"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "under-occupation-history",
+          "name": "Before",
+          "description": "What was lost when the old order fell.",
+          "count": 1,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["history"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "mythic-age",
+      "name": "Mythic Age",
+      "description": "For a campaign that starts where most campaigns end — with characters who already matter to the world and problems measured in ages rather than seasons. This is the only deck that draws on world-defining cards, so expect prophecies, ancient enemies, and the kind of history that gets sung rather than remembered. Best used for a high-level start or a returning party whose reputation arrived before they did.",
+      "type": "premade",
+      "tags": ["New Campaign"],
+      "minPlayers": 3,
+      "requiredPlayers": 3,
+      "maxPlayers": 6,
+      "expectedCards": 12,
+      "allowManualSubstitution": true,
+      "allowReordering": true,
+      "avoidDuplicateCards": true,
+      "focus": [
+        "Establish stakes the whole world can feel.",
+        "Give the age a name and a turning point.",
+        "Keep at least one thread personal to the characters.",
+        "Decide what will be lost if the party fails."
+      ],
+      "phases": [
+        {
+          "id": "mythic-age-adventure",
+          "name": "The Great Undertaking",
+          "description": "The deed the age will be remembered for.",
+          "count": 3,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["adventure"],
+            "scopes": ["regional", "epic"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "mythic-age-mystical",
+          "name": "Powers of the World",
+          "description": "The forces operating above mortal scale.",
+          "count": 2,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["mystical"],
+            "scopes": ["regional", "epic"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "mythic-age-conflict",
+          "name": "The Great Enemy",
+          "description": "What stands against the age.",
+          "count": 2,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["conflict"],
+            "scopes": ["regional", "epic"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "mythic-age-religion",
+          "name": "Gods and Prophecy",
+          "description": "What the higher powers want from all this.",
+          "count": 2,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["religion"],
+            "scopes": ["regional", "epic"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "mythic-age-history",
+          "name": "The Long Memory",
+          "description": "The older age this one is answering.",
+          "count": 2,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["history"],
+            "scopes": ["regional", "epic"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "mythic-age-culture",
+          "name": "Peoples of the World",
+          "description": "Who lives in the world worth saving.",
+          "count": 1,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["culture"],
+            "scopes": ["regional", "epic"],
+            "preferUnused": true
+          }
+        }
+      ]
     }
   ]
 }
