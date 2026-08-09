@@ -1732,7 +1732,7 @@
                                                             "prompt":  "Choose a player who knows what was recently found near the grave."
                                                         },
                                         "setup":  "New evidence has made the discrepancy harder to ignore.",
-                                        "question":  "What discovery suggests the wrong personÃ¢â‚¬â€or perhaps no person at allÃ¢â‚¬â€is buried there?"
+                                        "question":  "What discovery suggests the wrong person—or perhaps no person at all—is buried there?"
                                     }
                                 ]
                   },
@@ -4266,7 +4266,7 @@
                                                             "role":  "primary",
                                                             "selection":  "gm_selects_player"
                                                         },
-                                        "setup":  "There is a place considered too sacredÃ¢â‚¬â€or too dangerousÃ¢â‚¬â€to enter.",
+                                        "setup":  "There is a place considered too sacred—or too dangerous—to enter.",
                                         "question":  "Where is it, and why is it forbidden?"
                                     },
                                     {
@@ -4624,7 +4624,7 @@
                                                             "selection":  "gm_selects_player"
                                                         },
                                         "setup":  "A nearby peak or landmark seems to watch over the community.",
-                                        "question":  "Why do people believe it protectsÃ¢â‚¬â€or judgesÃ¢â‚¬â€them?"
+                                        "question":  "Why do people believe it protects—or judges—them?"
                                     },
                                     {
                                         "participant":  {
@@ -6298,7 +6298,7 @@
                                                             "prompt":  "Choose a player who sees a chance to finally make things right."
                                                         },
                                         "setup":  "You believe the damage caused by the broken promise is not beyond repair.",
-                                        "question":  "What opportunity now exists to fulfil the promiseÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Âor replace it with something better?"
+                                        "question":  "What opportunity now exists to fulfil the promise—or replace it with something better?"
                                     }
                                 ]
                   },
