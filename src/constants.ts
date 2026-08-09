@@ -22,6 +22,8 @@ export const SETTINGS = {
   session: "session",
   /** Whether to show the launch button in the Journal sidebar. */
   showJournalButton: "showJournalButton",
+  /** Whether the GM's session HUD sits on screen (their shortcut into the window). */
+  showGMHud: "showGMHud",
   /** GM-authored Story Deck recipes (written by the future deck editor). */
   customDecks: "customDecks",
   /** Raise the spotlighted player's portrait via the ginzzzu-portraits module. */

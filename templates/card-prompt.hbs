@@ -1,5 +1,18 @@
-{{!-- Player-facing card popup: setup, one question, and the pass instruction. --}}
+{{!-- Player-facing card popup: what the card has established so far, this
+      player's setup + question, and the pass instruction. --}}
 <div class="card-prompt__body">
+  {{#if hasHistory}}
+    <section class="card-prompt__history">
+      <h3 class="card-prompt__history-heading">{{localize "FSD.SoFar"}}</h3>
+      {{#each history as |h|}}
+        <div class="card-prompt__history-entry">
+          <p class="card-prompt__history-q">{{h.question}}</p>
+          <p class="card-prompt__history-a"><strong>{{h.who}}:</strong> {{h.answer}}</p>
+        </div>
+      {{/each}}
+    </section>
+  {{/if}}
+
   {{#if setup}}
     <p class="card-prompt__setup">{{setup}}</p>
   {{/if}}

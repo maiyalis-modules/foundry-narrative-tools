@@ -33,6 +33,20 @@ export function registerSettings(): void {
     default: true,
   });
 
+  // The GM's copy of the on-screen session HUD (players always get theirs).
+  // Client-scoped: whether a GM wants a floating panel on their screen is a
+  // per-person preference, not a world rule — and it must never change what
+  // players see.
+  game.settings.register(MODULE_ID, SETTINGS.showGMHud, {
+    name: "FSD.Settings.ShowGMHudName",
+    hint: "FSD.Settings.ShowGMHudHint",
+    scope: "client",
+    config: true,
+    type: Boolean,
+    default: true,
+    onChange: () => Hooks.callAll(`${MODULE_ID}.refreshHud`),
+  });
+
   // Storage for GM-authored Story Decks. Hidden from the settings page — the deck
   // editor writes here; `loadRecipes()` merges them with the bundled decks.
   game.settings.register(MODULE_ID, SETTINGS.customDecks, {

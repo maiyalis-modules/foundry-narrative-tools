@@ -12,6 +12,14 @@ import { SOCKET_EVENT } from "../constants.js";
  * also avoids any race with the world-setting sync.
  */
 
+/** One question already answered on the card in play, resolved for display. */
+export interface AnsweredQuestion {
+  /** Display name of the player who answered it. */
+  who: string;
+  question: string;
+  answer: string;
+}
+
 export interface PromptPayload {
   cardId: string;
   cardTitle: string;
@@ -19,6 +27,9 @@ export interface PromptPayload {
   setup: string;
   /** The single question this step asks, fully resolved. */
   question: string;
+  /** The card's earlier questions and answers, in step order — the context this
+   *  player is building on. Empty on the card's first step. */
+  history: AnsweredQuestion[];
   /** Criterion shown to this player for choosing the next speaker — empty when the
    *  next speaker is the GM's call (or the card ends here). */
   handoff: string;

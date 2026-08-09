@@ -3,12 +3,13 @@ import type { ActivePlay } from "../models/session.js";
 import { CardPromptApp } from "../ui/card-prompt-app.js";
 import { SessionStore } from "../stores/session-store.js";
 import { DEFAULT_REQUIRED_PLAYERS } from "../constants.js";
-import { getUsers, onlinePlayerCount, userName } from "./foundry-users.js";
+import { getOnlinePlayers, onlinePlayerCount, userName } from "./foundry-users.js";
 import type { PlayService } from "./play-service.js";
+import { selectPlayer } from "../ui/player-picker.js";
 import { releasePortraitAfterAnswer, spotlightPortraits } from "./portrait-bridge.js";
-import { emitPromptCard, type PromptPayload } from "./socket.js";
+import { emitPromptCard, type AnsweredQuestion, type PromptPayload } from "./socket.js";
 import { buildTokenContext } from "./token-context.js";
-import { escapeHtml } from "../utils/escape-html.js";
+import type { TokenContext } from "../engine/token-resolver.js";
 
 /**
  * Orchestrates the GM-directed card-play flow:
@@ -17,13 +18,6 @@ import { escapeHtml } from "../utils/escape-html.js";
  *   3. the answer syncs back, is recorded, and announced,
  *   4. the GM can prompt the next step (repeat) or finish.
  */
-
-/** Connected, non-GM users — the players who can be handed a card. */
-export function getOnlinePlayers(): { id: string; name: string }[] {
-  return getUsers()
-    .filter((u) => u.active && !u.isGM)
-    .map((u) => ({ id: u.id, name: u.name }));
-}
 
 /** GM side: start playing a card, prompting the first step's player. */
 export async function startCardPlay(
@@ -191,52 +185,46 @@ function buildPromptPayload(engine: DeckEngine, active: ActivePlay): PromptPaylo
     stepIndex: active.stepIndex,
     setup: engine.renderSetup(step, ctx),
     question: engine.renderQuestion(step, ctx),
+    history: buildHistory(engine, active, ctx),
     handoff,
     handoffCandidates,
   };
 }
 
 /**
- * Only one player picker may be open at a time.
+ * The card's story so far: the questions already answered on it, in step order.
  *
- * Several controls can ask for one (the run list, the card window, prompt-next),
- * and a second dialog stacked on the first is left stranded once the card it was
- * asking about has already been played.
+ * A player only ever sees their own step, so without this they'd be answering
+ * blind — the whole card is one conversation. It ships inside the payload
+ * because the player's client has no session access of its own.
+ *
+ * Each past question is re-resolved against the roles *as they stood at that
+ * step*: a role is reassigned as the spotlight moves, so rendering an old
+ * question against the current context would put the wrong speaker's name in it.
+ * `current` backs that up for roles that hadn't been assigned yet, so a question
+ * looking ahead to a later role still reads as words rather than a raw token.
  */
-let pickerOpen = false;
+function buildHistory(
+  engine: DeckEngine,
+  active: ActivePlay,
+  current: TokenContext,
+): AnsweredQuestion[] {
+  const participants: Record<string, string[]> = {};
+  const history: AnsweredQuestion[] = [];
 
-/** Show the GM a dialog to pick an online player. Warns + returns null if none. */
-async function selectPlayer(promptText: string): Promise<string | null> {
-  if (pickerOpen) return null;
-
-  const players = getOnlinePlayers();
-  if (players.length === 0) {
-    ui.notifications?.warn(game.i18n.localize("FSD.NoOnlinePlayers"));
-    return null;
-  }
-  const options = players
-    .map((p) => `<option value="${escapeHtml(p.id)}">${escapeHtml(p.name)}</option>`)
-    .join("");
-  const content = `<p>${escapeHtml(promptText)}</p>
-    <select name="player" style="width: 100%;">${options}</select>`;
-  pickerOpen = true;
-  try {
-    const chosen = await foundry.applications.api.DialogV2.prompt({
-      window: { title: game.i18n.localize("FSD.PlayCardTitle") },
-      content,
-      ok: {
-        label: game.i18n.localize("FSD.Play"),
-        icon: "fa-solid fa-paper-plane",
-        callback: (_event: Event, button: { form: HTMLFormElement }) =>
-          (button.form.elements.namedItem("player") as HTMLSelectElement | null)?.value ?? null,
-      },
-      rejectClose: false,
+  for (const response of [...active.responses].sort((a, b) => a.stepIndex - b.stepIndex)) {
+    if (response.stepIndex >= active.stepIndex) continue;
+    const step = engine.getStep(active.cardId, response.stepIndex);
+    if (!step) continue;
+    participants[step.participant.role] = [response.userId];
+    history.push({
+      who: userName(response.userId),
+      question: engine.renderQuestion(step, { ...current, ...buildTokenContext({ participants }) }),
+      answer: String(response.value ?? ""),
     });
-    return (chosen as string | null) ?? null;
-  } catch {
-    return null;
-  } finally {
-    pickerOpen = false;
   }
+
+  return history;
 }
+
 

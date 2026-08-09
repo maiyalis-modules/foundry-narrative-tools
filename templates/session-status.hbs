@@ -1,15 +1,26 @@
-{{!-- Player-facing session HUD: name + progress, no controls. --}}
+{{!-- Session HUD: a frameless glass panel, shown only while a session is
+      running. Players get name + progress; the GM gets the same, plus a
+      shortcut into the Story Deck window. --}}
 {{#if active}}
-  <div class="session-status__body">
-    <div class="session-status__name">{{deckName}}</div>
-    <div class="session-status__phase">
-      {{localize "FSD.Status.PhaseOf" current=phaseNumber total=phaseTotal}}{{#if phaseName}} &middot; {{phaseName}}{{/if}}
+  <div class="session-status__hud">
+    <div class="session-status__top">
+      <i class="fa-solid fa-book-sparkles session-status__glyph"></i>
+      <div class="session-status__text">
+        <div class="session-status__name">{{deckName}}</div>
+        <div class="session-status__phase">
+          {{localize "FSD.Status.PhaseOf" current=phaseNumber total=phaseTotal}}{{#if phaseName}} &middot; {{phaseName}}{{/if}}
+        </div>
+      </div>
+      {{#if isGM}}
+        <button type="button" class="session-status__open" data-fsd="openDeck"
+                data-tooltip="{{localize "FSD.Status.OpenDeck"}}">
+          {{localize "FSD.LaunchButton"}}
+        </button>
+      {{/if}}
     </div>
     <div class="session-status__bar">
       <div class="session-status__bar-fill" style="width: {{percent}}%"></div>
     </div>
-    <span class="session-status__state story-deck__muted">{{localize stateLabel}}</span>
+    <span class="session-status__state">{{localize stateLabel}}</span>
   </div>
-{{else}}
-  <p class="story-deck__muted session-status__idle">{{localize "FSD.Status.Idle"}}</p>
 {{/if}}

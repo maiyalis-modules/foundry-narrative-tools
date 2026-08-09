@@ -57,9 +57,14 @@ export class CardPromptApp extends HandlebarsApplicationMixin(ApplicationV2) {
 
   async _prepareContext(_options: AnyObject): Promise<AnyObject> {
     const candidates = this.prompt.handoffCandidates ?? [];
+    // A payload sent by an older build carries no history — treat it as none
+    // rather than letting the template fail on an undefined list.
+    const history = this.prompt.history ?? [];
     return {
       setup: this.prompt.setup,
       question: this.prompt.question,
+      history,
+      hasHistory: history.length > 0,
       handoff: this.prompt.handoff,
       // The pick is only theirs to make when the hand-off is a player choice AND
       // there's actually someone else online to pass to.

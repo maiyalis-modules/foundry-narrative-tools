@@ -1034,6 +1034,48 @@
   padding: 0.85rem;
 }
 
+/* What the card has already established, above this player's own question.
+   Deliberately quieter than the live question: it is context to build on, not
+   the thing being asked. Scrolls rather than pushing the answer box off-screen
+   on a long card. */
+.foundry-story-deck .card-prompt__history {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  max-height: 40vh;
+  overflow-y: auto;
+  padding: 0.6rem 0.75rem;
+  border-radius: 6px;
+  background: var(--fsd-chip-bg);
+  font-size: 0.92em;
+}
+
+.foundry-story-deck .card-prompt__history-heading {
+  margin: 0;
+  font-size: 0.85em;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0.65;
+}
+
+.foundry-story-deck .card-prompt__history-entry {
+  border-left: 2px solid var(--fsd-divider);
+  padding-left: 0.6rem;
+}
+
+.foundry-story-deck .card-prompt__history-q {
+  margin: 0;
+  opacity: 0.7;
+  line-height: 1.35;
+}
+
+.foundry-story-deck .card-prompt__history-a {
+  margin: 0.15rem 0 0;
+  line-height: 1.4;
+  white-space: pre-wrap;
+}
+
 .foundry-story-deck .card-prompt__setup {
   margin: 0;
   padding: 0.75rem 1rem;
@@ -1256,12 +1298,77 @@
   .foundry-story-deck-banner__inner::after { animation: none; display: none; }
 }
 
-/* ---- Player session HUD (small read-only window) ---- */
-.foundry-story-deck.session-status .session-status__body {
+/* ---- Session HUD (frameless glass panel, players + GM) ----
+   The application element itself is only a positioner: Foundry's window chrome
+   is stripped so the panel inside can be the whole visual. `position: fixed` is
+   ours because a frameless app gets inline left/top from Foundry but no
+   positioning scheme of its own. */
+.foundry-story-deck.session-status {
+  position: fixed;
+  z-index: 70;
+  width: auto;
+  max-width: min(22rem, 90vw);
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  /* Keep the positioner click-through so nothing invisible around the panel can
+     ever eat a click meant for the scene. */
+  pointer-events: none;
+}
+
+/* Hidden for the one frame between rendering and being measured into the
+   top-right corner, so it never flashes at the position it was born at. */
+.foundry-story-deck.session-status.session-status--unplaced {
+  opacity: 0;
+}
+
+.foundry-story-deck.session-status .session-status__hud {
+  pointer-events: all;
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
-  padding: 0.15rem 0.1rem;
+  gap: 0.5rem;
+  min-width: 15rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 14px;
+  /* Frosted glass: a dark wash blurring whatever scene sits behind it. */
+  background: rgba(18, 18, 24, 0.55);
+  backdrop-filter: blur(14px) saturate(150%);
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+  color: #f1eee8;
+  /* The panel is its own drag handle — there is no title bar to grab. */
+  cursor: grab;
+  user-select: none;
+}
+
+.foundry-story-deck.session-status .session-status__hud:active {
+  cursor: grabbing;
+}
+
+.foundry-story-deck.session-status.theme-light .session-status__hud {
+  border-color: rgba(45, 34, 18, 0.18);
+  background: rgba(250, 248, 243, 0.6);
+  color: #241f18;
+}
+
+.foundry-story-deck.session-status .session-status__top {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.foundry-story-deck.session-status .session-status__glyph {
+  flex: 0 0 auto;
+  font-size: 1.05em;
+  opacity: 0.85;
+}
+
+.foundry-story-deck.session-status .session-status__text {
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .foundry-story-deck.session-status .session-status__name {
@@ -1272,13 +1379,48 @@
 
 .foundry-story-deck.session-status .session-status__phase {
   font-size: 0.85em;
-  opacity: 0.85;
+  opacity: 0.8;
+}
+
+/* The GM's shortcut into the Story Deck window — a glass pill, like the controls
+   this panel is modelled on. */
+.foundry-story-deck.session-status .session-status__open {
+  flex: 0 0 auto;
+  width: auto;
+  margin: 0;
+  padding: 0.15rem 0.7rem;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  color: inherit;
+  font-size: 0.82em;
+  font-weight: 600;
+  line-height: 1.7;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.foundry-story-deck.session-status .session-status__open:hover {
+  border-color: rgba(255, 255, 255, 0.55);
+  background: rgba(255, 255, 255, 0.16);
+  box-shadow: none;
+}
+
+.foundry-story-deck.session-status.theme-light .session-status__open {
+  border-color: rgba(45, 34, 18, 0.3);
+  background: rgba(45, 34, 18, 0.05);
+}
+
+.foundry-story-deck.session-status.theme-light .session-status__open:hover {
+  border-color: rgba(45, 34, 18, 0.45);
+  background: rgba(45, 34, 18, 0.12);
 }
 
 .foundry-story-deck.session-status .session-status__bar {
-  height: 6px;
+  height: 5px;
   border-radius: 999px;
-  background: var(--fsd-chip-bg);
+  background: rgba(255, 255, 255, 0.14);
   overflow: hidden;
 }
 
@@ -1290,5 +1432,69 @@
 }
 
 .foundry-story-deck.session-status .session-status__state {
-  font-size: 0.8em;
+  font-size: 0.78em;
+  opacity: 0.7;
+}
+
+/* ---- GM player picker (DialogV2 content, not an app window) ---- */
+.foundry-story-deck.player-picker .player-picker__stats {
+  width: 100%;
+  margin: 0.75rem 0 0;
+  border-collapse: collapse;
+  font-size: 0.85em;
+  color: var(--fsd-ink);
+}
+
+.foundry-story-deck.player-picker .player-picker__stats caption {
+  text-align: left;
+  padding-bottom: 0.25rem;
+  font-size: 0.95em;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  opacity: 0.65;
+}
+
+.foundry-story-deck.player-picker .player-picker__stats th,
+.foundry-story-deck.player-picker .player-picker__stats td {
+  padding: 0.25rem 0.4rem;
+  border-bottom: 1px solid var(--fsd-divider);
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* The name column carries the width; the counts stay narrow beside it. */
+.foundry-story-deck.player-picker .player-picker__stats th:first-child,
+.foundry-story-deck.player-picker .player-picker__stats td:first-child {
+  text-align: left;
+  width: 100%;
+  white-space: normal;
+}
+
+.foundry-story-deck.player-picker .player-picker__stats thead th {
+  font-weight: 600;
+  opacity: 0.75;
+}
+
+.foundry-story-deck.player-picker .player-picker__stats tbody th {
+  font-weight: 600;
+}
+
+.foundry-story-deck.player-picker .player-picker__answered {
+  color: var(--fsd-accent);
+  font-weight: 600;
+}
+
+.foundry-story-deck.player-picker .player-picker__none {
+  opacity: 0.5;
+}
+
+/* Answered on this card, then dropped off — shown for the record, not pickable. */
+.foundry-story-deck.player-picker .player-picker__row--offline {
+  opacity: 0.6;
+}
+
+.foundry-story-deck.player-picker .player-picker__offline {
+  font-weight: 400;
+  font-size: 0.9em;
+  opacity: 0.8;
 }

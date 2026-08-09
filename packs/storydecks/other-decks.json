@@ -1,0 +1,169 @@
+{
+  "schemaVersion": 1,
+  "_parked": "Not loaded yet (see src/cards/index.ts — not in RECIPE_PATHS). These are non-New-Campaign use-case decks (New Character, Party Downtime), parked while development focuses on New Campaign decks. When ready, add this path to RECIPE_PATHS and decide each deck's scope filters (add a `scopes` array to each phase's selection).",
+  "decks": [
+    {
+      "id": "new-player-joins",
+      "name": "New Player Joins the Party",
+      "description": "A short deck for folding a new character into an established group without an awkward 'you all meet at a tavern' restart. It leans hard on relationships and shared memory so the newcomer arrives already tangled in the party's history, then leaves a single unresolved question hanging over them. Run it in the session a new player joins.",
+      "type": "premade",
+      "tags": ["New Character"],
+      "minPlayers": 2,
+      "requiredPlayers": 2,
+      "maxPlayers": 6,
+      "expectedCards": 6,
+      "allowManualSubstitution": true,
+      "allowReordering": true,
+      "avoidDuplicateCards": true,
+      "focus": [
+        "Give the new character existing connections.",
+        "Create at least one shared memory.",
+        "Give the party a reason to trust (or question) them.",
+        "Leave one unresolved mystery involving the newcomer."
+      ],
+      "phases": [
+        {
+          "id": "new-player-joins-relationships",
+          "name": "Relationships",
+          "description": "The bonds between the characters.",
+          "count": 3,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["relationships"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "new-player-joins-history",
+          "name": "History",
+          "description": "The past that shaped the present.",
+          "count": 1,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["history"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "new-player-joins-opportunity",
+          "name": "Opportunity",
+          "description": "Something worth pursuing.",
+          "count": 1,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["opportunity"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "new-player-joins-mystery",
+          "name": "Mystery",
+          "description": "A question left unanswered.",
+          "count": 1,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["mystery"],
+            "preferUnused": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "after-downtime",
+      "name": "After a Year of Downtime",
+      "description": "For picking a campaign back up after significant in-world time has passed. The deck focuses on relationships and the community as they are now, surfacing what changed while the characters were away, then layers fresh opportunities and problems on top. Run it to reconnect the party with the people and places that matter before pushing them into whatever comes next.",
+      "type": "premade",
+      "tags": ["Party Downtime"],
+      "minPlayers": 3,
+      "requiredPlayers": 3,
+      "maxPlayers": 6,
+      "expectedCards": 8,
+      "allowManualSubstitution": true,
+      "allowReordering": true,
+      "avoidDuplicateCards": true,
+      "focus": [
+        "Discover what has changed.",
+        "Reconnect with important NPCs.",
+        "Introduce new opportunities and new problems."
+      ],
+      "phases": [
+        {
+          "id": "after-downtime-relationships",
+          "name": "Relationships",
+          "description": "The bonds between the characters.",
+          "count": 2,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["relationships"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "after-downtime-community",
+          "name": "Community",
+          "description": "The town and the people who make it.",
+          "count": 2,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["culture", "organizations", "economy"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "after-downtime-opportunity",
+          "name": "Opportunity",
+          "description": "Something worth pursuing.",
+          "count": 1,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["opportunity"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "after-downtime-politics",
+          "name": "Politics",
+          "description": "Power and the struggle over it.",
+          "count": 1,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["politics"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "after-downtime-economy",
+          "name": "Economy",
+          "description": "Money, trade, and who controls it.",
+          "count": 1,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["economy"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "after-downtime-conflict",
+          "name": "Conflict",
+          "description": "Tension that could turn to violence.",
+          "count": 1,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["conflict"],
+            "preferUnused": true
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -20,6 +20,7 @@
   "FSD.WaitingChoose": "Waiting for {who} to choose a player…",
   "FSD.WaitingAnswer": "Waiting for {who}…",
   "FSD.Answers": "Answers so far",
+  "FSD.SoFar": "The story so far",
   "FSD.CardMissing": "This card is no longer available.",
   "FSD.GMOnly": "The Story Deck window is only available to the GM.",
 
@@ -30,12 +31,21 @@
   "FSD.Status.InProgress": "In progress",
   "FSD.Status.Pause": "Take a moment…",
   "FSD.Status.Idle": "No session in progress.",
+  "FSD.Status.OpenDeck": "Open the Story Deck window",
   "FSD.CardAlreadyActive": "A card is already being played. Finish or cancel it first.",
 
   "FSD.PlayCardTitle": "Play Card",
   "FSD.PlayCardSelect": "Send \"{title}\" to which player?",
   "FSD.PromptNextSelect": "Send the next question to which player?",
   "FSD.PromptNext": "Prompt Next Question",
+  "FSD.Picker.StatsHeading": "Who has answered what",
+  "FSD.Picker.StatsHeadingRun": "Who has answered what in {deck}",
+  "FSD.Picker.Player": "Player",
+  "FSD.Picker.ThisCard": "This card",
+  "FSD.Picker.Cards": "Cards",
+  "FSD.Picker.Questions": "Questions",
+  "FSD.Picker.QuestionNumber": "Q{n}",
+  "FSD.Picker.Offline": "(offline)",
   "FSD.ThenPass": "Then:",
   "FSD.Pass.GMChooses": "You choose (hidden from players):",
   "FSD.YourTurnToPass": "Your answer is in — {instruction}",
@@ -148,6 +158,8 @@
   "FSD.Settings.PortraitSpotlightHint": "When a player is handed a card, raise their character's portrait using Ginzzzu's Portraits. Has no effect unless that module is active.",
   "FSD.Settings.PortraitSoloName": "One portrait at a time",
   "FSD.Settings.PortraitSoloHint": "Lower the previous speaker's portrait when the spotlight moves on. Turn off to let a card's speakers accumulate on screen.",
+  "FSD.Settings.ShowGMHudName": "Show session panel (GM)",
+  "FSD.Settings.ShowGMHudHint": "Show the small on-screen session panel while a Story Deck is running, with a shortcut button that opens the Story Deck window. Only affects your own screen; players always see the panel during a session.",
   "FSD.Settings.ShowJournalButtonName": "Show Journal button",
   "FSD.Settings.ShowJournalButtonHint": "Show a Story Deck launch button in the Journal sidebar header. Only ever visible to the GM."
 }

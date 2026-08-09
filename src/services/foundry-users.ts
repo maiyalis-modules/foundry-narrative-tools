@@ -21,6 +21,13 @@ export function getUsers(): RosterUser[] {
   }));
 }
 
+/** Connected, non-GM users — the players who can be handed a card. */
+export function getOnlinePlayers(): { id: string; name: string }[] {
+  return getUsers()
+    .filter((u) => u.active && !u.isGM)
+    .map((u) => ({ id: u.id, name: u.name }));
+}
+
 /** Connected players (non-GM) and GMs, by id. */
 export function getRoster(): { players: string[]; gmIds: string[] } {
   const players: string[] = [];

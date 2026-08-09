@@ -37,13 +37,21 @@ let playService: PlayService | null = null;
 let deckRunService: DeckRunService | null = null;
 
 /**
- * Open the players' session HUD while a run is live and close it when it ends.
- * GM-suppressed — the GM uses the main window. Players can read the world setting,
- * so this stays in sync off the same `updateSetting` hook as everything else.
+ * Show the session HUD while a run is live and close it when it ends — for
+ * everyone. Nothing running means nothing to report, and neither side wants a
+ * panel sitting on their scene between sessions. Everyone can read the world
+ * setting, so this stays in sync off the same `updateSetting` hook as
+ * everything else.
+ *
+ * The GM's copy carries the shortcut into the Story Deck window, and can be
+ * turned off entirely from their own client settings.
  */
 function syncSessionStatus(): void {
-  if (game.user?.isGM || !sessionStatus) return;
-  if (SessionStore.load().run) void sessionStatus.render(true);
+  if (!sessionStatus) return;
+  const wanted =
+    SessionStore.load().run !== null &&
+    (!game.user?.isGM || game.settings.get(MODULE_ID, SETTINGS.showGMHud) !== false);
+  if (wanted) void sessionStatus.render(true);
   else if (sessionStatus.rendered) void sessionStatus.close();
 }
 
@@ -55,7 +63,11 @@ Hooks.once("init", () => {
   cardWindow = new CardWindowApp();
   sessionStatus = new SessionStatusApp();
   app.setCardWindow(cardWindow);
+  sessionStatus.setStoryDeckApp(app);
 });
+
+// The GM toggling their HUD setting applies immediately, rather than at reload.
+Hooks.on(`${MODULE_ID}.refreshHud`, () => syncSessionStatus());
 
 Hooks.once("ready", async () => {
   const deck = await loadDefaultDeck();
@@ -112,7 +124,8 @@ Hooks.once("ready", async () => {
   const module = game.modules.get(MODULE_ID);
   if (module) module.api = api;
 
-  // A player joining mid-session sees the HUD immediately.
+  // A player joining mid-session sees the HUD immediately; the GM's comes up
+  // with the world.
   syncSessionStatus();
 
   console.log(

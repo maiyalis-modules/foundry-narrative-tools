@@ -1,896 +1,656 @@
 {
-    "schemaVersion":  1,
-    "decks":  [
-                  {
-                      "id":  "small-town-start",
-                      "name":  "Small Town Campaign Start",
-                      "description":  "A grounded beginning for a party that starts life in a quiet frontier town. Most of the cards go into the bonds between the characters and the texture of the place they call home, then a few institutions, rivalries, and half-buried secrets are salted in. By the end you should have a town that feels lived-in, a web of relationships the players actually care about, and two or three loose threads the GM can pull on whenever the campaign needs a direction.",
-                      "type":  "premade",
-                      "tags":  [
-                                   "New Campaign"
-                               ],
-                      "minPlayers":  3,
-                      "requiredPlayers":  3,
-                      "maxPlayers":  6,
-                      "expectedCards":  12,
-                      "allowManualSubstitution":  true,
-                      "allowReordering":  true,
-                      "avoidDuplicateCards":  true,
-                      "focus":  [
-                                    "Build connections between characters.",
-                                    "Define what makes the town unique.",
-                                    "Seed a few unresolved problems.",
-                                    "Leave two or three adventure hooks."
-                                ],
-                      "phases":  [
-                                     {
-                                         "id":  "small-town-start-relationships",
-                                         "name":  "Relationships",
-                                         "description":  "The bonds between the characters.",
-                                         "count":  3,
-                                         "selection":  {
-                                                           "mode":  "random",
-                                                           "match":  "any",
-                                                           "themes":  [
-                                                                          "relationships"
-                                                                      ],
-                                                           "preferUnused":  true
-                                                       }
-                                     },
-                                     {
-                                         "id":  "small-town-start-community",
-                                         "name":  "Community",
-                                         "description":  "The town and the people who make it.",
-                                         "count":  2,
-                                         "selection":  {
-                                                           "mode":  "random",
-                                                           "match":  "any",
-                                                           "themes":  [
-                                                                          "community"
-                                                                      ],
-                                                           "preferUnused":  true
-                                                       }
-                                     },
-                                     {
-                                         "id":  "small-town-start-history",
-                                         "name":  "History",
-                                         "description":  "The past that shaped the present.",
-                                         "count":  2,
-                                         "selection":  {
-                                                           "mode":  "random",
-                                                           "match":  "any",
-                                                           "themes":  [
-                                                                          "history"
-                                                                      ],
-                                                           "preferUnused":  true
-                                                       }
-                                     },
-                                     {
-                                         "id":  "small-town-start-organizations",
-                                         "name":  "Organizations",
-                                         "description":  "The groups that hold power.",
-                                         "count":  1,
-                                         "selection":  {
-                                                           "mode":  "random",
-                                                           "match":  "any",
-                                                           "themes":  [
-                                                                          "organizations"
-                                                                      ],
-                                                           "preferUnused":  true
-                                                       }
-                                     },
-                                     {
-                                         "id":  "small-town-start-economy",
-                                         "name":  "Economy",
-                                         "description":  "Money, trade, and who controls it.",
-                                         "count":  1,
-                                         "selection":  {
-                                                           "mode":  "random",
-                                                           "match":  "any",
-                                                           "themes":  [
-                                                                          "economy"
-                                                                      ],
-                                                           "preferUnused":  true
-                                                       }
-                                     },
-                                     {
-                                         "id":  "small-town-start-opportunity",
-                                         "name":  "Opportunity",
-                                         "description":  "Something worth pursuing.",
-                                         "count":  1,
-                                         "selection":  {
-                                                           "mode":  "random",
-                                                           "match":  "any",
-                                                           "themes":  [
-                                                                          "opportunity"
-                                                                      ],
-                                                           "preferUnused":  true
-                                                       }
-                                     },
-                                     {
-                                         "id":  "small-town-start-mystery",
-                                         "name":  "Mystery",
-                                         "description":  "A question left unanswered.",
-                                         "count":  1,
-                                         "selection":  {
-                                                           "mode":  "random",
-                                                           "match":  "any",
-                                                           "themes":  [
-                                                                          "mystery"
-                                                                      ],
-                                                           "preferUnused":  true
-                                                       }
-                                     },
-                                     {
-                                         "id":  "small-town-start-politics",
-                                         "name":  "Politics",
-                                         "description":  "Power and the struggle over it.",
-                                         "count":  1,
-                                         "selection":  {
-                                                           "mode":  "random",
-                                                           "match":  "any",
-                                                           "themes":  [
-                                                                          "politics"
-                                                                      ],
-                                                           "preferUnused":  true
-                                                       }
-                                     }
-                                 ]
-                  },
-                  {
-                      "id":  "new-player-joins",
-                      "name":  "New Player Joins the Party",
-                      "description":  "A short deck for folding a new character into an established group without an awkward \u0027you all meet at a tavern\u0027 restart. It leans hard on relationships and shared memory so the newcomer arrives already tangled in the party\u0027s history, then leaves a single unresolved question hanging over them. Run it in the session a new player joins.",
-                      "type":  "premade",
-                      "tags":  [
-                                   "New Character"
-                               ],
-                      "minPlayers":  2,
-                      "requiredPlayers":  2,
-                      "maxPlayers":  6,
-                      "expectedCards":  6,
-                      "allowManualSubstitution":  true,
-                      "allowReordering":  true,
-                      "avoidDuplicateCards":  true,
-                      "focus":  [
-                                    "Give the new character existing connections.",
-                                    "Create at least one shared memory.",
-                                    "Give the party a reason to trust (or question) them.",
-                                    "Leave one unresolved mystery involving the newcomer."
-                                ],
-                      "phases":  [
-                                     {
-                                         "id":  "new-player-joins-relationships",
-                                         "name":  "Relationships",
-                                         "description":  "The bonds between the characters.",
-                                         "count":  3,
-                                         "selection":  {
-                                                           "mode":  "random",
-                                                           "match":  "any",
-                                                           "themes":  [
-                                                                          "relationships"
-                                                                      ],
-                                                           "preferUnused":  true
-                                                       }
-                                     },
-                                     {
-                                         "id":  "new-player-joins-history",
-                                         "name":  "History",
-                                         "description":  "The past that shaped the present.",
-                                         "count":  1,
-                                         "selection":  {
-                                                           "mode":  "random",
-                                                           "match":  "any",
-                                                           "themes":  [
-                                                                          "history"
-                                                                      ],
-                                                           "preferUnused":  true
-                                                       }
-                                     },
-                                     {
-                                         "id":  "new-player-joins-opportunity",
-                                         "name":  "Opportunity",
-                                         "description":  "Something worth pursuing.",
-                                         "count":  1,
-                                         "selection":  {
-                                                           "mode":  "random",
-                                                           "match":  "any",
-                                                           "themes":  [
-                                                                          "opportunity"
-                                                                      ],
-                                                           "preferUnused":  true
-                                                       }
-                                     },
-                                     {
-                                         "id":  "new-player-joins-mystery",
-                                         "name":  "Mystery",
-                                         "description":  "A question left unanswered.",
-                                         "count":  1,
-                                         "selection":  {
-                                                           "mode":  "random",
-                                                           "match":  "any",
-                                                           "themes":  [
-                                                                          "mystery"
-                                                                      ],
-                                                           "preferUnused":  true
-                                                       }
-                                     }
-                                 ]
-                  },
-                  {
-                      "id":  "political-intrigue",
-                      "name":  "Political Intrigue",
-                      "description":  "A campaign of nobles, guilds, and shifting alliances where the sharpest weapon is information. The deck front-loads political tensions and the organizations that embody them, gives those factions faces the players know personally, and deliberately avoids clean sides. Expect competing interests, useful enemies, and allies who may not stay allies.",
-                      "type":  "premade",
-                      "tags":  [
-                                   "New Campaign"
-                               ],
-                      "minPlayers":  3,
-                      "requiredPlayers":  3,
-                      "maxPlayers":  6,
-                      "expectedCards":  10,
-                      "allowManualSubstitution":  true,
-                      "allowReordering":  true,
-                      "avoidDuplicateCards":  true,
-                      "focus":  [
-                                    "Create competing interests.",
-                                    "Establish influential NPCs.",
-                                    "Define political tensions.",
-                                    "Avoid obvious \u0027good\u0027 and \u0027evil\u0027 factions."
-                                ],
-                      "phases":  [
-                                     {
-                                         "id":  "political-intrigue-politics",
-                                         "name":  "Politics",
-                                         "description":  "Power and the struggle over it.",
-                                         "count":  3,
-                                         "selection":  {
-                                                           "mode":  "random",
-                                                           "match":  "any",
-                                                           "themes":  [
-                                                                          "politics"
-                                                                      ],
-                                                           "preferUnused":  true
-                                                       }
-                                     },
-                                     {
-                                         "id":  "political-intrigue-organizations",
-                                         "name":  "Organizations",
-                                         "description":  "The groups that hold power.",
-                                         "count":  2,
-                                         "selection":  {
-                                                           "mode":  "random",
-                                                           "match":  "any",
-                                                           "themes":  [
-                                                                          "organizations"
-                                                                      ],
-                                                           "preferUnused":  true
-                                                       }
-                                     },
-                                     {
-                                         "id":  "political-intrigue-relationships",
-                                         "name":  "Relationships",
-                                         "description":  "The bonds between the characters.",
-                                         "count":  2,
-                                         "selection":  {
-                                                           "mode":  "random",
-                                                           "match":  "any",
-                                                           "themes":  [
-                                                                          "relationships"
-                                                                      ],
-                                                           "preferUnused":  true
-                                                       }
-                                     },
-                                     {
-                                         "id":  "political-intrigue-economy",
-                                         "name":  "Economy",
-                                         "description":  "Money, trade, and who controls it.",
-                                         "count":  1,
-                                         "selection":  {
-                                                           "mode":  "random",
-                                                           "match":  "any",
-                                                           "themes":  [
-                                                                          "economy"
-                                                                      ],
-                                                           "preferUnused":  true
-                                                       }
-                                     },
-                                     {
-                                         "id":  "political-intrigue-conflict",
-                                         "name":  "Conflict",
-                                         "description":  "Tension that could turn to violence.",
-                                         "count":  1,
-                                         "selection":  {
-                                                           "mode":  "random",
-                                                           "match":  "any",
-                                                           "themes":  [
-                                                                          "conflict"
-                                                                      ],
-                                                           "preferUnused":  true
-                                                       }
-                                     },
-                                     {
-                                         "id":  "political-intrigue-history",
-                                         "name":  "History",
-                                         "description":  "The past that shaped the present.",
-                                         "count":  1,
-                                         "selection":  {
-                                                           "mode":  "random",
-                                                           "match":  "any",
-                                                           "themes":  [
-                                                                          "history"
-                                                                      ],
-                                                           "preferUnused":  true
-                                                       }
-                                     }
-                                 ]
-                  },
-                  {
-                      "id":  "merchant-guild",
-                      "name":  "Merchant Guild Campaign",
-                      "description":  "For a party whose fortunes rise and fall with commerce, exploration, and trade. The deck emphasizes the economy, the guilds and companies that move goods, and the opportunities worth chasing, with a thread of travel and politics to keep the money entangled with the world. You should come away with valuable goods, contested trade routes, influential merchants, and rivals who want what you have.",
-                      "type":  "premade",
-                      "tags":  [
-                                   "New Campaign"
-                               ],
-                      "minPlayers":  3,
-                      "requiredPlayers":  3,
-                      "maxPlayers":  6,
-                      "expectedCards":  10,
-                      "allowManualSubstitution":  true,
-                      "allowReordering":  true,
-                      "avoidDuplicateCards":  true,
-                      "focus":  [
-                                    "Create trade opportunities.",
-                                    "Introduce influential merchants.",
-                                    "Define valuable goods and trade routes.",
-                                    "Seed rival businesses and guilds."
-                                ],
-                      "phases":  [
-                                     {
-                                         "id":  "merchant-guild-economy",
-                                         "name":  "Economy",
-                                         "description":  "Money, trade, and who controls it.",
-                                         "count":  3,
-                                         "selection":  {
-                                                           "mode":  "random",
-                                                           "match":  "any",
-                                                           "themes":  [
-                                                                          "economy"
-                                                                      ],
-                                                           "preferUnused":  true
-                                                       }
-                                     },
-                                     {
-                                         "id":  "merchant-guild-organizations",
-                                         "name":  "Organizations",
-                                         "description":  "The groups that hold power.",
-                                         "count":  2,
-                                         "selection":  {
-                                                           "mode":  "random",
-                                                           "match":  "any",
-                                                           "themes":  [
-                                                                          "organizations"
-                                                                      ],
-                                                           "preferUnused":  true
-                                                       }
-                                     },
-                                     {
-                                         "id":  "merchant-guild-opportunity",
-                                         "name":  "Opportunity",
-                                         "description":  "Something worth pursuing.",
-                                         "count":  2,
-                                         "selection":  {
-                                                           "mode":  "random",
-                                                           "match":  "any",
-                                                           "themes":  [
-                                                                          "opportunity"
-                                                                      ],
-                                                           "preferUnused":  true
-                                                       }
-                                     },
-                                     {
-                                         "id":  "merchant-guild-travel",
-                                         "name":  "Travel",
-                                         "description":  "Roads, routes, and the places between.",
-                                         "count":  1,
-                                         "selection":  {
-                                                           "mode":  "random",
-                                                           "match":  "any",
-                                                           "themes":  [
-                                                                          "travel"
-                                                                      ],
-                                                           "preferUnused":  true
-                                                       }
-                                     },
-                                     {
-                                         "id":  "merchant-guild-politics",
-                                         "name":  "Politics",
-                                         "description":  "Power and the struggle over it.",
-                                         "count":  1,
-                                         "selection":  {
-                                                           "mode":  "random",
-                                                           "match":  "any",
-                                                           "themes":  [
-                                                                          "politics"
-                                                                      ],
-                                                           "preferUnused":  true
-                                                       }
-                                     },
-                                     {
-                                         "id":  "merchant-guild-relationships",
-                                         "name":  "Relationships",
-                                         "description":  "The bonds between the characters.",
-                                         "count":  1,
-                                         "selection":  {
-                                                           "mode":  "random",
-                                                           "match":  "any",
-                                                           "themes":  [
-                                                                          "relationships"
-                                                                      ],
-                                                           "preferUnused":  true
-                                                       }
-                                     }
-                                 ]
-                  },
-                  {
-                      "id":  "frontier-exploration",
-                      "name":  "Frontier Exploration",
-                      "description":  "A newly settled region where the map still has blank spaces and every landmark hides a story. The deck weights wilderness, the opportunities a frontier offers, and the fragile communities clinging to it, threaded with travel and the deep history buried underfoot. Use it to define landmarks, mark out the dangerous places, and seed the ancient ruins the party will eventually be foolish enough to enter.",
-                      "type":  "premade",
-                      "tags":  [
-                                   "New Campaign"
-                               ],
-                      "minPlayers":  3,
-                      "requiredPlayers":  3,
-                      "maxPlayers":  6,
-                      "expectedCards":  12,
-                      "allowManualSubstitution":  true,
-                      "allowReordering":  true,
-                      "avoidDuplicateCards":  true,
-                      "focus":  [
-                                    "Define landmarks.",
-                                    "Create dangerous regions.",
-                                    "Introduce local settlements.",
-                                    "Seed ancient ruins and forgotten history."
-                                ],
-                      "phases":  [
-                                     {
-                                         "id":  "frontier-exploration-wilderness",
-                                         "name":  "Wilderness",
-                                         "description":  "The untamed land beyond the settlements.",
-                                         "count":  3,
-                                         "selection":  {
-                                                           "mode":  "random",
-                                                           "match":  "any",
-                                                           "themes":  [
-                                                                          "wilderness"
-                                                                      ],
-                                                           "preferUnused":  true
-                                                       }
-                                     },
-                                     {
-                                         "id":  "frontier-exploration-opportunity",
-                                         "name":  "Opportunity",
-                                         "description":  "Something worth pursuing.",
-                                         "count":  2,
-                                         "selection":  {
-                                                           "mode":  "random",
-                                                           "match":  "any",
-                                                           "themes":  [
-                                                                          "opportunity"
-                                                                      ],
-                                                           "preferUnused":  true
-                                                       }
-                                     },
-                                     {
-                                         "id":  "frontier-exploration-community",
-                                         "name":  "Community",
-                                         "description":  "The town and the people who make it.",
-                                         "count":  2,
-                                         "selection":  {
-                                                           "mode":  "random",
-                                                           "match":  "any",
-                                                           "themes":  [
-                                                                          "community"
-                                                                      ],
-                                                           "preferUnused":  true
-                                                       }
-                                     },
-                                     {
-                                         "id":  "frontier-exploration-travel",
-                                         "name":  "Travel",
-                                         "description":  "Roads, routes, and the places between.",
-                                         "count":  2,
-                                         "selection":  {
-                                                           "mode":  "random",
-                                                           "match":  "any",
-                                                           "themes":  [
-                                                                          "travel"
-                                                                      ],
-                                                           "preferUnused":  true
-                                                       }
-                                     },
-                                     {
-                                         "id":  "frontier-exploration-history",
-                                         "name":  "History",
-                                         "description":  "The past that shaped the present.",
-                                         "count":  1,
-                                         "selection":  {
-                                                           "mode":  "random",
-                                                           "match":  "any",
-                                                           "themes":  [
-                                                                          "history"
-                                                                      ],
-                                                           "preferUnused":  true
-                                                       }
-                                     },
-                                     {
-                                         "id":  "frontier-exploration-mystery",
-                                         "name":  "Mystery",
-                                         "description":  "A question left unanswered.",
-                                         "count":  1,
-                                         "selection":  {
-                                                           "mode":  "random",
-                                                           "match":  "any",
-                                                           "themes":  [
-                                                                          "mystery"
-                                                                      ],
-                                                           "preferUnused":  true
-                                                       }
-                                     },
-                                     {
-                                         "id":  "frontier-exploration-conflict",
-                                         "name":  "Conflict",
-                                         "description":  "Tension that could turn to violence.",
-                                         "count":  1,
-                                         "selection":  {
-                                                           "mode":  "random",
-                                                           "match":  "any",
-                                                           "themes":  [
-                                                                          "conflict"
-                                                                      ],
-                                                           "preferUnused":  true
-                                                       }
-                                     }
-                                 ]
-                  },
-                  {
-                      "id":  "kingdom-at-war",
-                      "name":  "Kingdom at War",
-                      "description":  "The campaign opens with two nations already at each other\u0027s throats and the party caught in the middle. The deck spends its weight on conflict, the politics driving it, and the history that made it inevitable, while keeping the relationships that give the war personal stakes. It leaves room for diplomacy as much as battle, and asks why this war matters to these characters in particular.",
-                      "type":  "premade",
-                      "tags":  [
-                                   "New Campaign"
-                               ],
-                      "minPlayers":  3,
-                      "requiredPlayers":  3,
-                      "maxPlayers":  6,
-                      "expectedCards":  12,
-                      "allowManualSubstitution":  true,
-                      "allowReordering":  true,
-                      "avoidDuplicateCards":  true,
-                      "focus":  [
-                                    "Explain why the war matters.",
-                                    "Create personal stakes.",
-                                    "Define military organizations.",
-                                    "Leave room for diplomacy as well as battle."
-                                ],
-                      "phases":  [
-                                     {
-                                         "id":  "kingdom-at-war-conflict",
-                                         "name":  "Conflict",
-                                         "description":  "Tension that could turn to violence.",
-                                         "count":  3,
-                                         "selection":  {
-                                                           "mode":  "random",
-                                                           "match":  "any",
-                                                           "themes":  [
-                                                                          "conflict"
-                                                                      ],
-                                                           "preferUnused":  true
-                                                       }
-                                     },
-                                     {
-                                         "id":  "kingdom-at-war-politics",
-                                         "name":  "Politics",
-                                         "description":  "Power and the struggle over it.",
-                                         "count":  2,
-                                         "selection":  {
-                                                           "mode":  "random",
-                                                           "match":  "any",
-                                                           "themes":  [
-                                                                          "politics"
-                                                                      ],
-                                                           "preferUnused":  true
-                                                       }
-                                     },
-                                     {
-                                         "id":  "kingdom-at-war-history",
-                                         "name":  "History",
-                                         "description":  "The past that shaped the present.",
-                                         "count":  2,
-                                         "selection":  {
-                                                           "mode":  "random",
-                                                           "match":  "any",
-                                                           "themes":  [
-                                                                          "history"
-                                                                      ],
-                                                           "preferUnused":  true
-                                                       }
-                                     },
-                                     {
-                                         "id":  "kingdom-at-war-relationships",
-                                         "name":  "Relationships",
-                                         "description":  "The bonds between the characters.",
-                                         "count":  2,
-                                         "selection":  {
-                                                           "mode":  "random",
-                                                           "match":  "any",
-                                                           "themes":  [
-                                                                          "relationships"
-                                                                      ],
-                                                           "preferUnused":  true
-                                                       }
-                                     },
-                                     {
-                                         "id":  "kingdom-at-war-organizations",
-                                         "name":  "Organizations",
-                                         "description":  "The groups that hold power.",
-                                         "count":  1,
-                                         "selection":  {
-                                                           "mode":  "random",
-                                                           "match":  "any",
-                                                           "themes":  [
-                                                                          "organizations"
-                                                                      ],
-                                                           "preferUnused":  true
-                                                       }
-                                     },
-                                     {
-                                         "id":  "kingdom-at-war-economy",
-                                         "name":  "Economy",
-                                         "description":  "Money, trade, and who controls it.",
-                                         "count":  1,
-                                         "selection":  {
-                                                           "mode":  "random",
-                                                           "match":  "any",
-                                                           "themes":  [
-                                                                          "economy"
-                                                                      ],
-                                                           "preferUnused":  true
-                                                       }
-                                     },
-                                     {
-                                         "id":  "kingdom-at-war-opportunity",
-                                         "name":  "Opportunity",
-                                         "description":  "Something worth pursuing.",
-                                         "count":  1,
-                                         "selection":  {
-                                                           "mode":  "random",
-                                                           "match":  "any",
-                                                           "themes":  [
-                                                                          "opportunity"
-                                                                      ],
-                                                           "preferUnused":  true
-                                                       }
-                                     }
-                                 ]
-                  },
-                  {
-                      "id":  "mystery-campaign",
-                      "name":  "Mystery Campaign",
-                      "description":  "Everything here bends toward a single unknown truth. The deck is dominated by mystery and the history it\u0027s rooted in, with just enough people, factions, and politics to give the questions somewhere to live. It is built to produce conflicting theories rather than tidy answers, so the table ends up with a knot worth spending a campaign untangling.",
-                      "type":  "premade",
-                      "tags":  [
-                                   "New Campaign",
-                                   "Plot Twist"
-                               ],
-                      "minPlayers":  3,
-                      "requiredPlayers":  3,
-                      "maxPlayers":  6,
-                      "expectedCards":  10,
-                      "allowManualSubstitution":  true,
-                      "allowReordering":  true,
-                      "avoidDuplicateCards":  true,
-                      "focus":  [
-                                    "Introduce unanswered questions.",
-                                    "Connect mysteries to the world\u0027s past.",
-                                    "Create conflicting theories instead of clear answers."
-                                ],
-                      "phases":  [
-                                     {
-                                         "id":  "mystery-campaign-mystery",
-                                         "name":  "Mystery",
-                                         "description":  "A question left unanswered.",
-                                         "count":  4,
-                                         "selection":  {
-                                                           "mode":  "random",
-                                                           "match":  "any",
-                                                           "themes":  [
-                                                                          "mystery"
-                                                                      ],
-                                                           "preferUnused":  true
-                                                       }
-                                     },
-                                     {
-                                         "id":  "mystery-campaign-history",
-                                         "name":  "History",
-                                         "description":  "The past that shaped the present.",
-                                         "count":  2,
-                                         "selection":  {
-                                                           "mode":  "random",
-                                                           "match":  "any",
-                                                           "themes":  [
-                                                                          "history"
-                                                                      ],
-                                                           "preferUnused":  true
-                                                       }
-                                     },
-                                     {
-                                         "id":  "mystery-campaign-relationships",
-                                         "name":  "Relationships",
-                                         "description":  "The bonds between the characters.",
-                                         "count":  1,
-                                         "selection":  {
-                                                           "mode":  "random",
-                                                           "match":  "any",
-                                                           "themes":  [
-                                                                          "relationships"
-                                                                      ],
-                                                           "preferUnused":  true
-                                                       }
-                                     },
-                                     {
-                                         "id":  "mystery-campaign-organizations",
-                                         "name":  "Organizations",
-                                         "description":  "The groups that hold power.",
-                                         "count":  1,
-                                         "selection":  {
-                                                           "mode":  "random",
-                                                           "match":  "any",
-                                                           "themes":  [
-                                                                          "organizations"
-                                                                      ],
-                                                           "preferUnused":  true
-                                                       }
-                                     },
-                                     {
-                                         "id":  "mystery-campaign-politics",
-                                         "name":  "Politics",
-                                         "description":  "Power and the struggle over it.",
-                                         "count":  1,
-                                         "selection":  {
-                                                           "mode":  "random",
-                                                           "match":  "any",
-                                                           "themes":  [
-                                                                          "politics"
-                                                                      ],
-                                                           "preferUnused":  true
-                                                       }
-                                     },
-                                     {
-                                         "id":  "mystery-campaign-opportunity",
-                                         "name":  "Opportunity",
-                                         "description":  "Something worth pursuing.",
-                                         "count":  1,
-                                         "selection":  {
-                                                           "mode":  "random",
-                                                           "match":  "any",
-                                                           "themes":  [
-                                                                          "opportunity"
-                                                                      ],
-                                                           "preferUnused":  true
-                                                       }
-                                     }
-                                 ]
-                  },
-                  {
-                      "id":  "after-downtime",
-                      "name":  "After a Year of Downtime",
-                      "description":  "For picking a campaign back up after significant in-world time has passed. The deck focuses on relationships and the community as they are now, surfacing what changed while the characters were away, then layers fresh opportunities and problems on top. Run it to reconnect the party with the people and places that matter before pushing them into whatever comes next.",
-                      "type":  "premade",
-                      "tags":  [
-                                   "Party Downtime"
-                               ],
-                      "minPlayers":  3,
-                      "requiredPlayers":  3,
-                      "maxPlayers":  6,
-                      "expectedCards":  8,
-                      "allowManualSubstitution":  true,
-                      "allowReordering":  true,
-                      "avoidDuplicateCards":  true,
-                      "focus":  [
-                                    "Discover what has changed.",
-                                    "Reconnect with important NPCs.",
-                                    "Introduce new opportunities and new problems."
-                                ],
-                      "phases":  [
-                                     {
-                                         "id":  "after-downtime-relationships",
-                                         "name":  "Relationships",
-                                         "description":  "The bonds between the characters.",
-                                         "count":  2,
-                                         "selection":  {
-                                                           "mode":  "random",
-                                                           "match":  "any",
-                                                           "themes":  [
-                                                                          "relationships"
-                                                                      ],
-                                                           "preferUnused":  true
-                                                       }
-                                     },
-                                     {
-                                         "id":  "after-downtime-community",
-                                         "name":  "Community",
-                                         "description":  "The town and the people who make it.",
-                                         "count":  2,
-                                         "selection":  {
-                                                           "mode":  "random",
-                                                           "match":  "any",
-                                                           "themes":  [
-                                                                          "community"
-                                                                      ],
-                                                           "preferUnused":  true
-                                                       }
-                                     },
-                                     {
-                                         "id":  "after-downtime-opportunity",
-                                         "name":  "Opportunity",
-                                         "description":  "Something worth pursuing.",
-                                         "count":  1,
-                                         "selection":  {
-                                                           "mode":  "random",
-                                                           "match":  "any",
-                                                           "themes":  [
-                                                                          "opportunity"
-                                                                      ],
-                                                           "preferUnused":  true
-                                                       }
-                                     },
-                                     {
-                                         "id":  "after-downtime-politics",
-                                         "name":  "Politics",
-                                         "description":  "Power and the struggle over it.",
-                                         "count":  1,
-                                         "selection":  {
-                                                           "mode":  "random",
-                                                           "match":  "any",
-                                                           "themes":  [
-                                                                          "politics"
-                                                                      ],
-                                                           "preferUnused":  true
-                                                       }
-                                     },
-                                     {
-                                         "id":  "after-downtime-economy",
-                                         "name":  "Economy",
-                                         "description":  "Money, trade, and who controls it.",
-                                         "count":  1,
-                                         "selection":  {
-                                                           "mode":  "random",
-                                                           "match":  "any",
-                                                           "themes":  [
-                                                                          "economy"
-                                                                      ],
-                                                           "preferUnused":  true
-                                                       }
-                                     },
-                                     {
-                                         "id":  "after-downtime-conflict",
-                                         "name":  "Conflict",
-                                         "description":  "Tension that could turn to violence.",
-                                         "count":  1,
-                                         "selection":  {
-                                                           "mode":  "random",
-                                                           "match":  "any",
-                                                           "themes":  [
-                                                                          "conflict"
-                                                                      ],
-                                                           "preferUnused":  true
-                                                       }
-                                     }
-                                 ]
-                  }
-              ]
+  "schemaVersion": 1,
+  "decks": [
+    {
+      "id": "small-town-start",
+      "name": "Small Town Campaign Start",
+      "description": "A grounded beginning for a party that starts life in a quiet frontier town. Most of the cards go into the bonds between the characters and the texture of the place they call home, then a few institutions, rivalries, and half-buried secrets are salted in. By the end you should have a town that feels lived-in, a web of relationships the players actually care about, and two or three loose threads the GM can pull on whenever the campaign needs a direction.",
+      "type": "premade",
+      "tags": ["New Campaign"],
+      "minPlayers": 3,
+      "requiredPlayers": 3,
+      "maxPlayers": 6,
+      "expectedCards": 12,
+      "allowManualSubstitution": true,
+      "allowReordering": true,
+      "avoidDuplicateCards": true,
+      "focus": [
+        "Build connections between characters.",
+        "Define what makes the town unique.",
+        "Seed a few unresolved problems.",
+        "Leave two or three adventure hooks."
+      ],
+      "phases": [
+        {
+          "id": "small-town-start-relationships",
+          "name": "Relationships",
+          "description": "The bonds between the characters.",
+          "count": 3,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["relationships"],
+            "scopes": ["community"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "small-town-start-community",
+          "name": "Community",
+          "description": "The town and the people who make it.",
+          "count": 2,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["culture", "organizations", "economy"],
+            "scopes": ["community"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "small-town-start-history",
+          "name": "History",
+          "description": "The past that shaped the present.",
+          "count": 2,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["history"],
+            "scopes": ["community"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "small-town-start-organizations",
+          "name": "Organizations",
+          "description": "The groups that hold power.",
+          "count": 1,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["organizations"],
+            "scopes": ["community"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "small-town-start-economy",
+          "name": "Economy",
+          "description": "Money, trade, and who controls it.",
+          "count": 1,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["economy"],
+            "scopes": ["community"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "small-town-start-opportunity",
+          "name": "Opportunity",
+          "description": "Something worth pursuing.",
+          "count": 1,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["opportunity"],
+            "scopes": ["community"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "small-town-start-mystery",
+          "name": "Mystery",
+          "description": "A question left unanswered.",
+          "count": 1,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["mystery"],
+            "scopes": ["community"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "small-town-start-politics",
+          "name": "Politics",
+          "description": "Power and the struggle over it.",
+          "count": 1,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["politics"],
+            "scopes": ["community"],
+            "preferUnused": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "political-intrigue",
+      "name": "Political Intrigue",
+      "description": "A campaign of nobles, guilds, and shifting alliances where the sharpest weapon is information. The deck front-loads political tensions and the organizations that embody them, gives those factions faces the players know personally, and deliberately avoids clean sides. Expect competing interests, useful enemies, and allies who may not stay allies.",
+      "type": "premade",
+      "tags": ["New Campaign"],
+      "minPlayers": 3,
+      "requiredPlayers": 3,
+      "maxPlayers": 6,
+      "expectedCards": 10,
+      "allowManualSubstitution": true,
+      "allowReordering": true,
+      "avoidDuplicateCards": true,
+      "focus": [
+        "Create competing interests.",
+        "Establish influential NPCs.",
+        "Define political tensions.",
+        "Avoid obvious 'good' and 'evil' factions."
+      ],
+      "phases": [
+        {
+          "id": "political-intrigue-politics",
+          "name": "Politics",
+          "description": "Power and the struggle over it.",
+          "count": 3,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["politics"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "political-intrigue-organizations",
+          "name": "Organizations",
+          "description": "The groups that hold power.",
+          "count": 2,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["organizations"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "political-intrigue-relationships",
+          "name": "Relationships",
+          "description": "The bonds between the characters.",
+          "count": 2,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["relationships"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "political-intrigue-economy",
+          "name": "Economy",
+          "description": "Money, trade, and who controls it.",
+          "count": 1,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["economy"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "political-intrigue-conflict",
+          "name": "Conflict",
+          "description": "Tension that could turn to violence.",
+          "count": 1,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["conflict"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "political-intrigue-history",
+          "name": "History",
+          "description": "The past that shaped the present.",
+          "count": 1,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["history"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "merchant-guild",
+      "name": "Merchant Guild Campaign",
+      "description": "For a party whose fortunes rise and fall with commerce, exploration, and trade. The deck emphasizes the economy, the guilds and companies that move goods, and the opportunities worth chasing, with a thread of travel and politics to keep the money entangled with the world. You should come away with valuable goods, contested trade routes, influential merchants, and rivals who want what you have.",
+      "type": "premade",
+      "tags": ["New Campaign"],
+      "minPlayers": 3,
+      "requiredPlayers": 3,
+      "maxPlayers": 6,
+      "expectedCards": 10,
+      "allowManualSubstitution": true,
+      "allowReordering": true,
+      "avoidDuplicateCards": true,
+      "focus": [
+        "Create trade opportunities.",
+        "Introduce influential merchants.",
+        "Define valuable goods and trade routes.",
+        "Seed rival businesses and guilds."
+      ],
+      "phases": [
+        {
+          "id": "merchant-guild-economy",
+          "name": "Economy",
+          "description": "Money, trade, and who controls it.",
+          "count": 3,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["economy"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "merchant-guild-organizations",
+          "name": "Organizations",
+          "description": "The groups that hold power.",
+          "count": 2,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["organizations"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "merchant-guild-opportunity",
+          "name": "Opportunity",
+          "description": "Something worth pursuing.",
+          "count": 2,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["opportunity"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "merchant-guild-travel",
+          "name": "Travel",
+          "description": "Roads, routes, and the places between.",
+          "count": 1,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["travel"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "merchant-guild-politics",
+          "name": "Politics",
+          "description": "Power and the struggle over it.",
+          "count": 1,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["politics"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "merchant-guild-relationships",
+          "name": "Relationships",
+          "description": "The bonds between the characters.",
+          "count": 1,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["relationships"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "frontier-exploration",
+      "name": "Frontier Exploration",
+      "description": "A newly settled region where the map still has blank spaces and every landmark hides a story. The deck weights wilderness, the opportunities a frontier offers, and the fragile communities clinging to it, threaded with travel and the deep history buried underfoot. Use it to define landmarks, mark out the dangerous places, and seed the ancient ruins the party will eventually be foolish enough to enter.",
+      "type": "premade",
+      "tags": ["New Campaign"],
+      "minPlayers": 3,
+      "requiredPlayers": 3,
+      "maxPlayers": 6,
+      "expectedCards": 12,
+      "allowManualSubstitution": true,
+      "allowReordering": true,
+      "avoidDuplicateCards": true,
+      "focus": [
+        "Define landmarks.",
+        "Create dangerous regions.",
+        "Introduce local settlements.",
+        "Seed ancient ruins and forgotten history."
+      ],
+      "phases": [
+        {
+          "id": "frontier-exploration-wilderness",
+          "name": "Wilderness",
+          "description": "The untamed land beyond the settlements.",
+          "count": 3,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["wilderness"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "frontier-exploration-opportunity",
+          "name": "Opportunity",
+          "description": "Something worth pursuing.",
+          "count": 2,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["opportunity"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "frontier-exploration-community",
+          "name": "Community",
+          "description": "The town and the people who make it.",
+          "count": 2,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["culture", "organizations", "economy"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "frontier-exploration-travel",
+          "name": "Travel",
+          "description": "Roads, routes, and the places between.",
+          "count": 2,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["travel"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "frontier-exploration-history",
+          "name": "History",
+          "description": "The past that shaped the present.",
+          "count": 1,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["history"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "frontier-exploration-mystery",
+          "name": "Mystery",
+          "description": "A question left unanswered.",
+          "count": 1,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["mystery"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "frontier-exploration-conflict",
+          "name": "Conflict",
+          "description": "Tension that could turn to violence.",
+          "count": 1,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["conflict"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "kingdom-at-war",
+      "name": "Kingdom at War",
+      "description": "The campaign opens with two nations already at each other's throats and the party caught in the middle. The deck spends its weight on conflict, the politics driving it, and the history that made it inevitable, while keeping the relationships that give the war personal stakes. It leaves room for diplomacy as much as battle, and asks why this war matters to these characters in particular.",
+      "type": "premade",
+      "tags": ["New Campaign"],
+      "minPlayers": 3,
+      "requiredPlayers": 3,
+      "maxPlayers": 6,
+      "expectedCards": 12,
+      "allowManualSubstitution": true,
+      "allowReordering": true,
+      "avoidDuplicateCards": true,
+      "focus": [
+        "Explain why the war matters.",
+        "Create personal stakes.",
+        "Define military organizations.",
+        "Leave room for diplomacy as well as battle."
+      ],
+      "phases": [
+        {
+          "id": "kingdom-at-war-conflict",
+          "name": "Conflict",
+          "description": "Tension that could turn to violence.",
+          "count": 3,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["conflict"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "kingdom-at-war-politics",
+          "name": "Politics",
+          "description": "Power and the struggle over it.",
+          "count": 2,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["politics"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "kingdom-at-war-history",
+          "name": "History",
+          "description": "The past that shaped the present.",
+          "count": 2,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["history"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "kingdom-at-war-relationships",
+          "name": "Relationships",
+          "description": "The bonds between the characters.",
+          "count": 2,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["relationships"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "kingdom-at-war-organizations",
+          "name": "Organizations",
+          "description": "The groups that hold power.",
+          "count": 1,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["organizations"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "kingdom-at-war-economy",
+          "name": "Economy",
+          "description": "Money, trade, and who controls it.",
+          "count": 1,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["economy"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "kingdom-at-war-opportunity",
+          "name": "Opportunity",
+          "description": "Something worth pursuing.",
+          "count": 1,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["opportunity"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "mystery-campaign",
+      "name": "Mystery Campaign",
+      "description": "Everything here bends toward a single unknown truth. The deck is dominated by mystery and the history it's rooted in, with just enough people, factions, and politics to give the questions somewhere to live. It is built to produce conflicting theories rather than tidy answers, so the table ends up with a knot worth spending a campaign untangling.",
+      "type": "premade",
+      "tags": ["New Campaign", "Plot Twist"],
+      "minPlayers": 3,
+      "requiredPlayers": 3,
+      "maxPlayers": 6,
+      "expectedCards": 10,
+      "allowManualSubstitution": true,
+      "allowReordering": true,
+      "avoidDuplicateCards": true,
+      "focus": [
+        "Introduce unanswered questions.",
+        "Connect mysteries to the world's past.",
+        "Create conflicting theories instead of clear answers."
+      ],
+      "phases": [
+        {
+          "id": "mystery-campaign-mystery",
+          "name": "Mystery",
+          "description": "A question left unanswered.",
+          "count": 4,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["mystery"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "mystery-campaign-history",
+          "name": "History",
+          "description": "The past that shaped the present.",
+          "count": 2,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["history"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "mystery-campaign-relationships",
+          "name": "Relationships",
+          "description": "The bonds between the characters.",
+          "count": 1,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["relationships"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "mystery-campaign-organizations",
+          "name": "Organizations",
+          "description": "The groups that hold power.",
+          "count": 1,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["organizations"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "mystery-campaign-politics",
+          "name": "Politics",
+          "description": "Power and the struggle over it.",
+          "count": 1,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["politics"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        },
+        {
+          "id": "mystery-campaign-opportunity",
+          "name": "Opportunity",
+          "description": "Something worth pursuing.",
+          "count": 1,
+          "selection": {
+            "mode": "random",
+            "match": "any",
+            "themes": ["opportunity"],
+            "scopes": ["community", "regional"],
+            "preferUnused": true
+          }
+        }
+      ]
+    }
+  ]
 }
