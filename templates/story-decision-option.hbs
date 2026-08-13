@@ -1,0 +1,29 @@
+{{!-- The Story Decision option editor. One root element (ApplicationV2 requires
+     each part to render exactly one) — Save/Cancel are the shared config-footer
+     part, not embedded here. --}}
+<div class="fsd-config-body">
+
+  <div class="form-group">
+    <label for="fsd-decision-option-title">{{localize "FSD.StoryDecision.OptionTitleLabel"}}</label>
+    <div class="form-fields">
+      <input type="text" id="fsd-decision-option-title" name="title" value="{{title}}"
+             placeholder="{{localize "FSD.StoryDecision.OptionTitlePlaceholder"}}">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="fsd-decision-option-description">{{localize "FSD.StoryDecision.OptionDescriptionLabel"}}</label>
+    <div class="form-fields">
+      <textarea id="fsd-decision-option-description" name="description" rows="3"
+                placeholder="{{localize "FSD.StoryDecision.OptionDescriptionPlaceholder"}}">{{description}}</textarea>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="fsd-decision-option-image">{{localize "FSD.StoryDecision.OptionImageLabel"}}</label>
+    <div class="form-fields">
+      <file-picker type="image" id="fsd-decision-option-image" name="image" value="{{image}}"></file-picker>
+    </div>
+  </div>
+
+</div>

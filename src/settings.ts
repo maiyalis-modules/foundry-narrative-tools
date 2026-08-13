@@ -2,34 +2,31 @@
  * Registers the module's settings with Foundry. Must be called during the `init`
  * hook (settings cannot be registered later).
  *
- * Right now this is intentionally light — enough to give the module a visible
- * presence under Configure Settings → Module Settings:
- *   - a menu button that opens the Story Deck window, and
- *   - a single real toggle that gates the Journal-sidebar launch button.
+ * Every setting below is `config: false` — they're edited from the **Story
+ * Decks** window instead of Foundry's flat settings list, the same way
+ * Maiyalis: Utility Suite organizes its own settings. `customDecks` stays
+ * hidden entirely; the deck editor writes it directly.
+ *
+ * No menu opens the main window directly — the Journal-sidebar launch button
+ * (see module.ts) and the `game.modules.get(MODULE_ID).api.open()` API cover
+ * that, so a settings-menu entry would just be a third, redundant way in.
+ *
+ * Menus are listed in registration order, which is why they sit at the bottom
+ * of this file rather than beside the settings each one edits: Story Decks,
+ * then the placeholder Story Decisions window.
  */
-import { MODULE_ID, SETTINGS } from "./constants.js";
+import { StoryDecisionsConfig } from "./apps/story-decisions-config.js";
+import { StoryDecksConfig } from "./apps/story-decks-config.js";
+import { MENUS, MODULE_ID, SETTINGS } from "./constants.js";
 import { isDaggerheart } from "./services/connections-service.js";
-import { StoryDeckApp } from "./ui/story-deck-app.js";
 
 export function registerSettings(): void {
-  // A button on the settings page that opens the main window. `type` accepts an
-  // ApplicationV2 subclass in Foundry v13+, so StoryDeckApp works directly.
-  game.settings.registerMenu(MODULE_ID, SETTINGS.menu, {
-    name: "FSD.Settings.OpenDeckName",
-    label: "FSD.Settings.OpenDeckLabel",
-    hint: "FSD.Settings.OpenDeckHint",
-    icon: "fa-solid fa-book-sparkles",
-    type: StoryDeckApp,
-    restricted: true,
-  });
-
-  // A simple, real setting so there's an actual control to see. Toggling it
-  // shows/hides the Journal-sidebar launch button (see module.ts).
+  // Shows/hides the Journal-sidebar launch button (see module.ts).
   game.settings.register(MODULE_ID, SETTINGS.showJournalButton, {
     name: "FSD.Settings.ShowJournalButtonName",
     hint: "FSD.Settings.ShowJournalButtonHint",
     scope: "world",
-    config: true,
+    config: false,
     type: Boolean,
     default: true,
   });
@@ -42,7 +39,7 @@ export function registerSettings(): void {
     name: "FSD.Settings.ShowGMHudName",
     hint: "FSD.Settings.ShowGMHudHint",
     scope: "client",
-    config: true,
+    config: false,
     type: Boolean,
     default: true,
     onChange: () => Hooks.callAll(`${MODULE_ID}.refreshHud`),
@@ -64,7 +61,7 @@ export function registerSettings(): void {
     name: "FSD.Settings.PortraitSpotlightName",
     hint: "FSD.Settings.PortraitSpotlightHint",
     scope: "world",
-    config: true,
+    config: false,
     type: Boolean,
     default: true,
   });
@@ -73,7 +70,7 @@ export function registerSettings(): void {
     name: "FSD.Settings.PortraitSoloName",
     hint: "FSD.Settings.PortraitSoloHint",
     scope: "world",
-    config: true,
+    config: false,
     type: Boolean,
     default: true,
   });
@@ -82,37 +79,37 @@ export function registerSettings(): void {
   // it can only ever run under that system. Registered (and shown) everywhere all
   // the same, so the feature is discoverable and the choice survives a world
   // switching systems — `connectionsEnabled()` gates on the system as well as the
-  // value, and the checkbox is disabled below where the system can't support it.
+  // value, and `StoryDecksConfig` disables the checkbox where the system can't
+  // support it.
   game.settings.register(MODULE_ID, SETTINGS.connections, {
     name: "FSD.Settings.ConnectionsName",
-    hint: isDaggerheart()
-      ? "FSD.Settings.ConnectionsHint"
-      : "FSD.Settings.ConnectionsHintUnavailable",
+    hint: "FSD.Settings.ConnectionsHint",
     scope: "world",
-    config: true,
+    config: false,
     type: Boolean,
     default: isDaggerheart(),
     onChange: () => Hooks.callAll(`${MODULE_ID}.refreshConnections`),
   });
-}
 
-/**
- * Grey out the connections checkbox on systems that can't support it.
- *
- * Foundry has no "disabled" flag for a registered setting, so the input is
- * disabled once the settings form is on screen. Cosmetic only — the runtime gate
- * is `connectionsEnabled()`, which never trusts the stored value alone.
- */
-export function registerSettingsUI(): void {
-  Hooks.on("renderSettingsConfig", (_app: unknown, html: HTMLElement | JQuery) => {
-    if (isDaggerheart()) return;
-    const root: HTMLElement | undefined =
-      html instanceof HTMLElement ? html : (html as JQuery)?.[0];
-    const input = root?.querySelector(
-      `input[name="${MODULE_ID}.${SETTINGS.connections}"]`,
-    ) as HTMLInputElement | null;
-    if (!input) return;
-    input.checked = false;
-    input.disabled = true;
+  // The buttons, in the order they should appear. `restricted: true` on both
+  // keeps them GM-only, which matters because most settings above are
+  // world-scoped and only a GM can write one.
+
+  game.settings.registerMenu(MODULE_ID, MENUS.storyDecksConfig, {
+    name: "FSD.Settings.StoryDecksMenu.Name",
+    label: "FSD.Settings.StoryDecksMenu.Label",
+    hint: "FSD.Settings.StoryDecksMenu.Hint",
+    icon: "fa-solid fa-sliders",
+    type: StoryDecksConfig,
+    restricted: true,
+  });
+
+  game.settings.registerMenu(MODULE_ID, MENUS.storyDecisionsConfig, {
+    name: "FSD.Settings.StoryDecisionsMenu.Name",
+    label: "FSD.Settings.StoryDecisionsMenu.Label",
+    hint: "FSD.Settings.StoryDecisionsMenu.Hint",
+    icon: "fa-solid fa-signs-post",
+    type: StoryDecisionsConfig,
+    restricted: true,
   });
 }

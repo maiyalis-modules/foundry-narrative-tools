@@ -170,6 +170,55 @@ export function emptyConnections(): ConnectionsState {
   return { round: null, answers: [], pending: null };
 }
 
+/** One choice the table can pick between in a Story Decision. */
+export interface DecisionOption {
+  id: string;
+  title: string;
+  description: string;
+  image: string;
+}
+
+/** How the table settles on one of a Story Decision's options. */
+export type DecisionType = "single" | "groupMajority" | "groupRandom";
+
+/**
+ * A Story Decision open for voting, or just resolved — see
+ * `services/decision-service.ts`. Nullable rather than a boolean for the same
+ * reason `ConnectionsRound` is: "is one running" and "what is it" are the same
+ * question.
+ */
+export interface DecisionState {
+  /** Distinguishes one Ask from the next — a late joiner's client uses it to
+   *  tell "already saw this one resolved" apart from "never started". */
+  id: string;
+  title: string;
+  description: string;
+  options: DecisionOption[];
+  type: DecisionType;
+  /** Only meaningful when `type` is `"single"`. */
+  singlePlayerId: string;
+  /** userId → optionId, as votes come in. Visible to the whole table live —
+   *  this isn't a secret ballot. */
+  votes: Record<string, string>;
+  status: "voting" | "resolved";
+  /** Set once resolved (`endVoting()` in `decision-service.ts`). */
+  winnerOptionId: string | null;
+}
+
+/**
+ * One record of a player being designated the chooser for a `"single"`
+ * decision — an append-only log rather than a running tally, so both the
+ * "today" and lifetime counts `singleChooserCounts()` reports (see
+ * `decision-service.ts`) are always a plain filter over the same source
+ * rather than two numbers that could drift apart.
+ */
+export interface SingleChooserRecord {
+  userId: string;
+  /** Calendar-day key ("2026-08-13") — see `utils/session-date.ts`. Decisions
+   *  made the same day count as the same "session" for fairness purposes. */
+  sessionKey: string;
+}
+
 /** The full, persistable session document. */
 export interface StoryDeckSession {
   /** Schema version for forward-compatible migrations. */
@@ -185,16 +234,24 @@ export interface StoryDeckSession {
   results: CardResult[];
   /** The Daggerheart connections round — see `services/connections-service.ts`. */
   connections: ConnectionsState;
+  /** The Story Decision currently open for voting (or just resolved), or
+   *  `null` between asks. See `services/decision-service.ts`. */
+  decision: DecisionState | null;
+  /** Every time a player has been asked to make a `"single"` decision — see
+   *  `services/decision-service.ts`'s `singleChooserCounts()`. */
+  singleChooserLog: SingleChooserRecord[];
 }
 
 export function createEmptySession(): StoryDeckSession {
   return {
-    version: 5,
+    version: 7,
     stage: null,
     active: null,
     run: null,
     runs: [],
     results: [],
     connections: emptyConnections(),
+    decision: null,
+    singleChooserLog: [],
   };
 }

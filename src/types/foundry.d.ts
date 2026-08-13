@@ -47,6 +47,8 @@ declare global {
     system?: { id: string; version?: string } & AnyObject;
     /** World folders, including the journal folders runs are exported into. */
     folders?: { find(fn: (folder: Folder) => boolean): Folder | undefined } & AnyObject;
+    /** World journal entries, including the ones runs and decisions are exported into. */
+    journal?: { find(fn: (entry: JournalEntry) => boolean): JournalEntry | undefined } & AnyObject;
     i18n: {
       localize(key: string): string;
       format(key: string, data?: AnyObject): string;

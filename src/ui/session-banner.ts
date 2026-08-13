@@ -32,6 +32,22 @@ export function announceSessionStart(subtitle: string, titleKey?: string): void 
 
 /** Show the animated banner + chime on *this* client. */
 export function showSessionBanner(subtitle: string, titleKey?: string): void {
+  renderBanner(game.i18n.localize(titleKey || DEFAULT_TITLE_KEY), subtitle, "fa-solid fa-book-sparkles");
+}
+
+/**
+ * The Story Decision banner: same sweep and chime, but the heading is the
+ * decision's own (GM-authored) title rather than a fixed localized one, so
+ * there's no `titleKey` to send across the wire — every client already has
+ * this from the decision state sync (see `module.ts`), which is what actually
+ * fans it out, not a socket message of its own.
+ */
+export function showDecisionBanner(title: string, subtitle: string): void {
+  renderBanner(title, subtitle, "fa-solid fa-signs-post");
+}
+
+/** Shared banner DOM/audio, parameterized by an already-resolved title and glyph. */
+function renderBanner(title: string, subtitle: string, glyph: string): void {
   try {
     document.getElementById(BANNER_ID)?.remove();
 
@@ -41,15 +57,14 @@ export function showSessionBanner(subtitle: string, titleKey?: string): void {
     const sub = subtitle
       ? `<span class="${BANNER_ID}__subtitle">${escapeHtml(subtitle)}</span>`
       : "";
-    const title = game.i18n.localize(titleKey || DEFAULT_TITLE_KEY);
     el.innerHTML = `
       <div class="${BANNER_ID}__inner">
-        <i class="fa-solid fa-book-sparkles ${BANNER_ID}__glyph"></i>
+        <i class="${glyph} ${BANNER_ID}__glyph"></i>
         <div class="${BANNER_ID}__text">
           <span class="${BANNER_ID}__title">${escapeHtml(title)}</span>
           ${sub}
         </div>
-        <i class="fa-solid fa-book-sparkles ${BANNER_ID}__glyph"></i>
+        <i class="${glyph} ${BANNER_ID}__glyph"></i>
       </div>`;
     document.body.appendChild(el);
 

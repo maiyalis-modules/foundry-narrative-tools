@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://github.com/brenton/foundry-story-deck/schemas/story-card.schema.json",
+  "$id": "https://github.com/maiyalis-modules/foundry-narrative-tools/schemas/story-card.schema.json",
   "title": "Story Card",
   "description": "A single collaborative worldbuilding card executed by the Story Deck engine (schema v3). A card is a guided conversation: each step names one player, asks one open question, and passes the spotlight to a different player.",
   "type": "object",

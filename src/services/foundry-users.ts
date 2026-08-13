@@ -52,3 +52,27 @@ export function userName(id: string): string {
 export function userNames(ids: string[]): string {
   return ids.map(userName).join(" & ");
 }
+
+/** A user's own color swatch (their player-color pip elsewhere in Foundry). */
+export function userColor(id: string): string {
+  const user = (game.users as { get?: (id: string) => AnyObject | undefined })?.get?.(id);
+  return String(user?.["color"] ?? "#ffffff");
+}
+
+export interface UserCharacter {
+  id: string;
+  name: string;
+  img: string;
+}
+
+/** The character assigned to a user ("Configure Player Character"), if any. */
+export function characterFor(id: string): UserCharacter | null {
+  const user = (game.users as { get?: (id: string) => AnyObject | undefined })?.get?.(id);
+  const actor = user?.["character"] as AnyObject | undefined;
+  if (!actor?.["id"]) return null;
+  return {
+    id: String(actor["id"]),
+    name: String(actor["name"] ?? ""),
+    img: String(actor["img"] ?? ""),
+  };
+}

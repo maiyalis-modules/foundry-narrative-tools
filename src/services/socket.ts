@@ -79,7 +79,8 @@ type SocketMessage =
        *  theirs to make. The GM prompts them automatically. */
       nextPlayerId: string | null;
     }
-  | { type: "sessionStart"; deckName: string; titleKey?: string };
+  | { type: "sessionStart"; deckName: string; titleKey?: string }
+  | { type: "decisionVote"; userId: string; optionId: string };
 
 export interface SocketHandlers {
   /** Runs on the targeted player's client. */
@@ -103,6 +104,9 @@ export interface SocketHandlers {
   onConnectionAnswer: (ask: ConnectionAnswerPayload) => void;
   /** Runs on the GM's client: the answer, ready to record. */
   onConnectionReply: (answererUserId: string, answer: string) => void;
+  /** Runs on the GM's client: a player (or the designated single chooser) cast
+   *  or changed their vote on the open Story Decision. */
+  onDecisionVote: (userId: string, optionId: string) => void;
 }
 
 /**
@@ -189,6 +193,9 @@ export function registerSocket(deps: SocketHandlers): void {
       case "connectionReply":
         if (game.user?.isGM) handlers.onConnectionReply(message.userId, message.answer);
         return;
+      case "decisionVote":
+        if (game.user?.isGM) handlers.onDecisionVote(message.userId, message.optionId);
+        return;
     }
   });
 }
@@ -234,6 +241,15 @@ export function emitConnectionReply(answer: string): void {
     type: "connectionReply",
     userId: myUserId(),
     answer,
+  });
+}
+
+/** Player → GM: cast (or change) a vote on the open Story Decision. */
+export function emitDecisionVote(optionId: string): void {
+  emit({
+    type: "decisionVote",
+    userId: myUserId(),
+    optionId,
   });
 }
 

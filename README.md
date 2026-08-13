@@ -82,7 +82,7 @@ links do) and works across drive letters:
 # Windows — no elevation required. Adjust the target path if your repo lives elsewhere.
 New-Item -ItemType Junction `
   -Path "$env:LOCALAPPDATA\FoundryVTT\Data\modules\foundry-story-deck" `
-  -Target "D:\Foundry\foundry-story-deck"
+  -Target "D:\Foundry\foundry-narrative-tools"
 ```
 
 ```bash
@@ -147,7 +147,7 @@ tonight **for anybody**, so the asker can see who is carrying the round.
 
 While the round is switched on, players cannot hand-edit the Connections field on
 their sheet; the GM still can, as the escape hatch for fixing a bad answer. Turn
-the whole thing off under *Settings → Configure Settings → Eryndor: Story Decks →
+the whole thing off under *Settings → Configure Settings → Maiyalis: Narrative Tools →
 Connections round* — the checkbox is disabled on non-Daggerheart systems, which
 have no such field to read.
 

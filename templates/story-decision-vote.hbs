@@ -1,0 +1,97 @@
+{{!-- The full-screen Story Decision vote. One root element (ApplicationV2
+     requires each part to render exactly one). Option tiles are positioned
+     with inline `left`/`top` percentages computed in story-decision-vote-app.ts
+     (no arithmetic helpers here — see CLAUDE.md); the SVG connector lines use
+     the same 0–100 coordinate space via `viewBox="0 0 100 100"` with
+     `preserveAspectRatio="none"`, so a line's endpoint always lines up with
+     its tile regardless of the window's aspect ratio.
+
+     Once resolved, `revealWinner()` (story-decision-vote-app.ts) adds
+     `.fsd-vote--revealed` and resets the winning tile's `left`/`top` back to
+     50% — the hub fades out, the losing tiles shrink away, and the winner
+     glides to center and grows, which is why it gets its own Close button
+     too. The hub keeps a Close button of its own for the same resolved state
+     — normally invisible under the winner's once `.fsd-vote--revealed` fades
+     the hub out, but the one way out if that reveal is ever skipped (see the
+     "no matching winner tile" guard in `revealWinner()`). --}}
+<div class="fsd-vote-body">
+  {{#if active}}
+  <svg class="fsd-vote-lines" viewBox="0 0 100 100" preserveAspectRatio="none">
+    {{#each options}}
+    <line x1="50" y1="50" x2="{{x}}" y2="{{y}}" />
+    {{/each}}
+  </svg>
+
+  <div class="fsd-vote-hub">
+    <h1 class="fsd-vote-hub__title">{{title}}</h1>
+    {{#if hasDescription}}
+    <p class="fsd-vote-hub__description">{{description}}</p>
+    {{/if}}
+    <p class="fsd-vote-hub__subtitle">{{subtitle}}</p>
+
+    {{#unless resolved}}
+    <p class="fsd-vote-hub__progress">
+      {{localize "FSD.StoryDecision.VotedProgress" answered=votedCount total=expectedCount}}
+    </p>
+    {{#if isGM}}
+    <button type="button" class="fsd-vote-hub__end" data-fsd="end-voting"
+            {{#if allVoted}}data-ready{{/if}}>
+      <i class="fa-solid fa-flag-checkered"></i>
+      {{localize "FSD.StoryDecision.EndVoting"}}
+    </button>
+    {{/if}}
+    {{else}}
+    {{#if isGM}}
+    <button type="button" class="fsd-vote-hub__close" data-fsd="close-decision">
+      <i class="fa-solid fa-xmark"></i>
+      {{localize "FSD.Config.Close"}}
+    </button>
+    {{/if}}
+    {{/unless}}
+  </div>
+
+  {{#each options}}
+  <div class="fsd-vote-option{{#if isWinner}} fsd-vote-option--winner{{/if}}"
+       data-option-id="{{id}}" data-fsd="vote"
+       style="left: {{x}}%; top: {{y}}%;">
+    {{#if hasImage}}
+    <img class="fsd-vote-option__image" src="{{image}}" alt="">
+    {{else}}
+    <span class="fsd-vote-option__image fsd-vote-option__image--empty">
+      <i class="fa-solid fa-image"></i>
+    </span>
+    {{/if}}
+
+    <div class="fsd-vote-option__label">
+      <span class="fsd-vote-option__title">{{title}}</span>
+      {{#if hasDescription}}
+      <p class="fsd-vote-option__description">{{description}}</p>
+      {{/if}}
+    </div>
+
+    {{#if votes.length}}
+    <div class="fsd-vote-option__votes">
+      {{#each votes}}
+      <span class="fsd-vote-option__voter" style="--fsd-voter-color: {{color}};" data-tooltip="{{name}}">
+        {{#if hasPortrait}}
+        <img src="{{portrait}}" alt="{{name}}">
+        {{else}}
+        <i class="fa-solid fa-user"></i>
+        {{/if}}
+      </span>
+      {{/each}}
+    </div>
+    {{/if}}
+
+    {{#if isWinner}}
+    {{#if ../isGM}}
+    <button type="button" class="fsd-vote-option__close" data-fsd="close-decision">
+      <i class="fa-solid fa-xmark"></i>
+      {{localize "FSD.Config.Close"}}
+    </button>
+    {{/if}}
+    {{/if}}
+  </div>
+  {{/each}}
+  {{/if}}
+</div>

@@ -1,0 +1,13 @@
+{{!-- Save/Cancel for the whole window, rendered below the tabs rather than inside
+     one. `data-fsd` rather than `data-action` because the click dispatch is our
+     own delegated listener (see config-window.ts). --}}
+<footer class="form-footer">
+  <button type="button" data-fsd="cancel">
+    <i class="fa-solid fa-xmark"></i>
+    {{localize "FSD.Config.Cancel"}}
+  </button>
+  <button type="button" data-fsd="save">
+    <i class="fa-solid fa-floppy-disk"></i>
+    {{localize "FSD.Config.Save"}}
+  </button>
+</footer>

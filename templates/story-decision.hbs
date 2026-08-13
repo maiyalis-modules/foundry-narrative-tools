@@ -1,0 +1,122 @@
+{{!-- The Story Decision trigger window. Not wired to anything yet — "Ask" is a
+     no-op — see story-decision-app.ts. One root element, since ApplicationV2
+     requires each part to render exactly one — the footer lives inside it
+     rather than as a separate part. Each option is edited in its own popup
+     (story-decision-option.hbs) rather than inline, so this list stays a
+     compact thumbnail + title row, drag-reorderable via native HTML5 DnD.
+     `.form-footer` already gives its buttons `flex: 1` (core), which is what
+     splits Clear/Cancel/Ask to even width each — no extra class needed. The player
+     select is always in the DOM (not `{{#if isSingle}}`) so `refreshControls`
+     can toggle it with plain `hidden`, the same live-without-a-full-render
+     pattern `DaggerheartAutomationConfig` uses in Maiyalis: Utility Suite. --}}
+<div class="fsd-config-body fsd-decision-body">
+
+  <div class="form-group">
+    <label for="fsd-decision-title">{{localize "FSD.StoryDecision.TitleLabel"}}</label>
+    <div class="form-fields">
+      <input type="text" id="fsd-decision-title" name="title" value="{{title}}"
+             placeholder="{{localize "FSD.StoryDecision.TitlePlaceholder"}}">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="fsd-decision-description">{{localize "FSD.StoryDecision.DescriptionLabel"}}</label>
+    <div class="form-fields">
+      <textarea id="fsd-decision-description" name="description" rows="4"
+                placeholder="{{localize "FSD.StoryDecision.DescriptionPlaceholder"}}">{{description}}</textarea>
+    </div>
+  </div>
+
+  <fieldset>
+    <legend>{{localize "FSD.StoryDecision.OptionsLegend"}}</legend>
+
+    {{#unless options.length}}
+    <p class="hint">{{localize "FSD.StoryDecision.NoOptions"}}</p>
+    {{/unless}}
+
+    <ol class="fsd-decision-options">
+      {{#each options}}
+      <li class="fsd-decision-option-row" data-fsd-option draggable="true">
+        <span class="fsd-decision-option-drag" aria-hidden="true">
+          <i class="fa-solid fa-grip-vertical"></i>
+        </span>
+        {{#if image}}
+        <img class="fsd-decision-option-thumb" src="{{image}}" alt="">
+        {{else}}
+        <span class="fsd-decision-option-thumb fsd-decision-option-thumb--empty">
+          <i class="fa-solid fa-image"></i>
+        </span>
+        {{/if}}
+        <span class="fsd-decision-option-title">
+          {{#if title}}{{title}}{{else}}{{localize "FSD.StoryDecision.OptionUntitled"}}{{/if}}
+        </span>
+        <button type="button" class="fsd-decision-option-edit" data-fsd="edit-option"
+                data-tooltip="{{localize "FSD.StoryDecision.EditOption"}}"
+                aria-label="{{localize "FSD.StoryDecision.EditOption"}}">
+          <i class="fa-solid fa-pen"></i>
+        </button>
+        <button type="button" class="fsd-decision-option-remove" data-fsd="remove-option"
+                data-tooltip="{{localize "FSD.StoryDecision.RemoveOption"}}"
+                aria-label="{{localize "FSD.StoryDecision.RemoveOption"}}">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+      </li>
+      {{/each}}
+    </ol>
+
+    <button type="button" class="fsd-decision-add-option" data-fsd="add-option">
+      <i class="fa-solid fa-plus"></i>
+      {{localize "FSD.StoryDecision.AddOption"}}
+    </button>
+  </fieldset>
+
+  <div class="form-group">
+    <label for="fsd-decision-type">{{localize "FSD.StoryDecision.DecisionTypeLabel"}}</label>
+    <div class="form-fields">
+      <select id="fsd-decision-type" name="decisionType">
+        <option value="single" {{#if isSingle}}selected{{/if}}>
+          {{localize "FSD.StoryDecision.DecisionType.Single"}}
+        </option>
+        <option value="groupMajority" {{#if isGroupMajority}}selected{{/if}}>
+          {{localize "FSD.StoryDecision.DecisionType.GroupMajority"}}
+        </option>
+        <option value="groupRandom" {{#if isGroupRandom}}selected{{/if}}>
+          {{localize "FSD.StoryDecision.DecisionType.GroupRandom"}}
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <div class="form-group" data-fsd-single-player {{#unless isSingle}}hidden{{/unless}}>
+    <label for="fsd-decision-single-player">{{localize "FSD.StoryDecision.PlayerLabel"}}</label>
+    <div class="form-fields">
+      <select id="fsd-decision-single-player" name="singlePlayer" {{#unless hasOnlinePlayers}}disabled{{/unless}}>
+        {{#if hasOnlinePlayers}}
+        <option value="" {{#unless hasSelectedPlayer}}selected{{/unless}}>
+          {{localize "FSD.StoryDecision.ChoosePlayer"}}
+        </option>
+        {{#each onlinePlayers}}
+        <option value="{{id}}" {{#if selected}}selected{{/if}}>{{label}}</option>
+        {{/each}}
+        {{else}}
+        <option value="">{{localize "FSD.StoryDecision.NoPlayersOnline"}}</option>
+        {{/if}}
+      </select>
+    </div>
+  </div>
+
+  <footer class="form-footer">
+    <button type="button" data-fsd="clear-draft">
+      <i class="fa-solid fa-broom"></i>
+      {{localize "FSD.StoryDecision.Clear"}}
+    </button>
+    <button type="button" data-fsd="cancel">
+      <i class="fa-solid fa-xmark"></i>
+      {{localize "FSD.Config.Cancel"}}
+    </button>
+    <button type="button" data-fsd="ask">
+      <i class="fa-solid fa-comment-dots"></i>
+      {{localize "FSD.StoryDecision.Ask"}}
+    </button>
+  </footer>
+</div>

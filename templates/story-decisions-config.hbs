@@ -1,0 +1,16 @@
+{{!-- The Story Decisions window. Placeholder until the feature itself is built —
+     see settings.ts / story-decisions-config.ts for the design (majority vote /
+     weighted random / single chooser over GM-authored plot hooks, prompted at
+     the start of a session). One root element, since ApplicationV2 requires
+     each part to render exactly one — the Close button lives inside it rather
+     than as a separate footer part. --}}
+<div class="fsd-config-body">
+  <p class="hint">{{localize "FSD.StoryDecisionsConfig.Placeholder"}}</p>
+
+  <footer class="form-footer">
+    <button type="button" data-fsd="cancel">
+      <i class="fa-solid fa-xmark"></i>
+      {{localize "FSD.Config.Close"}}
+    </button>
+  </footer>
+</div>

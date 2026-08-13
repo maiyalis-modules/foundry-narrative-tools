@@ -1730,3 +1730,399 @@
   text-align: right;
   opacity: 0.7;
 }
+
+/* --- Module configuration windows ----------------------------------------- */
+
+/* Tab visibility is entirely core's: `.tab[data-tab]:not(.active)` hides, and the
+   `standard-form` class on the window supplies `.tab.active { display: flex }`.
+   Nothing here should re-implement that. */
+
+/* An untabbed window has no `.tab` to inherit that column layout from, and its
+   part must render one root element — so the wrapper carries it instead. */
+.fsd-config .fsd-config-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* --- Journal sidebar launch buttons ---------------------------------------- */
+
+/* `.flexrow` (core) already splits the two buttons to half width each; this
+   just keeps them from touching, matching core's own `.action-buttons` gap. */
+.foundry-story-deck-launch-row {
+  gap: 8px;
+}
+
+/* --- Story Decision trigger window ------------------------------------------ */
+
+/* `<fieldset>` has a long-standing browser quirk: its default `min-width` is
+   `min-content`, not `0`, so it (and everything nested in it) refuses to
+   shrink below the option title's un-truncated width instead of clipping it.
+   Every level between the fieldset and the title span needs `min-width: 0`
+   to actually break that chain — the title's own rule alone isn't enough. */
+.fsd-decision-body fieldset {
+  min-width: 0;
+}
+
+.fsd-decision-body .fsd-decision-options {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+/* Each row is its own drag source (see the `dragstart`/`dragover`/`drop`
+   listeners in story-decision-app.ts) — the grip icon is a visual affordance
+   only, the whole row is draggable. Border + background set it apart from the
+   fieldset behind it rather than reading as plain list text.
+   Hardcoded rather than `var(--color-border-light-tertiary)`: that custom
+   property turned out to be undefined in this Foundry build's cascade (empty
+   at :root), which silently invalidates the whole `border` shorthand — no
+   border at all, not just an untinted one. */
+.fsd-decision-body .fsd-decision-option-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.35rem 0.5rem;
+  cursor: grab;
+}
+
+.fsd-decision-body .fsd-decision-option-row.dragging {
+  opacity: 0.5;
+}
+
+.fsd-decision-body .fsd-decision-option-drag {
+  flex: 0 0 auto;
+  opacity: 0.6;
+}
+
+.fsd-decision-body .fsd-decision-option-thumb {
+  flex: 0 0 auto;
+  width: 2rem;
+  height: 2rem;
+  object-fit: cover;
+  border-radius: 3px;
+}
+
+.fsd-decision-body .fsd-decision-option-thumb--empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.08);
+  opacity: 0.6;
+}
+
+.fsd-decision-body .fsd-decision-option-title {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.fsd-decision-body .fsd-decision-option-edit,
+.fsd-decision-body .fsd-decision-option-remove {
+  flex: 0 0 auto;
+  width: 2rem;
+  padding: 0;
+  line-height: 1;
+}
+
+.fsd-decision-body .fsd-decision-add-option {
+  width: fit-content;
+  /* Double the options list's row gap (.fsd-decision-options' `gap: 0.35rem`)
+     so the button reads as set apart from the list, not one more row in it. */
+  margin-top: 0.7rem;
+}
+
+/* ---------------------------------------------------------------------------
+   Story Decision vote — full-screen, frameless (see StoryDecisionVoteApp).
+   `.fsd-vote` is the app's own root element; Foundry applies none of its own
+   position/size to it (`window.positioned: false`), so `position: fixed` here
+   is all there is. Everything below it is percentage-positioned against
+   `.fsd-vote-body`, which is why the SVG connector lines and the option tiles
+   share the same 0–100 coordinate space computed in story-decision-vote-app.ts.
+   --------------------------------------------------------------------------- */
+.fsd-vote {
+  position: fixed;
+  inset: 0;
+  z-index: 90000;
+  background: radial-gradient(ellipse at center, rgba(20, 18, 30, 0.88) 0%, rgba(8, 7, 12, 0.96) 100%);
+}
+
+.fsd-vote-body {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.fsd-vote-lines {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.fsd-vote-lines line {
+  stroke: rgba(255, 255, 255, 0.22);
+  stroke-width: 0.25;
+}
+
+/* ---- The center hub: title, description, progress, GM controls ---- */
+
+.fsd-vote-hub {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  width: clamp(16rem, 24vw, 22rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 1.25rem 1.5rem;
+  text-align: center;
+  background: linear-gradient(180deg, rgba(40, 36, 58, 0.95) 0%, rgba(20, 18, 30, 0.95) 100%);
+  border: 1px solid rgba(133, 146, 232, 0.45);
+  border-radius: 0.75rem;
+  box-shadow: 0 0 60px rgba(80, 90, 180, 0.3);
+  color: #f6f2e8;
+}
+
+.fsd-vote-hub__title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.fsd-vote-hub__description {
+  margin: 0;
+  font-size: 0.95rem;
+  opacity: 0.85;
+}
+
+.fsd-vote-hub__subtitle {
+  margin: 0;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  color: #b9c0f0;
+}
+
+.fsd-vote-hub__progress {
+  margin: 0.3rem 0 0;
+  font-size: 0.85rem;
+  opacity: 0.75;
+}
+
+.fsd-vote-hub__end,
+.fsd-vote-hub__close {
+  margin-top: 0.5rem;
+  padding: 0.5rem 1.25rem;
+  border-radius: 0.4rem;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Lit up once everyone (or the one designated player) has voted — a hint to
+   the GM, not a gate; the button works either way. */
+.fsd-vote-hub__end[data-ready] {
+  background: #4c6bd0;
+  border-color: #7f95e8;
+  box-shadow: 0 0 20px rgba(124, 145, 232, 0.6);
+  color: #fff;
+}
+
+/* ---- Option tiles, arranged in a circle around the hub ---- */
+
+.fsd-vote-option {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: clamp(10rem, 16vw, 18rem);
+  padding: 0.8rem;
+  border-radius: 0.6rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(30, 28, 40, 0.88);
+  cursor: default;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease,
+    left 0.7s cubic-bezier(0.2, 0.8, 0.2, 1), top 0.7s cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity 0.5s ease, width 0.7s ease;
+}
+
+.fsd-vote--can-vote .fsd-vote-option {
+  cursor: pointer;
+}
+
+.fsd-vote-option:hover {
+  transform: translate(-50%, -50%) scale(1.16);
+  z-index: 5;
+  border-color: rgba(180, 190, 255, 0.6);
+  box-shadow: 0 0 24px rgba(120, 130, 220, 0.45);
+}
+
+.fsd-vote-option__image {
+  width: 6.5rem;
+  height: 6.5rem;
+  object-fit: cover;
+  border-radius: 0.4rem;
+  margin-bottom: 0.35rem;
+}
+
+.fsd-vote-option__image--empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.06);
+  opacity: 0.6;
+  font-size: 2rem;
+}
+
+.fsd-vote-option__label {
+  text-align: center;
+  color: #f6f2e8;
+}
+
+.fsd-vote-option__title {
+  display: block;
+  font-weight: 600;
+  font-size: 1rem;
+  line-height: 1.2;
+}
+
+/* Collapsed until hovered — expanding this (and the tile growing with it via
+   `.fsd-vote-option:hover` above) is the "hover to preview" interaction. */
+.fsd-vote-option__description {
+  margin: 0.3rem 0 0;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  font-size: 0.82rem;
+  color: #d8d4e8;
+  transition: max-height 0.22s ease, opacity 0.18s ease;
+}
+
+.fsd-vote-option:hover .fsd-vote-option__description {
+  max-height: 8rem;
+  opacity: 1;
+}
+
+/* ---- Vote badges: who picked this option, near the middle of its tile ---- */
+
+.fsd-vote-option__votes {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.2rem;
+  max-width: 80%;
+  pointer-events: none;
+}
+
+.fsd-vote-option__voter {
+  width: 1.7rem;
+  height: 1.7rem;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 50%;
+  border: 2px solid var(--fsd-voter-color, #fff);
+  background: #1c1a26;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.6);
+}
+
+.fsd-vote-option__voter img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ---- Resolution ----
+   groupRandom spins first (`.fsd-vote--spinning`, cycling `--spinlit` across
+   the tiles); every type then reveals the same way (`.fsd-vote--revealed`,
+   applied once by `revealWinner()` in story-decision-vote-app.ts): the hub and
+   connector lines fade out, the losing tiles shrink away, and the winner glides
+   from its radial spot back to dead center (`left`/`top` reset to 50% there,
+   which is what the `left`/`top` transitions above are for) and grows to take
+   over the screen. */
+
+.fsd-vote-option--spinlit {
+  transform: translate(-50%, -50%) scale(1.12);
+  z-index: 6;
+  border-color: #e8c25a;
+  box-shadow: 0 0 28px rgba(232, 194, 90, 0.6);
+}
+
+.fsd-vote--revealed .fsd-vote-hub,
+.fsd-vote--revealed .fsd-vote-lines {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+.fsd-vote--revealed .fsd-vote-option:not(.fsd-vote-option--winner) {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.4);
+  pointer-events: none;
+}
+
+/* Grown by `width` alone, not also `scale()` — the two stack multiplicatively
+   (a scaled-up box that's also had its layout width doubled), which read as
+   an oversized ~40%-of-viewport tile rather than the comfortable centerpiece
+   this is going for. */
+.fsd-vote--revealed .fsd-vote-option--winner {
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  cursor: default;
+  width: clamp(15rem, 22vw, 21rem);
+  padding: 1rem;
+  border-color: #e8c25a;
+  box-shadow: 0 0 70px rgba(232, 194, 90, 0.75);
+}
+
+.fsd-vote--revealed .fsd-vote-option--winner .fsd-vote-option__image {
+  width: 7rem;
+  height: 7rem;
+}
+
+/* The winner's description is otherwise hover-only (see `:hover` above) — once
+   it's the whole show, it should just be readable. */
+.fsd-vote--revealed .fsd-vote-option--winner .fsd-vote-option__description {
+  max-height: none;
+  opacity: 1;
+}
+
+.fsd-vote-option__close {
+  display: none;
+  margin-top: 0.6rem;
+  padding: 0.4rem 1rem;
+  border-radius: 0.4rem;
+}
+
+.fsd-vote--revealed .fsd-vote-option--winner .fsd-vote-option__close {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fsd-vote-option {
+    transition: none;
+  }
+}

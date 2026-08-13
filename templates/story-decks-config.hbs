@@ -1,0 +1,65 @@
+{{!-- The Story Decks settings window. Untabbed, so this is a plain body wrapper —
+     ApplicationV2 requires each part to render exactly one root element. The
+     `name` on each input matches its key in SETTINGS, which is how ConfigWindow
+     reads them back on save. --}}
+<div class="fsd-config-body">
+
+  <fieldset>
+    <legend>{{localize "FSD.StoryDecksConfig.LaunchLegend"}}</legend>
+
+    <div class="form-group">
+      <label for="fsd-show-journal-button">{{localize "FSD.Settings.ShowJournalButtonName"}}</label>
+      <div class="form-fields">
+        <input type="checkbox" id="fsd-show-journal-button" name="showJournalButton"
+               {{#if showJournalButton}}checked{{/if}}>
+      </div>
+      <p class="hint">{{localize "FSD.Settings.ShowJournalButtonHint"}}</p>
+    </div>
+
+    <div class="form-group">
+      <label for="fsd-show-gm-hud">{{localize "FSD.Settings.ShowGMHudName"}}</label>
+      <div class="form-fields">
+        <input type="checkbox" id="fsd-show-gm-hud" name="showGMHud"
+               {{#if showGMHud}}checked{{/if}}>
+      </div>
+      <p class="hint">{{localize "FSD.Settings.ShowGMHudHint"}}</p>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>{{localize "FSD.StoryDecksConfig.PortraitsLegend"}}</legend>
+
+    <div class="form-group">
+      <label for="fsd-portrait-spotlight">{{localize "FSD.Settings.PortraitSpotlightName"}}</label>
+      <div class="form-fields">
+        <input type="checkbox" id="fsd-portrait-spotlight" name="portraitSpotlight"
+               {{#if portraitSpotlight}}checked{{/if}}>
+      </div>
+      <p class="hint">{{localize "FSD.Settings.PortraitSpotlightHint"}}</p>
+    </div>
+
+    <div class="form-group">
+      <label for="fsd-portrait-solo">{{localize "FSD.Settings.PortraitSoloName"}}</label>
+      <div class="form-fields">
+        <input type="checkbox" id="fsd-portrait-solo" name="portraitSpotlightSolo"
+               {{#if portraitSpotlightSolo}}checked{{/if}}>
+      </div>
+      <p class="hint">{{localize "FSD.Settings.PortraitSoloHint"}}</p>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>{{localize "FSD.StoryDecksConfig.ConnectionsLegend"}}</legend>
+
+    <div class="form-group">
+      <label for="fsd-connections">{{localize "FSD.Settings.ConnectionsName"}}</label>
+      <div class="form-fields">
+        <input type="checkbox" id="fsd-connections" name="connections"
+               {{#if connections}}checked{{/if}}
+               {{#if connectionsDisabled}}disabled{{/if}}>
+      </div>
+      <p class="hint">{{connectionsHint}}</p>
+    </div>
+  </fieldset>
+
+</div>
