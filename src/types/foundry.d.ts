@@ -55,8 +55,18 @@ declare global {
     };
   } & AnyObject;
 
-  /** A world document folder (we only ever use the `JournalEntry` type). */
-  type Folder = { id: string; name: string; type: string } & AnyObject;
+  /**
+   * A world document folder (we only ever use the `JournalEntry` type).
+   * `folder` is the *parent* folder — the document itself, not its id, and null
+   * at the sidebar root.
+   */
+  type Folder = {
+    id: string;
+    name: string;
+    type: string;
+    folder?: Folder | null;
+    update(data: AnyObject): Promise<Folder | undefined>;
+  } & AnyObject;
   const Folder: {
     create(data: AnyObject): Promise<Folder | undefined>;
   };

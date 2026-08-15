@@ -133,7 +133,7 @@
   "FSD.Journal.SeedPage": "Elements to Develop",
   "FSD.Journal.DevelopIntro": "The table's conversation touched on these kinds of element. Flesh out whichever ones you want into NPCs, places, and hooks — that's yours to do.",
   "FSD.Journal.NotPlayed": "This card was drawn but not played.",
-  "FSD.Journal.Created": "Saved \"{name}\" to the Story Decks journal folder.",
+  "FSD.Journal.Created": "Saved \"{name}\" to the Narrative Tools / Story Decks journal folder.",
   "FSD.Journal.Failed": "Could not save the Story Deck to a journal entry — see the console.",
   "FSD.Journal.DecidedBy": "Decided by:",
   "FSD.Journal.Winner": "Winner",

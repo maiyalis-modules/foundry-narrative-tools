@@ -1,4 +1,10 @@
-import { DECISIONS_JOURNAL_FOLDER, JOURNAL_FOLDER, LOG_PREFIX, MODULE_ID } from "../constants.js";
+import {
+  DECISIONS_JOURNAL_FOLDER,
+  JOURNAL_FOLDER,
+  LOG_PREFIX,
+  MODULE_ID,
+  PARENT_JOURNAL_FOLDER,
+} from "../constants.js";
 import type { DeckEngine } from "../engine/deck-engine.js";
 import { tallyVotes } from "../engine/decision-resolver.js";
 import type { CardResult, DecisionState, DeckRun, RunCardRecord } from "../models/session.js";
@@ -30,7 +36,7 @@ export async function exportRunToJournal(
   if (played.length === 0 && run.cards.length === 0) return;
 
   try {
-    const folder = await ensureFolder();
+    const folder = await ensureFolder(JOURNAL_FOLDER);
 
     const pages = [
       ...run.phases.map((phase, index) => ({
@@ -67,13 +73,48 @@ export async function exportRunToJournal(
   }
 }
 
-/** Find (or create) the "Story Decks" journal folder. */
-async function ensureFolder(): Promise<Folder | undefined> {
+/**
+ * Find (or create) the "Narrative Tools" folder both of ours are nested inside.
+ *
+ * Returns undefined rather than throwing if it can't be had, which puts its
+ * children back at the sidebar root — where they lived before this existed.
+ * Losing a finished run over a folder would be a bad trade.
+ */
+async function ensureParentFolder(): Promise<Folder | undefined> {
   const existing = game.folders?.find(
-    (f: Folder) => f.type === "JournalEntry" && f.name === JOURNAL_FOLDER,
+    (f: Folder) => f.type === "JournalEntry" && f.name === PARENT_JOURNAL_FOLDER,
   );
   if (existing) return existing;
-  return (await Folder.create({ name: JOURNAL_FOLDER, type: "JournalEntry" })) ?? undefined;
+
+  try {
+    return (await Folder.create({ name: PARENT_JOURNAL_FOLDER, type: "JournalEntry" })) ?? undefined;
+  } catch (error) {
+    console.warn(`${LOG_PREFIX} Could not create the "${PARENT_JOURNAL_FOLDER}" folder.`, error);
+    return undefined;
+  }
+}
+
+/**
+ * Find (or create) one of our journal folders, nested under the parent above.
+ *
+ * Matched on name and type alone — folder names are only unique within a
+ * document type, but within one they're the only handle we have.
+ */
+async function ensureFolder(name: string): Promise<Folder | undefined> {
+  const parentId = (await ensureParentFolder())?.id ?? null;
+
+  const existing = game.folders?.find((f: Folder) => f.type === "JournalEntry" && f.name === name);
+  if (existing) {
+    // Worlds that exported before the parent existed have this folder at the
+    // sidebar root; adopt it once. `.folder` is the parent Folder document, not
+    // an id, so a non-null one means the GM has filed it themselves — leave it.
+    if (parentId && existing["folder"] == null) {
+      await existing["update"]({ folder: parentId });
+    }
+    return existing;
+  }
+
+  return (await Folder.create({ name, type: "JournalEntry", folder: parentId })) ?? undefined;
 }
 
 /**
@@ -95,7 +136,7 @@ export async function exportDecisionToJournal(state: DecisionState): Promise<voi
   if (!game.user?.isGM) return;
 
   try {
-    const folder = await ensureDecisionsFolder();
+    const folder = await ensureFolder(DECISIONS_JOURNAL_FOLDER);
     const key = sessionDateKey();
 
     const page = {
@@ -127,17 +168,6 @@ export async function exportDecisionToJournal(state: DecisionState): Promise<voi
     console.error(`${LOG_PREFIX} Could not write the decision to a journal entry.`, error);
     ui.notifications?.error(game.i18n.localize("FSD.Journal.DecisionFailed"));
   }
-}
-
-/** Find (or create) the "Story Decisions" journal folder. */
-async function ensureDecisionsFolder(): Promise<Folder | undefined> {
-  const existing = game.folders?.find(
-    (f: Folder) => f.type === "JournalEntry" && f.name === DECISIONS_JOURNAL_FOLDER,
-  );
-  if (existing) return existing;
-  return (
-    (await Folder.create({ name: DECISIONS_JOURNAL_FOLDER, type: "JournalEntry" })) ?? undefined
-  );
 }
 
 /** The decision's framing, then each option with its image, description, the

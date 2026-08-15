@@ -9,6 +9,12 @@ export const LOG_PREFIX = `${MODULE_TITLE} |` as const;
 /** Socket event name (see `socket: true` in module.json). */
 export const SOCKET_EVENT = `module.${MODULE_ID}` as const;
 
+/**
+ * Parent journal folder holding both of the module's own folders below, so our
+ * documents sit together rather than loose among the world's own.
+ */
+export const PARENT_JOURNAL_FOLDER = "Narrative Tools" as const;
+
 /** Journal folder that completed Story Deck runs are written into. */
 export const JOURNAL_FOLDER = "Story Decks" as const;
 

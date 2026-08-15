@@ -45,6 +45,8 @@ src/
                         game.modules.get(MODULE_ID).api
   constants.ts          MODULE_ID, MODULE_TITLE, LOG_PREFIX, SOCKET_EVENT,
                         SETTINGS, MENUS, TEMPLATES, JOURNAL_FOLDER(S)
+                        — "Story Decks" and "Story Decisions", both nested
+                        under PARENT_JOURNAL_FOLDER ("Narrative Tools")
   engine/               card-execution logic — no Foundry dependencies, doesn't
                         know card contents (deck-engine.ts, card-selector.ts,
                         decision-resolver.ts, token-resolver.ts)
